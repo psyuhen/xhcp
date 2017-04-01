@@ -1,0 +1,40 @@
+@CHARSET "UTF-8";
+
+body {
+	font-size: 12px;
+	font-family: "宋体";
+}
+/*表头样式*/
+table.dataTable thead {
+	/* background-color: #2fa4e7; */
+	color: #ffffff;
+	background-color: #2fa4e7;
+	border-color: #2fa4e7;
+	border-bottom: 1px solid #178acc;
+	background-image: -webkit-linear-gradient(#54b4eb, #2fa4e7 60%, #1d9ce5);
+	background-image: -o-linear-gradient(#54b4eb, #2fa4e7 60%, #1d9ce5);
+	background-image: linear-gradient(#54b4eb, #2fa4e7 60%, #1d9ce5);
+	background-repeat: no-repeat;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff54b4eb', endColorstr='#ff1d9ce5', GradientType=0);
+	filter: none;
+}
+/*强制文字不换行*/
+table.dataTable thead th {
+	white-space: nowrap;
+	text-align: center;
+}
+
+table.dataTable tbody td {
+	white-space: nowrap;
+}
+/*行hover时的样式*/
+table.dataTable.hover tr:hover {
+	outline: #A3C5FC solid 1px;
+	outline: -webkit-focus-ring-color auto 5px;
+}
+/*表格显示加载中的样式*/
+.dataTables_processing {
+	background-color: #d6e9c6;
+	color: #468847;
+	font-weight: bold;
+}

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.huateng.xhcp.mapper.system.ProvinceMapper">
+    <!-- 查询国家省份信息信息 -->
+	<select id="queryProvince" resultType="Province" parameterType="Province">
+		SELECT province_code,province_name
+		FROM tbl_province_info
+		<where>
+			<if test="province_code != null and province_code != ''">AND province_code = #{province_code,jdbcType=VARCHAR}</if>
+			<if test="province_name != null and province_name != ''">AND province_name = #{province_name,jdbcType=VARCHAR}</if>
+			
+		</where>
+		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[order by ${b_order_name} ${b_order_asc}  ]]></if>
+	</select>
+	
+	<!-- 新增国家省份信息 -->
+	<insert id="addProvince" parameterType="Province">
+		INSERT INTO tbl_province_info (province_code,province_name)
+		VALUES (#{province_code,jdbcType=VARCHAR},#{province_name,jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 批量新增国家省份信息信息 -->
+	<insert id="addBatchProvince" parameterType="Province">
+		INSERT INTO tbl_province_info (province_code,province_name)
+		<foreach item="item" collection="list" separator="union all">
+			SELECT #{item.province_code,jdbcType=VARCHAR},#{item.province_name,jdbcType=VARCHAR}
+			FROM dual
+		</foreach>
+	</insert>
+	
+	<!-- 更新国家省份信息信息 -->
+	<update id="updateProvince" parameterType="Province">
+		UPDATE tbl_province_info
+		<set>
+	      	<if test="province_code != null">province_code = #{province_code,jdbcType=VARCHAR},</if>
+	      	<if test="province_name != null">province_name = #{province_name,jdbcType=VARCHAR},</if>
+	      	
+		</set>
+		WHERE province_code = #{province_code,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 删除国家省份信息信息 -->
+	<delete id="deleteProvince" parameterType="Province">
+		DELETE FROM tbl_province_info WHERE province_code = #{province_code,jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 批量删除国家省份信息信息-->
+	<delete id="deleteBatchProvince" parameterType="Province">
+		DELETE FROM tbl_province_info WHERE province_code IN
+		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+			#{item.province_code,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+</mapper>

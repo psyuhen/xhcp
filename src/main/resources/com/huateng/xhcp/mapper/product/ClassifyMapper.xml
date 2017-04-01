@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.huateng.xhcp.mapper.product.ClassifyMapper">
+    <!-- 查询产品分类信息信息 -->
+	<select id="queryClassify" resultType="Classify" parameterType="Classify">
+		SELECT classify_id,name,`desc`,pcls_id
+		FROM tbl_classify_info
+		<where>
+			<if test="classify_id != null and classify_id != ''">AND classify_id = #{classify_id,jdbcType=VARCHAR}</if>
+			<if test="name != null and name != ''">AND name LIKE CONCAT('%', CONCAT(#{name,jdbcType=VARCHAR},'%'))</if>
+			<if test="desc != null and desc != ''">AND `desc` LIKE CONCAT('%', CONCAT(#{desc,jdbcType=VARCHAR},'%'))</if>
+			<if test="pcls_id != null and pcls_id != ''">AND pcls_id = #{pcls_id,jdbcType=INTEGER}</if>
+
+		</where>
+		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[order by ${b_order_name} ${b_order_asc}  ]]></if>
+	</select>
+
+	<!-- 查询产品分类信息信息 -->
+	<select id="querySub" resultType="Classify" >
+		SELECT classify_id,name,`desc`,pcls_id
+		FROM tbl_classify_info WHERE pcls_id IN
+		(SELECT classify_id FROM  tbl_classify_info WHERE pcls_id=-1)
+	</select>
+	<!-- 新增产品分类信息 -->
+	<insert id="addClassify" parameterType="Classify" useGeneratedKeys="true" keyProperty="classify_id">
+		INSERT INTO tbl_classify_info (name,`desc`,pcls_id)
+		VALUES (#{name,jdbcType=VARCHAR},#{desc,jdbcType=VARCHAR},#{pcls_id,jdbcType=INTEGER})
+	</insert>
+	
+	<!-- 批量新增产品分类信息信息 -->
+	<insert id="addBatchClassify" parameterType="Classify">
+		INSERT INTO tbl_classify_info (classify_id,name,`desc`,pcls_id)
+		<foreach item="item" collection="list" separator="union all">
+			SELECT #{item.classify_id,jdbcType=VARCHAR},#{item.name,jdbcType=VARCHAR},#{item.desc,jdbcType=VARCHAR},#{item.pcls_id,jdbcType=INTEGER}
+			FROM dual
+		</foreach>
+	</insert>
+	
+	<!-- 更新产品分类信息信息 -->
+	<update id="updateClassify" parameterType="Classify">
+		UPDATE tbl_classify_info
+		<set>
+	      	<if test="classify_id != null">classify_id = #{classify_id,jdbcType=INTEGER},</if>
+	      	<if test="name != null">name = #{name,jdbcType=VARCHAR},</if>
+	      	<if test="desc != null">`desc` = #{desc,jdbcType=VARCHAR},</if>
+	      	<if test="pcls_id != null">pcls_id = #{pcls_id,jdbcType=INTEGER},</if>
+
+		</set>
+		WHERE classify_id = #{classify_id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 删除产品分类信息信息 -->
+	<delete id="deleteClassify" parameterType="Classify">
+		DELETE FROM tbl_classify_info WHERE classify_id = #{classify_id,jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 批量删除产品分类信息信息-->
+	<delete id="deleteBatchClassify" parameterType="Classify">
+		DELETE FROM tbl_classify_info WHERE classify_id IN
+		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+			#{item.classify_id,jdbcType=INTEGER}
+		</foreach>
+	</delete>
+</mapper>

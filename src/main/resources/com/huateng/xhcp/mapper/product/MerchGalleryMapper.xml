@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.huateng.xhcp.mapper.product.MerchGalleryMapper">
+    <!-- 查询产品图片信息 -->
+	<select id="queryMerchGallery" resultType="MerchGallery" parameterType="MerchGallery">
+		SELECT gallery_id,merch_id,name,file_name,path,create_time
+		FROM tbl_merch_gallery
+		<where>
+			<if test="gallery_id != null and gallery_id != ''">AND gallery_id = #{gallery_id,jdbcType=INTEGER}</if>
+			<if test="merch_id != null and merch_id != ''">AND merch_id = #{merch_id,jdbcType=INTEGER}</if>
+			<if test="name != null and name != ''">AND name = #{name,jdbcType=VARCHAR}</if>
+			<if test="file_name != null and file_name != ''">AND file_name = #{file_name,jdbcType=VARCHAR}</if>
+			<if test="path != null and path != ''">AND path = #{path,jdbcType=VARCHAR}</if>
+			<if test="create_time != null and create_time != ''">AND create_time = #{create_time,jdbcType=VARCHAR}</if>
+			
+		</where>
+		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[order by ${b_order_name} ${b_order_asc}  ]]></if>
+	</select>
+	
+	<!-- 新增产品图片 -->
+	<insert id="addMerchGallery" parameterType="MerchGallery" useGeneratedKeys="true" keyProperty="gallery_id">
+		INSERT INTO tbl_merch_gallery (merch_id,name,file_name,path,create_time)
+		VALUES (#{merch_id,jdbcType=INTEGER},#{name,jdbcType=VARCHAR},#{file_name,jdbcType=VARCHAR},#{path,jdbcType=VARCHAR},DATE_FORMAT(now(),'%Y%m%d%H%i%s'))
+	</insert>
+	
+	<!-- 批量新增产品图片信息 -->
+	<insert id="addBatchMerchGallery" parameterType="MerchGallery" useGeneratedKeys="true" keyProperty="gallery_id">
+		INSERT INTO tbl_merch_gallery (merch_id,name,file_name,path,create_time)
+		<foreach item="item" collection="list" separator=",">
+			(#{item.merch_id,jdbcType=INTEGER},#{item.name,jdbcType=VARCHAR},#{item.file_name,jdbcType=VARCHAR},#{item.path,jdbcType=VARCHAR},DATE_FORMAT(now(),'%Y%m%d%H%i%s'))
+		</foreach>
+	</insert>
+	
+	<!-- 更新产品图片信息 -->
+	<update id="updateMerchGallery" parameterType="MerchGallery">
+		UPDATE tbl_merch_gallery
+		<set>
+	      	<if test="merch_id != null">merch_id = #{merch_id,jdbcType=INTEGER},</if>
+	      	<if test="name != null">name = #{name,jdbcType=VARCHAR},</if>
+	      	<if test="file_name != null">file_name = #{file_name,jdbcType=VARCHAR},</if>
+	      	<if test="path != null">path = #{path,jdbcType=VARCHAR},</if>
+
+		</set>
+		WHERE gallery_id = #{gallery_id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 删除产品图片信息 -->
+	<delete id="deleteMerchGallery" parameterType="MerchGallery">
+		DELETE FROM tbl_merch_gallery WHERE gallery_id = #{gallery_id,jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 批量删除产品图片信息-->
+	<delete id="deleteBatchMerchGallery" parameterType="MerchGallery">
+		DELETE FROM tbl_merch_gallery WHERE gallery_id IN
+		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+			#{item.gallery_id,jdbcType=INTEGER}
+		</foreach>
+	</delete>
+</mapper>

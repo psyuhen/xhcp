@@ -1,0 +1,562 @@
+$().ready(function(){
+	
+	$("#mobile_phone").keydown(function(){$("#mobile_phone_info").html("");});
+	$("#password").keydown(function(){$("#password_info").html("");});
+	$("#password_confirm").keydown(function(){$("#password_confirm_info").html("");});
+	$("#checkcode").keydown(function(){$("#checkcode_info").html("");});
+
+	$("#email").blur(function(){
+        var email = $("#email").val();
+        $.post('ajax_check.php', {act:'check_email', email:email}, function(data, textStatus){
+            if(textStatus == "success"){
+                if(data == "1"){
+				   $("#email_info").html("此邮箱可用");
+				   $("#email").removeClass("no").addClass("yes");
+                   return;
+                }
+                if(data == "2"){
+                   $("#email").removeClass("yes").addClass("no");
+				   $("#email_info").html("邮箱格式错误");
+                    return;
+                }
+                if(data == "3"){
+                   $("#email").removeClass("yes").addClass("no");
+				   $("#email_info").html("此邮箱已被注册");
+                    return;
+                }
+            }
+        });
+    });
+	
+	
+	$("#getcode").click(function() {
+
+		var mobile_phone = $("#mobile_phone").val();
+		var allowsend = $("#allowsend").val();
+		var salt = $("#salt").val();
+
+		var isMobile=/^(?:13\d|15\d|18\d|17\d|14\d)\d{5}(\d{3}|\*{3})$/;   
+		if(!isMobile.test(mobile_phone)){
+		   $("#mobile_phone_info").html("请输入正确的手机号").show(500);
+		}
+		if(allowsend == 1){
+			$.post('register.php', {action:'send_checkcode', mobile_phone: mobile_phone,salt: salt}, function(data, textStatus){
+                if(textStatus == "success"){
+					data = eval('('+data+')');
+					if(data.error != ''){
+						$("#mobile_phone_info").html(data.error).show(500);
+                        return;	
+					}
+					if(data.success != ''){
+		   				 $("#mobile_phone_info").html("").hide(500);
+						 $("#getcode").html('<i>验证码已发送(<font id="second60">60</font></i>)');
+						 $('#allowsend').val('0');
+						 countno(60);
+					}
+                }
+            });
+	     }
+	});
+	
+	
+	
+	$("#getcode_forget").click(function() {
+
+		var mobile_phone = $("#mobile_phone").val();
+		var allowsend = $("#allowsend").val();
+		var salt = $("#salt").val();
+
+		var isMobile=/^(?:13\d|15\d|18\d|17\d|14\d)\d{5}(\d{3}|\*{3})$/;   
+		if(!isMobile.test(mobile_phone)){
+		   $("#mobile_phone_info").html("请输入正确的手机号").show(500);
+		}
+		if(allowsend == 1){
+			$.post('ajax_check.php', {act:'send_checkcode_forget', mobile_phone: mobile_phone, salt: salt}, function(data, textStatus){
+                if(textStatus == "success"){
+					data = eval('('+data+')');
+					if(data.error != ''){
+						$("#mobile_phone_info").html(data.error).show(500);
+                        return;	
+					}
+					if(data.success != ''){
+		   				 $("#mobile_phone_info").html("").hide(500);
+						 $("#getcode_forget").html('<i>验证码已发送(<font id="second60">60</font></i>)');
+						 $('#allowsend').val('0');
+						 countno_forget(60);
+					}
+                }
+            });
+	     }
+	});
+	
+	
+	
+	
+	$("#kname").blur(function(){
+        var kname = $("#kname").val();
+		  if(kname.length < 2 || kname.length > 20){
+		   $("#kname").removeClass("yes").addClass("no");
+		  }
+		  else{
+			 $("#kname").removeClass("no").addClass("yes");
+			  }
+    });
+	
+	
+	$("#mobile_phone").blur(function(){
+        var mobile_phone = $("#mobile_phone").val();
+		var isMobile=/^(?:13\d|15\d|18\d|17\d|14\d)\d{5}(\d{3}|\*{3})$/;   
+		 if(!isMobile.test(mobile_phone)){
+		   $("#mobile_phone").removeClass("yes").addClass("no");
+		 }
+		else{$("#mobile_phone").removeClass("no").addClass("yes");}
+    });
+	
+
+	
+	
+    $("#username").blur(function(){
+        var username = $("#username").val();
+            $.post('ajax_check.php', {act:'check_username', username: username}, function(data, textStatus){
+                if(textStatus == "success"){
+                    if(data == "1"){
+						$("#username").removeClass("no").addClass("yes");
+				  		$("#username_info").html("此用户名可用");
+                        return;
+                    }
+                    if(data == "2"){
+						 $("#username").removeClass("yes").addClass("no");
+				  		 $("#username_info").html("用户名不合法");
+                        return;
+                    }
+                    if(data == "3"){
+						$("#username").removeClass("yes").addClass("no");
+				  		$("#username_info").html("用户名已被注册");
+                        return;
+                    }
+                }
+            });
+    });
+	
+});
+
+
+
+
+function countno(count3) {    
+	window.setTimeout(function(){    
+		count3--;    
+		if(count3 > 0) {    
+			$("#second60").html(count3);  
+			countno(count3);    
+		}else {    
+			$("#getcode").html('重新获取验证码'); 
+			$('#allowsend').val('1');  
+		}    
+	}, 1000);    
+}
+
+
+function countno_forget(count3) {    
+	window.setTimeout(function(){    
+		count3--;    
+		if(count3 > 0) {    
+			$("#second60").html(count3);  
+			countno_forget(count3);    
+		}else {    
+			$("#getcode_forget").html('重新获取验证码'); 
+			$('#allowsend').val('1');  
+		}    
+	}, 1000);    
+}
+
+
+function check_password(){
+    var password = $("#password").val();
+    var confirm_password = $("#confirm_password").val();
+    if(password == ""){
+	   $("#password").removeClass("yes").addClass("no");
+	   $("#password_info").html("请输入密码");
+    }else{
+        if(password.length < 6 || password.length > 20){
+            $("#password").removeClass("yes").addClass("no");
+	   		$("#password_info").html("密码不少于6位");
+        }else{
+            password = password.replace(/[^a-zA-Z0-9_]/g, '-');
+            if(password.indexOf('-') != -1){
+               $("#password").removeClass("yes").addClass("no");
+	   		   $("#password_info").html("密码中含非法字符");
+            }else{
+                 $("#password").removeClass("no").addClass("yes");
+	  			 $("#password_info").html("输入密码有效");
+            }
+        }
+    }
+    if(password != confirm_password && confirm_password!=''){
+        $("#confirm_password").removeClass("yes").addClass("no");
+	   	$("#confirm_password_info").html("输入密码不同");
+    }else{
+		if(confirm_password!=''){
+        $("#confirm_password").removeClass("no").addClass("yes");
+	   	$("#confirm_password_info").html("输入密码有效");}
+    }
+}
+
+
+
+function check_reginfo(){
+
+
+    var mobile_phone = $("#mobile_phone").val();
+    var checkcode = $("#checkcode").val();
+    var password = $("#password").val();
+    var password_confirm = $("#password_confirm").val();
+    var salt = $("#salt").val();
+	var isshopping = $("#isshopping").val();
+
+	
+	$.post('register.php', {action:'register', mobile_phone: mobile_phone,checkcode:checkcode,password:password,password_confirm:password_confirm}, function(data, textStatus){
+		if(textStatus == "success"){
+			data = eval('('+data+')');
+			if(data.success.isshopping == 2){
+				if(data.error.mobile_phone){$("#mobile_phone_info").html(data.error.mobile_phone).show(500);}
+				else{$("#mobile_phone_info").html('').hide(500);}
+				
+				if(data.error.checkcode){$("#checkcode_info").html(data.error.checkcode).show(500);}
+				else{$("#checkcode_info").html('').hide(500);}
+				
+				if(data.error.password){$("#password_info").html(data.error.password).show(500);}
+				else{$("#password_info").html('').hide(500);}
+				
+				if(data.error.password_confirm){$("#password_confirm_info").html(data.error.password_confirm).show(500);}
+				else{$("#password_confirm_info").html('').hide(500);}
+			}
+			else{
+				//alert(typeof(isshopping)=='undefined' || isshopping==null);
+				if(isshopping == 0){window.location.href="index.php";return false;}
+				if(isshopping == 1){window.location.href="shopping.php?step=checkout";return false;}
+			}
+			
+		}
+	});
+		 
+	
+	
+
+		
+	/*var mobile_phone_check = $("#mobile_phone").attr("data-status");
+	var password_check = $("#password").attr("data-status");
+	var password_confirm_check = $("#password_confirm").attr("data-status");
+	var agreement_check = $("#agreement").attr("data-status");
+	var checkcode_check = $("#checkcode").attr("data-status");
+	
+    if(mobile_phone_check != "yes"){$("#mobile_phone_row").addClass("no");errflag += 1;}
+	if(password_check != "yes"){$("#password_row").addClass("no");errflag += 1;}
+	if(password_confirm_check != "yes"){$("#password_confirm_row").addClass("no");errflag += 1;}
+	if(agreement_check != "yes"){$("#agreement_check").addClass("no");errflag += 1;}
+    if(checkcode_check != "yes"){$("#checkcode_row").addClass("no");errflag += 1;}
+	
+
+	
+    if(errflag > 0){
+        return false;
+    }*/
+    return false;
+}
+
+
+
+
+function feedback(){
+    var name = $("#name").val();
+    var tel = $("#tel").val();
+    var email = $("#email").val();
+    var message = $("#message").val();
+
+	$.post('feedback.php', {name: name,tel:tel,email:email,message:message}, function(data, textStatus){
+		if(textStatus == "success"){
+			data = eval('('+data+')');
+			if(data.error){
+				
+				if(data.error.success){
+					$("#respond").html('留言提交成功').show(500);
+					return false;
+				}
+				
+				$("#respond").html('红框部分请重新输入').show(500);
+				if(data.error.name){
+					$("#name").addClass('no');
+				}
+				else{
+					$("#name").html('').removeClass('no');
+				}
+				
+				if(data.error.tel){
+					$("#tel").addClass('no');
+				}
+				else{
+					$("#tel").html('').removeClass('no');
+				}
+				
+				if(data.error.email){
+					$("#email").addClass('no');
+				}
+				else{
+					$("#email").html('').removeClass('no');
+				}
+				
+				if(data.error.message){
+					$("#message").addClass('no');
+				}
+				else{
+					$("#message").html('').removeClass('no');
+				}
+			}
+			else{
+				$("#respond").html('留言提交成功').show(500);
+				$(':input').not(':hidden,:button').val('');
+			}
+			
+		}
+	});
+
+    return false;
+}
+
+
+
+function reset_info(){
+	$("#email").removeClass().addClass("no");
+	$("#email_info").html("");
+	
+	$("#username").removeClass().addClass("no");
+	$("#username_info").html("");
+	
+	$("#password").removeClass().addClass("no");
+	$("#password_info").html("");
+	
+	$("#confirm_password").removeClass().addClass("no");
+	$("#confirm_password_info").html("");
+	
+}
+
+
+function check_login(isshoping){
+	var errflag_login = 0;
+	var username_login = $("#username_login").val();
+	var password_login = $("#password_login").val();
+	if(username_login==''){
+		  $("#username_login").removeClass("yes").addClass("no");
+		  $("#username_login_info").html("请输入手机号");
+		  $("#username_login_icon").show(500);
+		  errflag_login += 1;
+	}
+	else{
+		$("#username_login").removeClass("no").addClass("yes");
+		  $("#username_login_info").html("");
+		  $("#username_login_icon").hide(500);
+		}
+	
+	
+	if(password_login==''){
+		  $("#password_login").removeClass("yes").addClass("no");
+		  $("#password_login_icon").show(500);
+		  $("#password_login_info").html("请输入密码");
+		   errflag_login += 1;
+	}
+	else{
+		  $("#password_login").removeClass("no").addClass("yes");
+		  $("#password_login_info").html("");
+		  $("#password_login_icon").hide(500);
+	}
+	
+	if(errflag_login > 0){
+        return false;
+    }
+
+	$.post('user.php', {act:'act_login', username: username_login,password: password_login}, function(data, textStatus){
+                    if(data == "1"){
+						if(isshoping==1){window.location.href="shopping_checkout.html";}
+						else{window.location.href="user.php";}
+                    }
+					else{
+					     $("#username_login").removeClass("yes").addClass("no");
+						 $("#password_login").removeClass("yes").addClass("no");
+						 $("#username_login_info").html("");
+		  				 $("#password_login_icon").show(500);
+						 alert("用户名/密码错误");
+						 $("#password_login_info").html("用户名/密码错误");
+						 return false;
+                    }
+     });
+	
+return false;	
+}
+
+
+
+
+
+
+function change_info(){
+	var errflag_info = 0;
+	var ktel = $("#ktel").val();
+	var kname = $("#kname").val();
+	if(kname=='' || kname.length < 2 || kname.length >20 ){
+		  $("#kname").removeClass().addClass("no");
+		  errflag_info += 1;
+	}
+	
+	 var isMobile=/^(?:13\d|15\d|18\d|17\d|14\d)\d{5}(\d{3}|\*{3})$/;   
+		 if(!isMobile.test(ktel)){
+		   $("#ktel").removeClass().addClass("no");errflag_info += 1;
+		 }
+		else{$("#ktel").removeClass().addClass("yes");}
+
+	if(errflag_info > 0){
+        return false;
+    }
+
+	$.post('ajax_check.php', {act:'change_info', kname: kname,ktel: ktel}, function(data, textStatus){
+                    if(data == "1"){
+						window.location.href="address.php";
+                    }
+
+     });
+		
+return false;	
+}
+
+
+
+function change_password(){
+	var errflag_info = 0;
+	var old_password = $("#old_password").val();
+	var new_password = $("#new_password").val();
+	var comfirm_password = $("#comfirm_password").val();
+	
+	
+	if(old_password.length < 6){
+		  $("#old_password").addClass("no");
+		  errflag_info += 1;
+	}
+	else{ $("#old_password").removeClass("no");}
+	
+	
+	if(new_password.length < 6){
+		  $("#new_password").addClass("no");
+		  errflag_info += 1;
+	}
+	else{$("#new_password").removeClass("no");}
+	
+	if(comfirm_password.length < 6){
+		  $("#comfirm_password").addClass("no");
+		  errflag_info += 1;
+	}
+	else{ $("#comfirm_password").removeClass("no");}
+	
+	if(errflag_info > 0){
+        return false;
+    }
+
+	$.post('user.php', {act:'act_edit_password', old_password: old_password,new_password: new_password,comfirm_password: comfirm_password}, function(data, textStatus){
+		
+					if(data == 1){
+						$("#response_info").html('密码已修改！');
+						$(':input').not(':hidden,:button').val('');
+					}
+					else if(data==2){$("#response_info").html('密码不能小于6位！');}
+					else if(data==3){$("#response_info").html('原密码输入错误');}
+					else{
+						$("#response_info").html('两次输入的密码不一样！');
+					}
+					
+     });
+		
+return false;	
+}
+
+
+
+
+function get_password(){
+	var errflag_login = 0;
+	var uname = $("#uname").val();
+	var kemail = $("#kemail").val();
+	if(uname==''){
+		  $("#uname").removeClass().addClass("no");
+		  errflag_login += 1;
+	}
+	if(kemail==''){
+		  $("#kemail").removeClass().addClass("no");
+		   errflag_login += 1;
+	}
+	if(errflag_login > 0){
+        return false;
+    }
+	 $("#response_info").html('请等待...');
+
+	$.post('user.php', {act:'send_pwd_email', user_name: uname,email: kemail}, function(data, textStatus){
+					if(data == 0){
+						$("#response_info").html('昵称与邮箱不匹配！');
+                    }
+                    else if(data == 1){
+						$("#response_info").html('修改密码的邮件已发送到您的邮箱！');
+						$(':input').not(':radio,:hidden,:submit').val('');
+                    }
+					else{
+					    $("#response_info").html('邮件发送失败！');
+                    }
+     });
+	
+return false;	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+function get_new_password(){
+	var errflag_info = 0;
+	var new_password = $("#new_password").val();
+	var comfirm_password = $("#comfirm_password").val();
+	var uid = $("#uid").val();
+	var code = $("#code").val();
+	
+
+	if(new_password.length < 6){
+		  $("#new_password").addClass("no");
+		  errflag_info += 1;
+	}
+	else{$("#new_password").removeClass("no");}
+	
+	if(comfirm_password.length < 6){
+		  $("#comfirm_password").addClass("no");
+		  errflag_info += 1;
+	}
+	else{ $("#comfirm_password").removeClass("no");}
+	
+	
+	if(errflag_info > 0){
+        return false;
+    }
+	$.post('user.php', {act:'act_edit_password', uid: uid,code: code,new_password: new_password, comfirm_password: comfirm_password}, function(data, textStatus){
+					if(data == 1){
+						$("#response_info").html('密码已修改！');
+						$(':input').not(':hidden').val('');
+					}
+					else if(data==2){$("#response_info").html('密码不能小于6位！');}
+					else{
+						$("#response_info").html('两次输入的密码不一样！');
+					}
+     });
+return false;	
+}
+

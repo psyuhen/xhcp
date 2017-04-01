@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.huateng.xhcp.mapper.article.ArticleMapper">
+    <!-- 查询资讯信息信息 -->
+	<select id="queryArticle" resultType="Article" parameterType="Article">
+		SELECT article_id,title,article_date,contents,hits,update_time,create_time
+		FROM tbl_article_info
+		<where>
+			<if test="article_id != null and article_id != ''">AND article_id = #{article_id,jdbcType=INTEGER}</if>
+			<if test="title != null and title != ''">AND title = #{title,jdbcType=VARCHAR}</if>
+			<if test="article_date != null and article_date != ''">AND article_date LIKE CONCAT(#{article_date,jdbcType=VARCHAR},'%')</if>
+			<if test="article_y != null and article_y != ''">AND substring(article_date,1,4) = #{article_y,jdbcType=VARCHAR}</if>
+			<if test="article_m != null and article_m != ''">AND substring(article_date,5,2) = #{article_m,jdbcType=VARCHAR}</if>
+			<if test="contents != null and contents != ''">AND contents = #{contents,jdbcType=VARCHAR}</if>
+			<if test="hits != null and hits != ''">AND hits = #{hits,jdbcType=VARCHAR}</if>
+			<if test="update_time != null and update_time != ''">AND update_time = #{update_time,jdbcType=VARCHAR}</if>
+			<if test="create_time != null and create_time != ''">AND create_time = #{create_time,jdbcType=VARCHAR}</if>
+			
+		</where>
+		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[order by ${b_order_name} ${b_order_asc}  ]]></if>
+        <if test="b_order_name == null  or b_order_name == ''"><![CDATA[order by article_date DESC  ]]></if>
+	</select>
+
+    <select id="queryPAndN" resultType="Article" parameterType="String">
+        <![CDATA[
+          (SELECT article_id,title,article_date,contents,hits,update_time,create_time
+		  FROM tbl_article_info WHERE article_id < #{article_id,jdbcType=INTEGER} ORDER BY article_id DESC limit 1)
+		  UNION ALL
+		  (SELECT article_id,title,article_date,contents,hits,update_time,create_time
+		  FROM tbl_article_info WHERE article_id > #{article_id,jdbcType=INTEGER} ORDER BY article_id ASC limit 1)
+        ]]>
+    </select>
+	
+	<!-- 新增资讯信息 -->
+	<insert id="addArticle" parameterType="Article" useGeneratedKeys="true" keyProperty="article_id">
+		INSERT INTO tbl_article_info (title,article_date,contents,hits,update_time,create_time)
+		VALUES (#{title,jdbcType=VARCHAR},#{article_date,jdbcType=VARCHAR},#{contents,jdbcType=VARCHAR},#{hits,jdbcType=VARCHAR},#{update_time,jdbcType=VARCHAR},DATE_FORMAT(now(),'%Y%m%d%H%i%s'))
+	</insert>
+	
+	<!-- 批量新增资讯信息信息 -->
+	<insert id="addBatchArticle" parameterType="Article">
+		INSERT INTO tbl_article_info (article_id,title,article_date,contents,hits,update_time,create_time)
+		<foreach item="item" collection="list" separator="union all">
+			SELECT #{item.article_id,jdbcType=INTEGER},#{item.title,jdbcType=VARCHAR},#{item.article_date,jdbcType=VARCHAR},#{item.contents,jdbcType=VARCHAR},#{item.hits,jdbcType=VARCHAR},#{item.update_time,jdbcType=VARCHAR},DATE_FORMAT(now(),'%Y%m%d%H%i%s')
+			FROM dual
+		</foreach>
+	</insert>
+	
+	<!-- 更新资讯信息信息 -->
+	<update id="updateArticle" parameterType="Article">
+		UPDATE tbl_article_info
+		<set>
+	      	<if test="title != null">title = #{title,jdbcType=VARCHAR},</if>
+	      	<if test="article_date != null">article_date = #{article_date,jdbcType=VARCHAR},</if>
+	      	<if test="contents != null">contents = #{contents,jdbcType=VARCHAR},</if>
+	      	<if test="hits != null">hits = #{hits,jdbcType=VARCHAR},</if>
+            <![CDATA[
+              update_time = DATE_FORMAT(now(),'%Y%m%d%H%i%s')
+            ]]>
+		</set>
+		WHERE article_id = #{article_id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 删除资讯信息信息 -->
+	<delete id="deleteArticle" parameterType="Article">
+		DELETE FROM tbl_article_info WHERE article_id = #{article_id,jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 批量删除资讯信息信息-->
+	<delete id="deleteBatchArticle" parameterType="Article">
+		DELETE FROM tbl_article_info WHERE article_id IN
+		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+			#{item.article_id,jdbcType=INTEGER}
+		</foreach>
+	</delete>
+</mapper>

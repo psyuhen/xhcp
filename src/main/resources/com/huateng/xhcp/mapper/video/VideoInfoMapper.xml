@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.huateng.xhcp.mapper.video.VideoInfoMapper">
+    <!-- 查询视频信息信息 -->
+	<select id="queryVideoInfo" resultType="VideoInfo" parameterType="VideoInfo">
+		SELECT video_id,title,img_file_id,concat(b.file_path,b.name) img_file_url,
+		video_file_id, concat(c.file_path,c.name) video_file_url,
+		a.create_time
+		FROM tbl_video_info a
+		LEFT JOIN tbl_file_info b ON a.img_file_id=b.file_id
+		LEFT JOIN tbl_file_info c ON a.video_file_id=c.file_id
+		<where>
+			<if test="video_id != null and video_id != ''">AND a.video_id = #{video_id,jdbcType=INTEGER}</if>
+			<if test="title != null and title != ''">AND a.title = #{title,jdbcType=VARCHAR}</if>
+			<if test="img_file_id != null and img_file_id != ''">AND a.img_file_id = #{img_file_id,jdbcType=INTEGER}</if>
+			<if test="video_file_id != null and video_file_id != ''">AND a.video_file_id = #{video_file_id,jdbcType=INTEGER}</if>
+			<if test="create_time != null and create_time != ''">AND a.create_time = #{create_time,jdbcType=VARCHAR}</if>
+			
+		</where>
+		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[ORDER BY ${b_order_name} ${b_order_asc}  ]]></if>
+		<if test="b_order_name == null  or b_order_name = ''"><![CDATA[ORDER BY a.create_time DESC  ]]></if>
+	</select>
+	
+	<!-- 新增视频信息 -->
+	<insert id="addVideoInfo" parameterType="VideoInfo" useGeneratedKeys="true" keyProperty="video_id">
+		INSERT INTO tbl_video_info (title,img_file_id,video_file_id,create_time)
+		VALUES (#{title,jdbcType=VARCHAR},#{img_file_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},#{video_file_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},DATE_FORMAT(now(),'%Y%m%d%H%i%s'))
+	</insert>
+	
+	<!-- 批量新增视频信息信息 -->
+	<insert id="addBatchVideoInfo" parameterType="VideoInfo">
+		INSERT INTO tbl_video_info (title,img_file_id,video_file_id,create_time)
+		<foreach item="item" collection="list" separator="union all">
+			SELECT #{item.title,jdbcType=VARCHAR},#{item.img_file_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},#{item.video_file_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},DATE_FORMAT(now(),'%Y%m%d%H%i%s')
+			FROM dual
+		</foreach>
+	</insert>
+	
+	<!-- 更新视频信息信息 -->
+	<update id="updateVideoInfo" parameterType="VideoInfo">
+		UPDATE tbl_video_info
+		<set>
+	      	<if test="video_id != null">video_id = #{video_id,jdbcType=INTEGER},</if>
+	      	<if test="title != null">title = #{title,jdbcType=VARCHAR},</if>
+	      	<if test="img_file_id != null">img_file_id = #{img_file_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},</if>
+	      	<if test="video_file_id != null">video_file_id = #{video_file_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},</if>
+
+		</set>
+		WHERE video_id = #{video_id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 删除视频信息信息 -->
+	<delete id="deleteVideoInfo" parameterType="VideoInfo">
+		DELETE FROM tbl_video_info WHERE video_id = #{video_id,jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 批量删除视频信息信息-->
+	<delete id="deleteBatchVideoInfo" parameterType="VideoInfo">
+		DELETE FROM tbl_video_info WHERE video_id IN
+		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+			#{item.video_id,jdbcType=INTEGER}
+		</foreach>
+	</delete>
+</mapper>

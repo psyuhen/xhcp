@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util-4.2.xsd
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-4.2.xsd
+        http://www.springframework.org/schema/task 
+        http://www.springframework.org/schema/task/spring-task-4.2.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+        http://www.springframework.org/schema/mvc
+       	http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd">
+
+	<!-- 自动扫描组件 -->
+	<context:component-scan base-package="com.huateng.xhcp">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<!-- 
+			Spring MVC启动时的配置文件，包含组件扫描、url映射以及设置freemarker参数，让spring不扫描带有@Service注解的类。
+			为什么要这样设置？因为servlet-context.xml与service-context.xml不是同时加载，
+			如果不进行这样的设置，那么，spring就会将所有带@Service注解的类都扫描到容器中，等到加载service-context.xml的时候，
+			会因为容器已经存在Service类，使得cglib将不对Service进行代理，直接导致的结果就是在service-context中的事务配置不起作用，
+			发生异常时，无法对数据进行回滚。
+		-->
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+	</context:component-scan>
+	<!-- 支持异步方法执行 -->
+	<task:annotation-driven executor="asyncExecutor" />
+	<task:executor id="asyncExecutor" pool-size="10-100" queue-capacity="10" />
+	
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+	
+	
+
+	<!-- 默认首页 -->
+	<!-- <mvc:view-web path="/mgr/" view-name="forward:index" /> -->
+
+	<!-- 静态资源映射 -->
+	<mvc:resources mapping="/css/**" location="/WEB-INF/mgr/css/" />
+	<mvc:resources mapping="/js/**" location="/WEB-INF/mgr/js/" />
+
+	<!--拦截器 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<!--国际化资源切换（根据请求参数中的locale参数自动切换）-->
+			<mvc:mapping path="/**" />
+			<ref bean="localeChangeInterceptor"/>
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/charisma/**" />
+			<mvc:exclude-mapping path="/images/**" />
+			<mvc:exclude-mapping path="/css/**" />
+			<mvc:exclude-mapping path="/js/**" />
+			<mvc:exclude-mapping path="/login" />
+			<mvc:exclude-mapping path="/login/toLogin" />
+			<mvc:exclude-mapping path="/logout" />
+			<bean class="com.huateng.xhcp.interceptor.LoginInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<!--********************************************** -->
+	<!-- 以下为不同的视图解释器 -->
+	<!--********************************************** -->
+	<bean id="defaultViewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="contentType" value="text/html" />
+		<!-- 前缀 -->
+		<property name="prefix" value="/WEB-INF/mgr/jsp/" />
+		<!-- 后缀 -->
+		<property name="suffix" value=".jsp" />
+	</bean>
+	<!-- json view -->
+	<bean id="defaultJsonView"
+		class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
+
+	<!-- 文件上传 -->
+	<bean id="multipartResolver"
+		  class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="104857600" />
+	</bean>
+	<!-- Spring MVC在上传文件的大小超出限制时，会抛出异常org.springframework.web.multipart.MaxUploadSizeExceededException -->
+	<!-- 该异常是Spring MVC在还没有进入Controller时检查上传的文件信息时抛出来的 -->
+	<bean id="exceptionResolver"
+		  class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<!-- 遇到MaxUploadSizeExceededException异常时，跳转到上传结果页面 -->
+				<prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">upload/result</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- 国际化 -->
+	<bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+        <property name="defaultLocale" value="zh_CN"/>
+    </bean>
+	<!-- <bean id="cookieLocaleResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+		<property name="cookieName" value="client_lang" />
+		<property name="cookieMaxAge" value="94608000" />
+		<property name="defaultLocale" value="zh_CN"/>
+	</bean> -->
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename" value="locale"/>
+        <property name="useCodeAsDefaultMessage" value="true"/>
+    </bean>
+    
+    <!-- 修改list默认大小256为MaxValue -->
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="webBindingInitializer" >
+			<ref bean="dataBindingInitializer"/>
+		</property>
+		<property name="messageConverters">
+			<list>
+				<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter"/>
+				<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<value>text/html;charset=UTF-8</value>
+						</list>
+					</property>
+				</bean>
+				<bean class="org.springframework.http.converter.ResourceHttpMessageConverter"/>
+				<bean class="org.springframework.http.converter.xml.SourceHttpMessageConverter"/>
+				<bean class="org.springframework.http.converter.support.AllEncompassingFormHttpMessageConverter"/>
+				<bean class="org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter"/>
+				<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 注解方式 -->
+	<mvc:annotation-driven>
+	</mvc:annotation-driven>
+	<!-- 默认servlet处理,单纯使用default-servlet-handler时如果使用了注解方式，要加mvc:annotation-driven -->
+	<mvc:default-servlet-handler />
+</beans>

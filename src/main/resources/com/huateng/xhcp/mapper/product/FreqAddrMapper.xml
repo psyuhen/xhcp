@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.huateng.xhcp.mapper.product.FreqAddrMapper">
+    <!-- 查询常用地址信息信息 -->
+	<select id="queryFreqAddr" resultType="FreqAddr" parameterType="FreqAddr">
+		SELECT freq_id,account_id,province_code,city_code,town_code,address,mobile,user_name,default_addr,create_time
+		FROM tbl_freq_addr
+		<where>
+			<if test="freq_id != null and freq_id != ''">AND freq_id = #{freq_id,jdbcType=VARCHAR}</if>
+			<if test="account_id != null and account_id != ''">AND account_id = #{account_id,jdbcType=VARCHAR}</if>
+			<if test="province_code != null and province_code != ''">AND province_code = #{province_code,jdbcType=VARCHAR}</if>
+			<if test="city_code != null and city_code != ''">AND city_code = #{city_code,jdbcType=VARCHAR}</if>
+			<if test="town_code != null and town_code != ''">AND town_code = #{town_code,jdbcType=VARCHAR}</if>
+			<if test="address != null and address != ''">AND address = #{address,jdbcType=VARCHAR}</if>
+			<if test="mobile != null and mobile != ''">AND mobile = #{mobile,jdbcType=VARCHAR}</if>
+			<if test="user_name != null and user_name != ''">AND user_name = #{user_name,jdbcType=VARCHAR}</if>
+			<if test="default_addr != null and default_addr != ''">AND default_addr = #{default_addr,jdbcType=VARCHAR}</if>
+			<if test="create_time != null and create_time != ''">AND create_time = #{create_time,jdbcType=VARCHAR}</if>
+			
+		</where>
+		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[order by ${b_order_name} ${b_order_asc}  ]]></if>
+	</select>
+
+	<select id="queryByAccountId" resultType="FreqAddr" parameterType="String">
+		SELECT a.freq_id,
+			   a.account_id,
+			   a.province_code,
+			   b.province_name,
+			   a.city_code,
+			   c.city_name,
+			   a.town_code,
+			   d.town_name,
+			   a.address,
+			   a.mobile,
+			   a.user_name,
+			   a.default_addr,
+			   a.create_time
+		  FROM tbl_freq_addr a
+		  LEFT JOIN tbl_province_info b
+			ON a.province_code = b.province_code
+		  LEFT JOIN tbl_city_info c
+			ON a.city_code = c.city_code
+		  LEFT JOIN tbl_city_town_info d
+			ON a.town_code = d.town_code
+		 WHERE a.account_id = #{account_id, jdbcType = VARCHAR}
+	</select>
+
+	<!-- 新增常用地址信息 -->
+	<insert id="addFreqAddr" parameterType="FreqAddr" useGeneratedKeys="true" keyProperty="freq_id">
+		INSERT INTO tbl_freq_addr (account_id,province_code,city_code,town_code,address,mobile,user_name,default_addr,create_time)
+		VALUES (#{account_id,jdbcType=VARCHAR},#{province_code,jdbcType=VARCHAR},#{city_code,jdbcType=VARCHAR},#{town_code,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},#{mobile,jdbcType=VARCHAR},#{user_name,jdbcType=VARCHAR},#{default_addr,jdbcType=VARCHAR},DATE_FORMAT(now(),'%Y%m%d%H%i%s'))
+	</insert>
+	
+	<!-- 批量新增常用地址信息信息 -->
+	<insert id="addBatchFreqAddr" parameterType="FreqAddr">
+		INSERT INTO tbl_freq_addr (account_id,province_code,city_code,town_code,address,mobile,user_name,default_addr,create_time)
+		<foreach item="item" collection="list" separator="union all">
+			SELECT #{item.account_id,jdbcType=VARCHAR},#{item.province_code,jdbcType=VARCHAR},#{item.city_code,jdbcType=VARCHAR},#{item.town_code,jdbcType=VARCHAR},#{item.address,jdbcType=VARCHAR},#{item.mobile,jdbcType=VARCHAR},#{item.user_name,jdbcType=VARCHAR},#{item.default_addr,jdbcType=VARCHAR},DATE_FORMAT(now(),'%Y%m%d%H%i%s')
+			FROM dual
+		</foreach>
+	</insert>
+
+	<!-- 设置默认的地址 -->
+	<update id="updateDefaultAddr" parameterType="FreqAddr">
+		UPDATE  tbl_freq_addr
+		SET default_addr=(CASE WHEN  freq_id=#{freq_id,jdbcType=VARCHAR} THEN '0' ELSE '1' END)
+		WHERE  account_id= #{account_id,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 更新常用地址信息信息 -->
+	<update id="updateFreqAddr" parameterType="FreqAddr">
+		UPDATE tbl_freq_addr
+		<set>
+	      	<if test="freq_id != null">freq_id = #{freq_id,jdbcType=VARCHAR},</if>
+	      	<if test="account_id != null">account_id = #{account_id,jdbcType=VARCHAR},</if>
+	      	<if test="province_code != null">province_code = #{province_code,jdbcType=VARCHAR},</if>
+	      	<if test="city_code != null">city_code = #{city_code,jdbcType=VARCHAR},</if>
+	      	<if test="town_code != null">town_code = #{town_code,jdbcType=VARCHAR},</if>
+	      	<if test="address != null">address = #{address,jdbcType=VARCHAR},</if>
+	      	<if test="mobile != null">mobile = #{mobile,jdbcType=VARCHAR},</if>
+	      	<if test="user_name != null">user_name = #{user_name,jdbcType=VARCHAR},</if>
+	      	<if test="default_addr != null">default_addr = #{default_addr,jdbcType=VARCHAR},</if>
+		</set>
+		WHERE freq_id = #{freq_id,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 删除常用地址信息信息 -->
+	<delete id="deleteFreqAddr" parameterType="FreqAddr">
+		DELETE FROM tbl_freq_addr WHERE freq_id = #{freq_id,jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 批量删除常用地址信息信息-->
+	<delete id="deleteBatchFreqAddr" parameterType="FreqAddr">
+		DELETE FROM tbl_freq_addr WHERE freq_id IN
+		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+			#{item.freq_id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+</mapper>

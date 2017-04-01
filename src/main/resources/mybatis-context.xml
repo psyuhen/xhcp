@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:tx="http://www.springframework.org/schema/tx" 
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+        http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util-4.2.xsd">
+	<!-- 
+	======================================================================
+					此文件为HikariCP与mybatis的整合
+					HikariCP提供数据库源
+	======================================================================
+	-->
+
+    <!-- 加载hikari.properties配置文件 -->
+    <bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+        <constructor-arg name="properties">
+            <util:properties location="classpath:hikari.properties"/>
+        </constructor-arg>
+    </bean>
+
+    <!-- hikariCP的数据源 -->
+    <bean id="dataSource" class="com.huateng.xhcp.db.DataSourceFactory">
+        <property name="hikariConfig" ref="hikariConfig" />
+    </bean>
+    
+    <!-- mybatis的SessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath*:com/huateng/xhcp/mapper/*.xml" />
+		<property name="typeAliasesPackage" value="com.huateng.xhcp.model" />
+		<property name="typeHandlersPackage" value="com.huateng.xhcp.db.IntegerNullValueHandler"/>
+		<!-- 配置Mybatis的插件plugin -->
+		<property name="plugins">
+			<array>
+				<!-- 分页插件 -->
+				<bean class="com.github.pagehelper.PageHelper">
+					<property name="properties">
+						<value>
+							dialect=mysql
+							reasonable=false
+						</value>
+					</property>
+				</bean>
+			</array>
+		</property>
+	</bean>
+    
+    <!-- 加载mybatis的实体类 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.huateng.xhcp.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+    
+    <!-- 开启注解事务 只对当前配置文件有效 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+    
+    <!-- 事务 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	  <property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<!-- 通知 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- 传播行为 -->
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="insert*" propagation="REQUIRED" />
+			<tx:method name="add*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="get*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="find*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="query*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="select*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="*"/>
+		</tx:attributes>
+	</tx:advice>
+	<!-- 配置aop -->
+	<aop:config>
+		<aop:pointcut expression="execution(* com.huateng.xhcp.service..*.*(..))" id="txPointcut"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut" order="2"/>
+			
+		<!--<aop:aspect ref="logAspect" order="1">
+			<aop:pointcut id="logPointcut" expression="(execution(* com.huateng.cfrm.service..*.insert*(..)) or execution(* com.huateng.cfrm.service..*.update*(..)) or execution(* com.huateng.cfrm.service..*.add*(..)) or execution(* com.huateng.cfrm.service..*.save*(..)) or execution(* com.huateng.cfrm.service..*.delete*(..))) and not execution(* com.huateng.cfrm.service.system.SysLogService.*(..))" />
+			&lt;!&ndash; <aop:around pointcut-ref="logPointcut" method="log" /> &ndash;&gt;
+			
+			<aop:after-throwing method="doExceptionLog" pointcut-ref="logPointcut" throwing="ex"/>
+			<aop:after-returning method="doReturnLog" pointcut-ref="logPointcut"/>
+		</aop:aspect>-->
+	</aop:config>
+</beans>
