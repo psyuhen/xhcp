@@ -26,6 +26,17 @@
 	height : 10px;
 	border: 2px;
 }
+.line_01 {
+	padding: 0 20px 0;
+	margin: 20px 0;
+	line-height: 1px;
+	border-left: 500px solid #ddd;
+	border-right: 500px solid #ddd;
+	font-weight: bold;
+	font-style: italic;
+	text-align: center;
+}
+
 </style>
 	<%-- topbar starts --%>
     <div class="navbar navbar-default" role="navigation">

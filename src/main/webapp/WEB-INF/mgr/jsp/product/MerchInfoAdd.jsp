@@ -158,17 +158,41 @@
 								</div>
 							</div>
 						</div>
+						<div class="line_01">商品展示图片</div>
 						<div class="row">
 							<div class="col-md-12">
-								<%-- 内容 --%>
-								<div class="form-inline">
-									<div id="imgfilesDiv">
-
+								<%-- 详情图片 --%>
+								<div class="row">
+									<div class="col-md-1" style="width: 9%">
+										<a style="background:url(${ctx}/css/images/content_add_image_icon.png)"
+										   title="添加详情图片" href="javascript:void(0);" id="addPhotoImg">
+											<img class="grayscale" src="${ctx}/css/images/content_add_image_icon.png" style="width:108px;height:108px;" alt="添加详情图片">
+										</a>
 									</div>
-									<a style="background:url(${ctx}/css/images/content_add_image_icon.png)"
-									   title="添加详情图片" href="javascript:void(0);" id="addImg">
-										<img class="grayscale" src="${ctx}/css/images/content_add_image_icon.png" style="width:108px;height:108px;" alt="添加详情图片">
-									</a>
+									<div class="col-md-11" style="width:90%">
+										<div id="imgphotofilesDiv">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="line_01">商品详情图片</div>
+						<div class="row">
+							<div class="col-md-12">
+								<%-- 详情图片 --%>
+								<div class="row">
+									<div class="col-md-1" style="width: 9%">
+										<a style="background:url(${ctx}/css/images/content_add_image_icon.png)"
+										   title="添加详情图片" href="javascript:void(0);" id="addDetailImg">
+											<img class="grayscale" src="${ctx}/css/images/content_add_image_icon.png" style="width:108px;height:108px;" alt="添加详情图片">
+										</a>
+									</div>
+									<div class="col-md-11" style="width:90%">
+										<div id="imgdetailfilesDiv">
+
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>

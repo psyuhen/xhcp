@@ -39,14 +39,14 @@
 	<!-- 新增产品 -->
 	<insert id="addMerchInfo" parameterType="MerchInfo" useGeneratedKeys="true" keyProperty="merch_id">
 		INSERT INTO tbl_merch_info (name,`desc`,classify_id,price,in_stock,published_date,out_published,update_time,create_time,sm_recommend,free_shipping,unit,weight,standard,hits)
-		VALUES (#{name,jdbcType=VARCHAR},#{desc,jdbcType=VARCHAR},#{classify_id,jdbcType=INTEGER},#{price,jdbcType=FLOAT},#{in_stock,jdbcType=INTEGER},#{published_date,jdbcType=VARCHAR},#{out_published,jdbcType=VARCHAR},#{update_time,jdbcType=VARCHAR},DATE_FORMAT(now(),'%Y%m%d%H%i%s'),#{sm_recommend,jdbcType=VARCHAR},#{free_shipping,jdbcType=VARCHAR},#{unit,jdbcType=VARCHAR},#{weight,jdbcType=FLOAT},#{standard,jdbcType=VARCHAR},#{hits,jdbcType=INTEGER})
+		VALUES (#{name,jdbcType=VARCHAR},#{desc,jdbcType=VARCHAR},#{classify_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},#{price,jdbcType=FLOAT,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},#{in_stock,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},#{published_date,jdbcType=VARCHAR},#{out_published,jdbcType=VARCHAR},#{update_time,jdbcType=VARCHAR},DATE_FORMAT(now(),'%Y%m%d%H%i%s'),#{sm_recommend,jdbcType=VARCHAR},#{free_shipping,jdbcType=VARCHAR},#{unit,jdbcType=VARCHAR},#{weight,jdbcType=FLOAT,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},#{standard,jdbcType=VARCHAR},#{hits,jdbcType=INTEGER})
 	</insert>
 	
 	<!-- 批量新增产品信息 -->
 	<insert id="addBatchMerchInfo" parameterType="MerchInfo">
 		INSERT INTO tbl_merch_info (merch_id,name,`desc`,classify_id,price,in_stock,published_date,out_published,update_time,create_time,sm_recommend,free_shipping,unit,weight,standard,hits)
 		<foreach item="item" collection="list" separator="union all">
-			SELECT #{item.merch_id,jdbcType=INTEGER},#{item.name,jdbcType=VARCHAR},#{item.desc,jdbcType=VARCHAR},#{item.classify_id,jdbcType=INTEGER},#{item.price,jdbcType=FLOAT},#{item.in_stock,jdbcType=INTEGER},#{item.published_date,jdbcType=VARCHAR},#{item.out_published,jdbcType=VARCHAR},#{item.update_time,jdbcType=VARCHAR},DATE_FORMAT(now(),'%Y%m%d%H%i%s'),#{item.sm_recommend,jdbcType=VARCHAR},#{item.free_shipping,jdbcType=VARCHAR},#{item.unit,jdbcType=VARCHAR},#{item.weight,jdbcType=FLOAT},#{item.standard,jdbcType=VARCHAR},#{item.hits,jdbcType=INTEGER}
+			SELECT #{item.merch_id,jdbcType=INTEGER},#{item.name,jdbcType=VARCHAR},#{item.desc,jdbcType=VARCHAR},#{item.classify_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},#{item.price,jdbcType=FLOAT},#{item.in_stock,jdbcType=INTEGER},#{item.published_date,jdbcType=VARCHAR},#{item.out_published,jdbcType=VARCHAR},#{item.update_time,jdbcType=VARCHAR},DATE_FORMAT(now(),'%Y%m%d%H%i%s'),#{item.sm_recommend,jdbcType=VARCHAR},#{item.free_shipping,jdbcType=VARCHAR},#{item.unit,jdbcType=VARCHAR},#{item.weight,jdbcType=FLOAT},#{item.standard,jdbcType=VARCHAR},#{item.hits,jdbcType=INTEGER}
 			FROM dual
 		</foreach>
 	</insert>
@@ -58,16 +58,16 @@
 	      	<if test="merch_id != null">merch_id = #{merch_id,jdbcType=INTEGER},</if>
 	      	<if test="name != null">name = #{name,jdbcType=VARCHAR},</if>
 	      	<if test="desc != null">`desc` = #{desc,jdbcType=VARCHAR},</if>
-	      	<if test="classify_id != null">classify_id = #{classify_id,jdbcType=INTEGER},</if>
-	      	<if test="price != null">price = #{price,jdbcType=FLOAT},</if>
-	      	<if test="in_stock != null">in_stock = #{in_stock,jdbcType=INTEGER},</if>
+	      	<if test="classify_id != null">classify_id = #{classify_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},</if>
+	      	<if test="price != null">price = #{price,jdbcType=FLOAT,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},</if>
+	      	<if test="in_stock != null">in_stock = #{in_stock,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},</if>
 	      	<if test="published_date != null">published_date = #{published_date,jdbcType=VARCHAR},</if>
 	      	<if test="out_published != null">out_published = #{out_published,jdbcType=VARCHAR},</if>
 	      	<if test="update_time != null">update_time = DATE_FORMAT(now(),'%Y%m%d%H%i%s'),</if>
 	      	<if test="sm_recommend != null">sm_recommend = #{sm_recommend,jdbcType=VARCHAR},</if>
 	      	<if test="free_shipping != null">free_shipping = #{free_shipping,jdbcType=VARCHAR},</if>
 	      	<if test="unit != null">unit = #{unit,jdbcType=VARCHAR},</if>
-	      	<if test="weight != null">weight = #{weight,jdbcType=FLOAT},</if>
+	      	<if test="weight != null">weight = #{weight,jdbcType=FLOAT,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},</if>
 	      	<if test="standard != null">standard = #{standard,jdbcType=VARCHAR},</if>
 	      	<if test="hits != null">hits = #{hits,jdbcType=INTEGER},</if>
 	      	

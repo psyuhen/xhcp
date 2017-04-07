@@ -421,6 +421,11 @@ Validator.validateInvalidChar = function(val) {
  * @returns {Boolean}
  */
 Validator.double = function(val, len, per) {
+	val = $.trim(val);
+	if(val == ""){
+		return true;
+	}
+
 	per = per || 0;
 	len = len || 16;
 	

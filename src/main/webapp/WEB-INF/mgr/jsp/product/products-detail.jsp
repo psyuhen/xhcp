@@ -28,23 +28,15 @@
             <section class="main clear">
                 <div class="md6 left">
                     <ul class="slider">
-                        <li lockscale="3/4" style="background-image: url(images/201601/source_img/1_P_1452279466367.jpg);"></li>
-                        <li lockscale="3/4" style="background-image: url(images/201601/source_img/1_P_1452279450053.jpg);"></li>
-                        <li lockscale="3/4" style="background-image: url(images/201601/source_img/1_P_1452279430459.jpg);"></li>
-                        <li lockscale="3/4" style="background-image: url(images/201601/source_img/1_P_1452279410481.jpg);"></li>
-                        <li lockscale="3/4" style="background-image: url(images/201601/source_img/1_P_1452279389097.jpg);"></li>
-                        <li lockscale="3/4" style="background-image: url(images/201409/source_img/1_P_1410485474146.jpg);"></li>
-                        <li lockscale="3/4" style="background-image: url(images/201601/source_img/1_P_1452279484787.jpg);"></li>
+                        <c:forEach items="${photos}" var="p">
+                            <li lockscale="3/4" style="background-image: url(${ctx}/${p.path}${p.name});"></li>
+                        </c:forEach>
                     </ul>
                     <div class="preview">
                         <ul class="nmg clear">
-                            <li><div class="con" lockscale="3/4" style="background-image: url(images/201601/source_img/1_P_1452279466367.jpg)"></div></li>
-                            <li><div class="con" lockscale="3/4" style="background-image: url(images/201601/source_img/1_P_1452279450053.jpg)"></div></li>
-                            <li><div class="con" lockscale="3/4" style="background-image: url(images/201601/source_img/1_P_1452279430459.jpg)"></div></li>
-                            <li><div class="con" lockscale="3/4" style="background-image: url(images/201601/source_img/1_P_1452279410481.jpg)"></div></li>
-                            <li><div class="con" lockscale="3/4" style="background-image: url(images/201601/source_img/1_P_1452279389097.jpg)"></div></li>
-                            <li><div class="con" lockscale="3/4" style="background-image: url(images/201409/source_img/1_P_1410485474146.jpg)"></div></li>
-                            <li><div class="con" lockscale="3/4" style="background-image: url(images/201601/source_img/1_P_1452279484787.jpg)"></div></li>
+                            <c:forEach items="${photos}" var="p">
+                                <li><div class="con" lockscale="3/4" style="background-image: url(${ctx}/${p.path}${p.name})"></div></li>
+                            </c:forEach>
                         </ul>
                     </div>
                 </div>
@@ -88,20 +80,9 @@
                 </div>
                 <div class="imgs tac">
                     <p style="text-align: center;">
-                        <img alt="" src="http://www.yanzhiwu.com/upfiles/images/20160108184608.jpg" style="width: 790px; height: 840px;" /><br />
-                        <img alt="" src="http://www.yanzhiwu.com/upfiles/images/20160108184628.jpg" style="width: 790px; height: 505px;" /><br />
-                        <img alt="" src="http://www.yanzhiwu.com/upfiles/images/20160108184703.jpg" style="width: 790px; height: 727px;" /><br />
-                        <img alt="" src="http://www.yanzhiwu.com/upfiles/images/20160528094036.jpg" style="width: 790px; height: 209px;" /><br />
-                        <img alt="" src="http://www.yanzhiwu.com/upfiles/images/20160108184736.jpg" style="width: 790px; height: 660px;" /><br />
-                        <img alt="" src="http://www.yanzhiwu.com/upfiles/images/20160108184753.jpg" style="width: 790px; height: 747px;" /><br />
-                        <img alt="" src="http://www.yanzhiwu.com/upfiles/images/20160108184809.jpg" style="width: 790px; height: 646px;" /><br />
-                        <img alt="" src="http://www.yanzhiwu.com/upfiles/images/20160108184826.jpg" style="width: 790px; height: 682px;" /><br />
-                        <img alt="" src="http://www.yanzhiwu.com/upfiles/images/20160108184842.jpg" style="width: 790px; height: 529px;" /><br />
-                        <img alt="" src="http://www.yanzhiwu.com/upfiles/images/20160108184902.jpg" style="width: 790px; height: 379px;" /><br />
-                        <img alt="" src="http://www.yanzhiwu.com/upfiles/images/20160108184921.jpg" style="width: 790px; height: 747px;" /><br />
-                        <img alt="" src="http://www.yanzhiwu.com/upfiles/images/20160108184938.jpg" style="width: 790px; height: 661px;" /><br />
-                        <img alt="" src="http://www.yanzhiwu.com/upfiles/images/20160108184955.jpg" style="width: 790px; height: 715px;" /><br />
-                        <img alt="" src="http://www.yanzhiwu.com/upfiles/images/20160108185010.jpg" style="width: 790px; height: 801px;" /></p>
+                        <c:forEach items="${galleries}" var="g">
+                            <img alt="" src="${ctx}/${g.path}${g.name}" style="width: 790px; height: 840px;" /><br />
+                        </c:forEach>
                 </div>
             </section>
         </div>

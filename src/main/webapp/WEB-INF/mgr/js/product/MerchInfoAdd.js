@@ -10,6 +10,7 @@ var MerchInfo = function (options){
 	var _merch_id = options.merch_id;
 	var _controller_name = "com.huateng.xhcp.web.product.MerchInfoController";
 	var _param_type = "com.huateng.xhcp.model.product.MerchInfo";
+	var _count = 0;
 
 	/*查询按钮事件初始化*/
 	this.initBtn = function(){
@@ -31,31 +32,52 @@ var MerchInfo = function (options){
 			queryAndSet(classifyRoot, null);
 		});
 
-        $("#addImg img").on("click", function () {
-            var imgDiv = appendDiv();
-            $("#imgfilesDiv").append(imgDiv);
-            imgDiv.find(":file").click();
+        $("#addPhotoImg img").on("click", function () {
+            addClick("photo");
+        });
+        $("#addDetailImg img").on("click", function () {
+            addClick("detail");
         });
 
-        $("#imgfilesDiv").on("change", "div :file", function (event) {
+        $("#imgphotofilesDiv").on("change", "div :file", function (event) {
             //获取文件列表
             var fileList = event.target.files;
-            if(fileList != null && fileList.length > 0){
-                var filename = $(this).val();
-                if(checkImg(filename)){
-                    addImgFile($(this),fileList[0]);
-                }else{
-                    $(this).val("");
-                }
-            }else{
-                $(this).prevAll("img").attr("src", "");
-            }
+            showImg($(this), fileList);
+        });
+        $("#imgdetailfilesDiv").on("change", "div :file", function (event) {
+            //获取文件列表
+            var fileList = event.target.files;
+            showImg($(this), fileList);
         });
 
-        $("#imgfilesDiv").on("click", "div img", function (event) {
-           $(this).nextAll(":file").click();
-        });
+        if(_oper != "view"){
+            $("#imgphotofilesDiv").on("click", "div img", function (event) {
+                $(this).nextAll(":file").click();
+            });
+            $("#imgdetailfilesDiv").on("click", "div img", function (event) {
+                $(this).nextAll(":file").click();
+            });
+        }
 	};
+
+	function showImg(obj, fileList){
+        if(fileList != null && fileList.length > 0){
+            var filename = obj.val();
+            if(checkImg(filename)){
+                addImgFile(obj,fileList[0]);
+            }else{
+                obj.val("");
+            }
+        }else{
+            obj.prevAll("img").attr("src", "");
+        }
+    }
+
+	function addClick(fileType){
+        var imgDiv = appendDiv(fileType);
+        $("#img"+fileType+"filesDiv").append(imgDiv);
+        imgDiv.find(":file").click();
+    }
 
     function addImgFile(obj,file){
         var fileReaderSupport = typeof FileReader != "undefined";
@@ -71,7 +93,7 @@ var MerchInfo = function (options){
         reader.readAsDataURL(file);
     }
 
-    function appendDiv() {
+    function appendDiv(fileType) {
         var oneImg = $("<div class='imgDiv'>&nbsp;&nbsp;&nbsp;");
         var img = $("<img style='cursor:pointer;'>");
         img.attr({
@@ -80,11 +102,27 @@ var MerchInfo = function (options){
         });
         img.addClass("detailphoto");
         var a = $("<a href='javascript:void(0)' class='delete' ><i class='glyphicon glyphicon-remove red'></i></a>");
-        a.click(function () {
-            $(this).parent().remove();
-        });
 
-        var input = $("<input type='file' name='photos' style='display:none;' />");
+        if(_oper != "view"){
+            a.click(function () {
+                var $athis = $(this);
+                if(_oper == "update"){
+                    var imgId = $athis.prev("img").attr("id");
+                    if(imgId != ""){
+                        tableSupport.post(mgr_path + "/product/gallery/deleteMerchGallery",{}, function (resp) {
+                            Noty.response(resp);
+                            if(resp.status == "0"){
+                                $athis.parent().remove();
+                            }
+                        });
+                    }
+                }else{
+                    $athis.parent().remove();
+                }
+            });
+        }
+
+        var input = $("<input type='file' name='"+fileType+"_"+ (_count ++)+"' style='display:none;' />");
         oneImg.append(img);
         oneImg.append(a);
         oneImg.append(input);
@@ -232,6 +270,28 @@ var MerchInfo = function (options){
 				}
 			}
 		});
+
+		//查询产品图片信息
+        tableSupport.get(mgr_path + "/product/gallery/" + _merch_id, {}, function(list){
+            if(list != null){
+                //图片展示
+                $.each(list, function (index, item) {
+                    var fileType = $.trim(item.file_type);
+                    if(fileType == "0"){
+                        var imgDiv = appendDiv("photo");
+                        imgDiv.find("img:eq(0)").attr("src", ctx +"/"+ item.path + item.name);
+                        imgDiv.attr("id", "photos_" + item.gallery_id);
+                        $("#imgphotofilesDiv").append(imgDiv);
+                    }else if(fileType == "1"){
+                        var imgDiv = appendDiv("detail");
+                        imgDiv.find("img:eq(0)").attr("src", ctx +"/"+ item.path + item.name);
+                        imgDiv.attr("id", "details_" + item.gallery_id);
+                        $("#imgdetailfilesDiv").append(imgDiv);
+                    }
+                });
+                //图片详情
+            }
+        });
 	};
 	
 	function init(){
@@ -246,6 +306,7 @@ var MerchInfo = function (options){
 		if("update" === _oper){
 			$("#merch_id").attr("readonly", true);
 		}else if("view" === _oper){
+		    $("#addPhotoImg,#addDetailImg").hide();
 			Form.setDisabled("merchInfoForm");
 		}
 	}

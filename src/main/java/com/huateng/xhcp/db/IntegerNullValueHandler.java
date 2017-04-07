@@ -27,10 +27,23 @@ public class IntegerNullValueHandler implements TypeHandler<String> {
 
     @Override
     public void setParameter(PreparedStatement ps, int i, String value, JdbcType jdbcType) throws SQLException {
-        if(StringUtils.isBlank(value) && jdbcType == JdbcType.INTEGER){
-            ps.setNull(i, Types.INTEGER);
-        }else{
+
+        if(StringUtils.isBlank(value)){
+            if(jdbcType == JdbcType.INTEGER){
+                ps.setNull(i, Types.INTEGER);
+            }else if(jdbcType == JdbcType.FLOAT){
+                ps.setNull(i, Types.FLOAT);
+            }
+
+            return ;
+        }
+
+        if(jdbcType == JdbcType.INTEGER){
             ps.setInt(i, Integer.parseInt(value));
+        }else if(jdbcType == JdbcType.FLOAT){
+            ps.setFloat(i, Float.parseFloat(value));
+        }else{
+            ps.setString(i, value);
         }
     }
 }

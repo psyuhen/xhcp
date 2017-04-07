@@ -3,6 +3,7 @@
  */
 package com.huateng.xhcp.web.product;
 
+import java.io.File;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -100,7 +102,20 @@ public class MerchGalleryController implements com.huateng.xhcp.service.upload.V
 		
 		return new com.huateng.xhcp.web.page.Page(list);
 	}
-	
+
+	/**
+	 * 根据Key查询产品图片信息
+	 * @param merch_id
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/mgr/product/gallery/{merch_id}", method = RequestMethod.GET)
+	public List<MerchGallery> queryByMerchId(@PathVariable String merch_id){
+		MerchGallery merchGallery = new MerchGallery();
+		merchGallery.setMerch_id(merch_id);
+		return this.merchGalleryService.queryBy(merchGallery);
+	}
+
 	/**
 	 * 根据Key查询产品图片信息
 	 * @param gallery_id
@@ -212,12 +227,21 @@ public class MerchGalleryController implements com.huateng.xhcp.service.upload.V
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/mgr/product/gallery/deleteMerchGallery", method = RequestMethod.POST)
-	public ResponseEntity<ResponseInfo> deleteMerchGallery(MerchGallery merchGallery){
+	public ResponseEntity<ResponseInfo> deleteMerchGallery(MerchGallery merchGallery,HttpServletRequest request){
 		try{
+			final MerchGallery gallery = this.merchGalleryService.queryByKey(merchGallery.getGallery_id());
+			if(gallery == null){
+				return HttpUtil.failure("删除产品图片失败!");
+			}
+
 			int c = this.merchGalleryService.deleteMerchGallery(merchGallery);
 			if(c == 0){
 				return HttpUtil.failure("删除产品图片失败!");
 			}
+
+			final String realPath = request.getServletContext().getRealPath("/");
+			File f = new File(realPath + gallery.getPath() + gallery.getName());
+			f.delete();
 		}catch(Exception e){
 			LOGGER.error(e.getMessage(), e);
 			return HttpUtil.failure("删除产品图片失败!");

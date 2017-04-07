@@ -44,6 +44,7 @@ import com.huateng.xhcp.util.HttpUtil;
 public class MerchInfoController implements com.huateng.xhcp.service.upload.Validator<MerchInfo>{
 	private static final Log LOGGER = LogFactory.getLog(MerchInfoController.class);
 	private @Autowired @Setter @Getter MerchInfoService merchInfoService;
+	private @Autowired @Setter @Getter MerchGalleryService merchGalleryService;
 	private @Autowired @Setter @Getter ClassifyService classifyService;
 
 	/**
@@ -62,6 +63,18 @@ public class MerchInfoController implements com.huateng.xhcp.service.upload.Vali
 		}
 
 		request.setAttribute("merchInfo", merchInfo);
+
+		MerchGallery gallery = new MerchGallery();
+		gallery.setMerch_id(merch_id);
+		gallery.setFile_type("1");
+		final List<MerchGallery> galleries = this.merchGalleryService.queryBy(gallery);
+
+		request.setAttribute("galleries", galleries);
+
+		gallery.setFile_type("0");
+		final List<MerchGallery> photos = this.merchGalleryService.queryBy(gallery);
+
+		request.setAttribute("photos", photos);
 		return "product/products-detail";
 	}
 	/**
@@ -268,7 +281,7 @@ public class MerchInfoController implements com.huateng.xhcp.service.upload.Vali
 					}
 
 					merchGalleries.addAll(fileInfos);
-					return null;
+					return UploadType.SUCCESS;
 				}
 			});
 			if(uploadType == UploadType.SUCCESS){
@@ -419,7 +432,7 @@ public class MerchInfoController implements com.huateng.xhcp.service.upload.Vali
 					}
 
 					merchGalleries.addAll(fileInfos);
-					return null;
+					return UploadType.SUCCESS;
 				}
 			});
 			if(uploadType == UploadType.SUCCESS){

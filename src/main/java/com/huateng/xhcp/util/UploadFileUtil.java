@@ -201,6 +201,7 @@ public class UploadFileUtil {
                 Map.Entry<String, MultipartFile> next = iterator.next();
                 String key = next.getKey();//对应文件控件的name
                 MultipartFile value = next.getValue();
+                String file_type = "0";
                 if (value != null){
                     long size = value.getSize();
                     String fileName = value.getOriginalFilename();
@@ -225,12 +226,19 @@ public class UploadFileUtil {
                         File uploadedFile = new File(realPathTmp, newFileName);
                         value.transferTo(uploadedFile);
 
+                        if(StringUtils.startsWith(key, "detail")){
+                            file_type = "1";
+                        }else if(StringUtils.startsWith(key, "photo")){
+                            file_type = "0";
+                        }
+
                         MerchGallery merchGallery = new MerchGallery();
                         merchGallery.setMerch_id(merchId);
                         merchGallery.setName(newFileName);
                         merchGallery.setFile_name(fileName);
                         merchGallery.setPath(filePathTmp);
                         merchGallery.setUrl(saveUrlTmp + newFileName);
+                        merchGallery.setFile_type(file_type);
 
                         fileInfos.add(merchGallery);
 
