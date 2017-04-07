@@ -52,15 +52,36 @@
                     <th>操作</th>
                 </tr>
 
-                <tr><td>您的购物车没有商品...</td></tr>
-
+                <c:choose>
+                    <c:when test="${sessionScope.Shopping_Car != null && fn:length(sessionScope.Shopping_Car) > 0}" >
+                        <c:forEach items="${sessionScope.Shopping_Car}" var="car">
+                            <tr>
+                                <td>${car.merch_name}</td>
+                                <td>${car.price}</td>
+                                <td>
+                                    <div class="uikit_amount" max="10" min="1">
+                                        <a href="javascript:void(0);" class="add" onclick="count_add(6200)">+</a>
+                                        <a href="javascript:void(0);" class="min" onclick="count_minus(6200)">-</a>
+                                        <input type="text" value="${car.buy_num}" id="count6200" onkeyup="count_input(6200)" max="10" min="1">
+                                    </div>
+                                </td>
+                                <td>${car.price * car.buy_num}</td>
+                                <td>
+                                    <a href="javascript:void(0);" onclick="delete_cart('${car.car_id}','${car.merch_id}')">删除</a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <tr><td>您的购物车没有商品...</td></tr>
+                    </c:otherwise>
+                </c:choose>
 
             </table>
 
-
             <div class="total tar">
+                <font class="inb" id="total">￥${TotalPrice}</font><a href="shopping_checkout.html" class="inb">去结算</a>
             </div>
-
         </div>
     </section>
 </article>

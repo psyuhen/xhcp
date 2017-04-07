@@ -1,15 +1,13 @@
 function add_cart(proid){
-if(!isNaN(proid)){ 
+if(!isNaN(proid)){
  	var pro_number = $("#count").val();
  	var specificationsid = $("#specificationsid").val();
   
-	$.post('ajax_shopping.php', {act:'add_cart', proid: proid,pro_number: pro_number,specificationsid: specificationsid}, function(data, textStatus){
-				window.location.href="shopping.php"; 
-					     /*$("#cartcontent").html(data);
-						 $("#cartcontent").removeClass().addClass("add-shopping-cart");
-						 $('#cartcontent').show(500);
-						  $.getScript("/themes/default/jquery/shopping.js");*/
-            });
+	$.post(ctx +'/product/car/add', {"merch_id": proid,"buy_num": pro_number}, function(resp){
+			if(resp.status == "0"){
+				window.location.href=ctx +"/shopping.html";
+			}
+		});
 	}	
 }
 
@@ -79,18 +77,13 @@ var chk_value =[];
 
 
 
-function delete_cart(cart_id){
+function delete_cart(cart_id,merch_id){
 if(!isNaN(cart_id)){ 
-	$.post('ajax_shopping.php', {act:'delete_cart', cart_id: cart_id}, function(data, textStatus){
-							 $('#cart_list'+cart_id).remove();
-							 if(data=='' || data==0){
-							  //window.location.href="products.php"; 
-							  location.reload(); 
-							 }
-							 else{
-								$('#total').html(data);	 
-							 }
-            });
+	$.post(ctx + '/product/car/delete', {"car_id":cart_id, "merch_id":merch_id}, function(resp){
+			if(resp.status == "0"){
+				location.reload();
+			}
+		});
 	}	
 }
 

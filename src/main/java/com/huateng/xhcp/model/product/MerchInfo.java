@@ -34,4 +34,6 @@ public class MerchInfo extends BaseModel{
 	private @Setter @Getter String weight;
 	private @Setter @Getter String standard;
 	private @Setter @Getter String hits;
+	private @Setter @Getter String merch_photo;
+
 }

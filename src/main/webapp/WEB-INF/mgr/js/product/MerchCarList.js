@@ -1,23 +1,23 @@
 /**
  * function:
- * MerchInfoList.js
+ * MerchCarList.js
  * @author sam.pan
- * @createTime 2017-03-29 15:20:01
+ * @createTime 2017-04-07 16:13:37
  */
-var MerchInfoList = function (options){
+var MerchCarList = function (options){
 	var $this = this;
 	var $dataTable = null;
 	var $rowData = null;
 	var $table = null;
-	var _service_name = "com.huateng.xhcp.web.product.MerchInfoController";
-	var _param_type = "com.huateng.xhcp.model.product.MerchInfo";
+	var _service_name = "com.huateng.xhcp.web.product.MerchCarController";
+	var _param_type = "com.huateng.xhcp.model.product.MerchCar";
 	var _page = options.page;
 	var _module_id = options.module_id;
 	
 	/*初始化数据表格*/
 	this.initTable = function(){
 		var t = new Table({
-			"table_id"			: "merchInfoList",
+			"table_id"			: "merchCarList",
 			"ordering"			: false,
 			"download"			: {enabled:false},
 			"row_btn_enabled"	: true,
@@ -25,13 +25,13 @@ var MerchInfoList = function (options){
 			"btn_edit_callback"	: btnEditEvent,
 			"btn_del_callback"	: btnDelEvent,
 			"service_name"		: _service_name,
-			"method_name"		: "queryMerchInfo",
+			"method_name"		: "queryMerchCar",
 			"param_type"		: _param_type,
-			"module_name"		: "产品维护",
-			"url"				: ctx + "/mgr/product/queryMerchInfoPage",
+			"module_name"		: "购物车维护",
+			"url"				: ctx + "/mgr/mgr/product/car/queryMerchCarPage",
 			"formId"			: "conditionForm",
-			"tableHeaders"		: ["商品ID","商品名称","商品描述","分类ID","单价","库存","上架时间","是否下架","修改时间","创建时间","店长推荐","是否包邮","单位","重量","规格","点击数"],
-			"columnNames"		: ["merch_id","name","desc","classify_id","price","in_stock",{"published_date":RenderUtil.date},{"out_published":RenderUtil.out_published},{"update_time":RenderUtil.time},{"create_time":RenderUtil.time},{"sm_recommend":RenderUtil.sm_recommend},{"free_shipping":RenderUtil.free_shipping},"unit","weight","standard","hits"]
+			"tableHeaders"		: ["购物车ID","商品ID","购买数量","用户ID","创建时间"],
+			"columnNames"		: ["car_id","merch_id","buy_num","account_id","create_time"]
 		});
 		$dataTable = t.getDataTable();
 		$table = t;
@@ -44,14 +44,14 @@ var MerchInfoList = function (options){
 	
 	/* 查看*/
 	function btnViewEvent($rowData){
-		var merch_id = $rowData.merch_id;
-		window.location.href = mgr_path + "/product/view?merch_id=" + merch_id + "&page=" + _page + "&module_id=" + _module_id;
+		var car_id = $rowData.car_id;
+		window.location.href = mgr_path + "/mgr/product/car/view?car_id=" + car_id + "&page=" + _page + "&module_id=" + _module_id;
 	}
 	
 	/* 编辑*/
 	function btnEditEvent($rowData){
-		var merch_id = $rowData.merch_id;
-		window.location.href = mgr_path + "/product/update?page=mgr&merch_id=" + merch_id + "&module_id=" + _module_id;
+		var car_id = $rowData.car_id;
+		window.location.href = mgr_path + "/mgr/product/car/update?page=mgr&car_id=" + car_id + "&module_id=" + _module_id;
 	}
 	
 	/* 删除*/
@@ -75,18 +75,18 @@ var MerchInfoList = function (options){
 	/* 删除*/
 	function btnDelCallback(rowdata){
 		var params = [
-		    ParamCheck.initChkObj("merch_id", "产品ID", rowdata.merch_id)
+		    ParamCheck.initChkObj("car_id", "购物车ID", rowdata.car_id)
 		];
 		
 		ParamCheck.commonSubmit({
 			service_name : _service_name,
-			method_name : "deleteMerchInfo",
+			method_name : "deleteMerchCar",
 			parameter_type : _param_type,
 			oper_type : "delete",
-			oper_desc : "删除产品信息",
-			switch_name : "merchInfoSwitch",
-			module_id : "productmgr",
-			check_fields : ["merch_id"],
+			oper_desc : "删除购物车信息",
+			switch_name : "merchCarSwitch",
+			module_id : "carmgr",
+			check_fields : ["car_id"],
 			params : params,
 			success : function(){
 				$("#btn_search").click();

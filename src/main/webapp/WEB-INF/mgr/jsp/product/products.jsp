@@ -76,7 +76,14 @@
                 <c:forEach items="${merchInfos}" var="merch">
                     <div class="md4 fadeInUp animated" style="animation-delay: 0s; visibility: visible;">
                         <a href="products-${merch.merch_id}.html">
-                            <div class="face" style="background-image: url(images/201702/source_img/11_G_1486591431176.jpg)"></div>
+                            <c:choose>
+                                <c:when test="${merch.merch_photo != null}">
+                                    <div class="face" style="background-image: url(${ctx}/${merch.merch_photo})"></div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="face" style="background-image: url(${ctx})"></div>
+                                </c:otherwise>
+                            </c:choose>
                             <div class="text">
                                 <h2>${merch.name}</h2>
                                 <p>${merch.desc}</p>

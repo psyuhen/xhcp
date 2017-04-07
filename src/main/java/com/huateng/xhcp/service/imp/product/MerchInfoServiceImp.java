@@ -123,7 +123,9 @@ public class MerchInfoServiceImp implements MerchInfoService {
      * @param merchInfo
      */
     public int updateMerchInfo(MerchInfo merchInfo, List<MerchGallery> fileInfos) {
-        this.merchGalleryMapper.addBatchMerchGallery(fileInfos);
+        if(fileInfos != null && !fileInfos.isEmpty()){
+            this.merchGalleryMapper.addBatchMerchGallery(fileInfos);
+        }
 
         return this.merchInfoMapper.updateMerchInfo(merchInfo);
     }

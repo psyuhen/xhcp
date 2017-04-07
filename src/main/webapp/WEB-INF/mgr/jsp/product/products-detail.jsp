@@ -67,9 +67,9 @@
                             </div>
                             <p>服务：由燕之屋直接销售和供货，并提供售后服务。</p>
 
-                            <input type="hidden" id="price_value" value="4536" />
+                            <input type="hidden" id="price_value" value="${merchInfo.price}" />
                             <input type="hidden" id="specificationsid" value="53" />
-                            <a href="javascript:void(0);" class="buybtn" onclick="return add_cart(1)">立即购买</a>
+                            <a href="javascript:void(0);" class="buybtn" onclick="return add_cart('${merchInfo.merch_id}')">立即购买</a>
                         </div>
                     </div>
                 </div>

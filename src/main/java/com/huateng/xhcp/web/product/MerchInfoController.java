@@ -48,7 +48,7 @@ public class MerchInfoController implements com.huateng.xhcp.service.upload.Vali
 	private @Autowired @Setter @Getter ClassifyService classifyService;
 
 	/**
-	 * 初始化页面
+	 * 产品详情
 	 * @return
 	 */
 	@RequestMapping(value = "/products-{merch_id}.html")
@@ -78,7 +78,7 @@ public class MerchInfoController implements com.huateng.xhcp.service.upload.Vali
 		return "product/products-detail";
 	}
 	/**
-	 * 初始化页面
+	 * 产品系列
 	 * @return
 	 */
 	@RequestMapping(value = "/products-top-{classify_id}.html")
@@ -174,6 +174,21 @@ public class MerchInfoController implements com.huateng.xhcp.service.upload.Vali
 		merchInfo.setLimit(3);
 		merchInfo.setClassify_id(classifyId);
 		List<MerchInfo> merchInfos = this.merchInfoService.queryMerchInfo(merchInfo);
+
+		if(merchInfos != null){
+			for(MerchInfo mi : merchInfos){
+				MerchGallery mg = new MerchGallery();
+				mg.setMerch_id(mi.getMerch_id());
+				List<MerchGallery> merchGalleries = this.merchGalleryService.queryBy(mg);
+				if(merchGalleries == null || merchGalleries.isEmpty()){
+					continue;
+				}
+
+				MerchGallery merchGallery = merchGalleries.get(0);
+				mi.setMerch_photo(merchGallery.getPath() + merchGallery.getName());
+			}
+		}
+
 		request.setAttribute("merchInfos", merchInfos);
 		return "product/products";
     }

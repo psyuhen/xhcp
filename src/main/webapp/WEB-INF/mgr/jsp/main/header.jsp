@@ -148,7 +148,20 @@
                         </c:choose>
                     </li>
                     <%-- 购物车 --%>
-                    <li class="cart"><a href="${ctx}/product/shopping.html" class="clear"><i class="iconfont fl">&#xe6ed;</i><span class="fl txt">购物车</span><font class="hl fl">(0)</font></a></li>
+                    <li class="cart">
+                        <a href="${ctx}/shopping.html" class="clear">
+                            <i class="iconfont fl">&#xe6ed;</i>
+                            <span class="fl txt">购物车</span>
+                            <c:choose>
+                                <c:when test="${sessionScope.Shopping_Car != null}">
+                                    <font class="hl fl">(${fn:length(sessionScope.Shopping_Car)})</font>
+                                </c:when>
+                                <c:otherwise>
+                                    <font class="hl fl">(0)</font>
+                                </c:otherwise>
+                            </c:choose>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>

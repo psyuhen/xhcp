@@ -45,8 +45,33 @@ public class SecurityContext {
 		/* 获取当前请求的登录用户*/
 		Account account = (Account)session.getAttribute("user");
 		
-		LOGGER.debug("获取当前登录用户信息:" + account);
+		LOGGER.debug("获取当前后台登录用户信息:" + account);
 		
+		return account;
+	}
+	/**
+	 * 获取登录用户
+	 * @return
+	 */
+	public static Account getFrontAccount(){
+		/* 获取request*/
+		RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes)requestAttributes;
+
+		/*如果为空时，肯定是没登录的*/
+		if(servletRequestAttributes == null){
+			return null;
+		}
+
+		HttpServletRequest request = servletRequestAttributes.getRequest();
+
+		/* 获取当前请求的session*/
+		HttpSession session = request.getSession();
+		/* 获取当前请求的登录用户*/
+		Account account = (Account)session.getAttribute(FRONT_ACCOUNT);
+
+		LOGGER.debug("获取当前登录用户信息:" + account);
+
 		return account;
 	}
 
