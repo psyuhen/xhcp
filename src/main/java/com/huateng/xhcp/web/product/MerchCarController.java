@@ -5,12 +5,16 @@ package com.huateng.xhcp.web.product;
 
 import com.github.pagehelper.Page;
 import com.huateng.xhcp.model.ResponseInfo;
+import com.huateng.xhcp.model.product.FreqAddr;
 import com.huateng.xhcp.model.product.MerchCar;
 import com.huateng.xhcp.model.product.MerchInfo;
 import com.huateng.xhcp.model.system.Account;
+import com.huateng.xhcp.model.system.Province;
 import com.huateng.xhcp.security.SecurityContext;
+import com.huateng.xhcp.service.product.FreqAddrService;
 import com.huateng.xhcp.service.product.MerchCarService;
 import com.huateng.xhcp.service.product.MerchInfoService;
+import com.huateng.xhcp.service.system.ProvinceService;
 import com.huateng.xhcp.util.HttpUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,13 +24,15 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +46,34 @@ public class MerchCarController implements com.huateng.xhcp.service.upload.Valid
 	private static final Log LOGGER = LogFactory.getLog(MerchCarController.class);
 	private @Autowired @Setter @Getter MerchCarService merchCarService;
 	private @Autowired @Setter @Getter MerchInfoService merchInfoService;
+	private @Autowired @Setter @Getter ProvinceService provinceService;
+	private @Autowired @Setter @Getter FreqAddrService freqAddrService;
 
+	/**
+	 * 初始化页面
+	 * @return
+	 */
+	@RequestMapping(value = "/shopping_checkout.html")
+	public String toShoppingCheckout(HttpServletRequest request, HttpServletResponse response){
+
+		Province province = new Province();
+		List<Province> provinces = this.provinceService.queryBy(province);
+		request.setAttribute("provinces", provinces);
+
+
+		final Account frontAccount = SecurityContext.getFrontAccount();
+
+		//没有登录要先登录才能结算
+		if(frontAccount == null){
+			return "forward:/login.html";
+		}
+
+		final List<FreqAddr> freqAddrs = this.freqAddrService.queryByAccountId(frontAccount.getAccount_id());
+
+		request.setAttribute("freqAddrs", freqAddrs);
+
+		return "product/shopping_checkout";
+	}
 	/**
 	 * 初始化页面
 	 * @return
@@ -72,6 +105,7 @@ public class MerchCarController implements com.huateng.xhcp.service.upload.Valid
 		session.setAttribute("TotalPrice", total);
 		return "product/shopping";
 	}
+
 	/**
 	 * 初始化页面
 	 * @return
@@ -161,19 +195,21 @@ public class MerchCarController implements com.huateng.xhcp.service.upload.Valid
 		final HttpSession session = request.getSession();
 		List<MerchCar> carList = (List<MerchCar>)session.getAttribute("Shopping_Car");
 
+		float total = 0.0f;
 		if(carList != null){
 			for(MerchCar mc : carList){
 				if(StringUtils.equals(merchCar.getMerch_id(), mc.getMerch_id())){
-
-					int bn = Integer.parseInt(StringUtils.defaultIfBlank(mc.getBuy_num(), "0"));
 					int tbn = Integer.parseInt(StringUtils.defaultIfBlank(merchCar.getBuy_num(), "0"));
-					mc.setBuy_num("" + (bn + tbn));
-					break;
+					mc.setBuy_num("" + tbn);
 				}
+				int bn = Integer.parseInt(StringUtils.defaultIfBlank(mc.getBuy_num(), "0"));
+				float price = Float.parseFloat(StringUtils.defaultIfBlank(mc.getPrice(), "0.0"));
+
+				total += (bn * price);
 			}
 		}
 
-		return HttpUtil.success("更新数量成功!");
+		return HttpUtil.success("更新数量成功!", total);
 	}
 
 	/**

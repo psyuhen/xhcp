@@ -123,10 +123,14 @@
                                                     </c:forEach>
                                                 </select></td>
                                             <td class="city_box"><label for="select2"></label>
-                                                <select name="city" id="city" onchange="ChangeCity(this.value)"><option value="">城市/地区/自治区</option></select>
+                                                <select name="city" id="city" onchange="ChangeCity(this.value)">
+                                                    <option value="">城市/地区/自治区</option>
+                                                </select>
                                             </td>
                                             <td><label for="select3"></label>
-                                                <select name="district" id="district"><option value="">区/县</option></select>
+                                                <select name="district" id="district">
+                                                    <option value="">区/县</option>
+                                                </select>
                                             </td>
                                         </tr>
                                         </tbody></table></td>

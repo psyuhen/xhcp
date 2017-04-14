@@ -68,6 +68,8 @@ public class ArticleController implements com.huateng.xhcp.service.upload.Valida
 
 		List<Article> pAndN = this.articleService.queryPAndN(article_id);
 
+        this.articleService.updateHits(article_id);
+
 		request.setAttribute("articleNew", article);
 		request.setAttribute("articlePAndN", pAndN);
         return "article/newsdetail";
@@ -181,13 +183,7 @@ public class ArticleController implements com.huateng.xhcp.service.upload.Valida
         }
 
         List<Article> articles = articleService.queryArticle(article);
-        if(articles != null){
-            for(Article a : articles){
-                String contents = StringUtil.delHtml(a.getContents());
-                contents = StringUtil.ellipsis(contents, 100);
-                a.setContents(contents);
-            }
-        }
+		StringUtil.rmContentsHtml(articles);
         return articles;
     }
 	/**

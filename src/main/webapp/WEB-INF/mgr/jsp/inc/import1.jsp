@@ -77,5 +77,4 @@ if(typeof jQuery === 'undefined'){
 <script src="${ctx}/css/themes/default/script/bxslider.js"></script>
 <script src="${ctx}/css/themes/default/script/pubuliu.js"></script>
 <script src="${ctx}/css/themes/default/script/main.js"></script>
-<script src="${ctx}/css/themes/default/script/shopping.js"></script>
 <script src="${ctx}/js/common/StringUtil.${__min}js"></script>

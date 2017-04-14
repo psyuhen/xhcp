@@ -6,6 +6,7 @@ package com.huateng.xhcp.mapper.product;
 import java.util.List;
 
 import com.huateng.xhcp.model.product.MerchInfo;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 产品Mapper
@@ -13,6 +14,12 @@ import com.huateng.xhcp.model.product.MerchInfo;
  *
  */
 public interface MerchInfoMapper {
+	/**
+	 * 查询产品信息
+	 * @param keywords
+	 * @return
+	 */
+	List<MerchInfo> searchKeyWord(@Param("keywords") String [] keywords);
 	/**
 	 * 查询产品信息
 	 * @param merchInfo
@@ -41,6 +48,11 @@ public interface MerchInfoMapper {
 	 * @param merchInfo
 	 */
 	int updateMerchInfo(MerchInfo merchInfo);
+	/**
+	 * 更新点击数
+	 * @param merch_id
+	 */
+	int updateHits(String merch_id);
 	/**
 	 * 根据merch_id删除产品信息
 	 * @param merchInfo

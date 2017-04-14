@@ -46,10 +46,15 @@ function check_login(){
     obj.account_id = username_login;
     obj.account_password = password_login;
     obj.validate_code = validate_code;
+    obj.blackUrl = $("#blackUrl").val();
 
     $.post(ctx+"/login.do",obj, function (resp) {
         if(resp.status == "0"){
-            window.location.href = ctx + "/usercenter.html";
+            if(StringUtil.isBlank(resp.dataObj)){
+                window.location.href = ctx + "/usercenter.html";
+            }else{
+                window.location.href = resp.dataObj;
+            }
         }else{
             $("#validateCode").click();
             $("#username_login").removeClass("yes").addClass("no");

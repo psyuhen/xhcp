@@ -74,6 +74,8 @@ public class MerchInfoController implements com.huateng.xhcp.service.upload.Vali
 		gallery.setFile_type("0");
 		final List<MerchGallery> photos = this.merchGalleryService.queryBy(gallery);
 
+		this.merchInfoService.updateHits(merch_id);
+
 		request.setAttribute("photos", photos);
 		return "product/products-detail";
 	}

@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.huateng.xhcp.model.article.Article;
 import com.huateng.xhcp.model.kindeditor.KEMsg;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -150,6 +151,18 @@ public class StringUtil {
 
 		return String.valueOf(c);
 	}
+	/**
+	 * 生成订单号
+	 * @return 订单号
+	 */
+	public static String genOrderId(){
+		StringBuilder sb = new StringBuilder();
+		sb.append(DateUtil.currentTime());
+		sb.append(random(11));
+
+		return sb.toString();
+	}
+
 
 	/**
 	 * 返回错误信息
@@ -173,5 +186,20 @@ public class StringUtil {
 		keMsg.setError(0);
 		keMsg.setMessage(msg);
 		return keMsg;
+	}
+
+
+	/**
+	 * 去掉contents的html，并保留100个字
+	 * @param articles
+	 */
+	public static void rmContentsHtml(List<Article> articles){
+		if(articles != null){
+			for(Article a : articles){
+				String contents = delHtml(a.getContents());
+				contents = ellipsis(contents, 100);
+				a.setContents(contents);
+			}
+		}
 	}
 }

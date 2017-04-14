@@ -73,7 +73,7 @@
                 <c:forEach items="${merchInfos}" var="merch">
                     <div class="md4">
                         <a href="products-${merch.merch_id}.html">
-                            <div class="face" style="background-image: url(images/201702/source_img/11_G_1486591431176.jpg)"></div>
+                            <div class="face" style="background-image: url(${ctx}/${merch.merch_photo})"></div>
                             <div class="text">
                                 <h2>${merch.name}</h2>
                                 <p>${merch.desc}</p>

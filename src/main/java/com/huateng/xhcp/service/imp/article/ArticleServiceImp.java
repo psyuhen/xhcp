@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,14 @@ import com.huateng.xhcp.web.page.PageHelper;
 public class ArticleServiceImp implements ArticleService {
 
 	private @Autowired @Setter @Getter ArticleMapper articleMapper;
+	/**
+	 * 查询资讯信息信息
+	 * @param keywords
+	 * @return
+	 */
+	public List<Article> searchKeyWord(String [] keywords){
+		return this.articleMapper.searchKeyWord(keywords);
+	}
 	/**
 	 * 查询资讯信息信息
 	 * @param article
@@ -83,6 +92,14 @@ public class ArticleServiceImp implements ArticleService {
 	 */
 	public int updateArticle(Article article){
 		return this.articleMapper.updateArticle(article);
+	}
+
+	/**
+	 * 更新点击数
+	 * @param article_id
+	 */
+	public int updateHits(String article_id){
+		return this.articleMapper.updateHits(article_id);
 	}
 	/**
 	 * 根据article_id删除资讯信息信息

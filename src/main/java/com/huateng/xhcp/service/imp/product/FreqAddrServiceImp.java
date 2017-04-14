@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,7 +66,12 @@ public class FreqAddrServiceImp implements FreqAddrService {
 	 * @param freqAddr
 	 */
 	public int addFreqAddr(FreqAddr freqAddr){
-		return this.freqAddrMapper.addFreqAddr(freqAddr);
+
+		int c = this.freqAddrMapper.addFreqAddr(freqAddr);
+
+		updateda(freqAddr);
+
+		return c;
 	}
 	/**
 	 * 批量新增常用地址信息信息
@@ -77,12 +83,26 @@ public class FreqAddrServiceImp implements FreqAddrService {
 		}
 		this.freqAddrMapper.addBatchFreqAddr(freqAddr);
 	}
+
+	private void updateda(FreqAddr freqAddr){
+		//当前被设置为默认，要把其他的变为非默认
+		if(StringUtils.equals(freqAddr.getDefault_addr(), "0")){
+			FreqAddr fa = new FreqAddr();
+			fa.setAccount_id(freqAddr.getAccount_id());
+			fa.setFreq_id(freqAddr.getFreq_id());
+			this.freqAddrMapper.updateDefaultAddr(fa);
+		}
+	}
 	/**
 	 * 设置默认的地址
 	 * @param freqAddr
 	 */
 	public int updateDefaultAddr(FreqAddr freqAddr){
-		return this.freqAddrMapper.updateDefaultAddr(freqAddr);
+
+		int c = this.freqAddrMapper.updateDefaultAddr(freqAddr);
+		updateda(freqAddr);
+
+		return c;
 	}
 	/**
 	 * 更新常用地址信息信息

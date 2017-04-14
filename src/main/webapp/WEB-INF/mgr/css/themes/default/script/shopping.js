@@ -116,39 +116,35 @@ if(!isNaN(pid)){
 }
 
 
-
-
-
-
 function count_minus(cid){
-	 var after_no = parseInt($('#count'+cid).val())-1;
+    var $cid = $('#count'+cid);
+    var after_no = parseInt($cid.val())-1;
 	 var kprice = parseFloat($('#kprice'+cid).html());
 	 if(isNaN(after_no) || after_no == 0){
 		 	after_no = 1;
-			$('#count'+cid).val(1)
 	 }
-	  else{
-	 	$('#count'+cid).val(after_no);
-	 }
-	 $.post('ajax_shopping.php', {act:'change_countno',cid:cid,prono:after_no}, function(data, textStatus){
-		 $('#subtotal'+cid).html(after_no * kprice); 
-		 $('#total').html('￥'+data); 
+	 $.post(ctx+'/product/car/addbuynum', {"merch_id":cid,"buy_num":after_no}, function(resp){
+         if(resp.status == "0"){
+             $cid.val(after_no);
+             $('#subtotal'+cid).html(after_no * kprice);
+             $('#total').html('￥'+(resp.dataObj).toFixed(2));
+         }
      });
 }
 
 function count_add(cid){
-	var after_no = parseInt($('#count'+cid).val())+1;
-	var kprice = parseFloat($('#kprice'+cid).html());
+	 var $cid = $('#count'+cid);
+	 var after_no = parseInt($cid.val())+1;
+	 var kprice = parseFloat($('#kprice'+cid).html());
 	 if(isNaN(after_no) || after_no == 0){
-		 	after_no = 1;
-			$('#count'+cid).val(1)
+			after_no = 1;
 	 }
-	 else{
-	 	$('#count'+cid).val(after_no);
-	 }
-	  $.post('ajax_shopping.php', {act:'change_countno',cid:cid,prono:after_no}, function(data, textStatus){
-		 $('#subtotal'+cid).html(after_no * kprice); 
-		 $('#total').html('￥'+data); 
+	 $.post(ctx+'/product/car/addbuynum', {"merch_id":cid,"buy_num":after_no}, function(resp){
+	 	if(resp.status == "0"){
+	 		$cid.val(after_no);
+            $('#subtotal'+cid).html(after_no * kprice);
+            $('#total').html('￥'+(resp.dataObj).toFixed(2));
+        }
      });
 }
 

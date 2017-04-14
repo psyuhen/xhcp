@@ -40,6 +40,11 @@ public interface MerchCarMapper {
 	 */
 	int deleteMerchCar(MerchCar merchCar);
 	/**
+	 * 根据account_id删除购物车信息
+	 * @param account_id
+	 */
+	int deleteByAccount(String account_id);
+	/**
 	 * 根据car_id批量删除购物车信息
 	 * @param merchCar
 	 */

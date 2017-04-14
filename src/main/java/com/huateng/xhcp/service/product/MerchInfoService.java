@@ -3,10 +3,10 @@
  */
 package com.huateng.xhcp.service.product;
 
-import java.util.List;
-
 import com.huateng.xhcp.model.product.MerchGallery;
 import com.huateng.xhcp.model.product.MerchInfo;
+
+import java.util.List;
 
 /**
  * 产品服务类
@@ -14,6 +14,12 @@ import com.huateng.xhcp.model.product.MerchInfo;
  *
  */
 public interface MerchInfoService {
+	/**
+	 * 查询产品信息
+	 * @param keywords
+	 * @return
+	 */
+	List<MerchInfo> searchKeyWord(String [] keywords);
 	/**
 	 * 查询产品信息
 	 * @param merchInfo
@@ -53,6 +59,11 @@ public interface MerchInfoService {
 	 * @param merchInfo
 	 */
 	int updateMerchInfo(MerchInfo merchInfo, List<MerchGallery> fileInfos);
+	/**
+	 * 更新点击数
+	 * @param merch_id
+	 */
+	int updateHits(String merch_id);
 	/**
 	 * 根据merch_id删除产品信息
 	 * @param merchInfo

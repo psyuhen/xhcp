@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.huateng.xhcp.mapper.product.OrderDetailMapper">
+    <!-- 查询订单信息信息 -->
+	<select id="queryOrderDetail" resultType="OrderDetail" parameterType="OrderDetail">
+		SELECT order_id,merch_id,merch_name,amount,unit,price,create_time
+		FROM tbl_order_detail
+		<where>
+			<if test="order_id != null and order_id != ''">AND order_id = #{order_id,jdbcType=VARCHAR}</if>
+			<if test="merch_id != null and merch_id != ''">AND merch_id = #{merch_id,jdbcType=INTEGER}</if>
+			<if test="merch_name != null and merch_name != ''">AND merch_name = #{merch_name,jdbcType=VARCHAR}</if>
+			<if test="amount != null and amount != ''">AND amount = #{amount,jdbcType=INTEGER}</if>
+			<if test="unit != null and unit != ''">AND unit = #{unit,jdbcType=VARCHAR}</if>
+			<if test="price != null and price != ''">AND price = #{price,jdbcType=FLOAT}</if>
+			<if test="create_time != null and create_time != ''">AND create_time = #{create_time,jdbcType=FLOAT}</if>
+
+		</where>
+		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[order by ${b_order_name} ${b_order_asc}  ]]></if>
+	</select>
+	
+	<!-- 新增订单信息 -->
+	<insert id="addOrderDetail" parameterType="OrderDetail">
+		INSERT INTO tbl_order_detail (order_id,merch_id,merch_name,amount,unit,price,create_time)
+		VALUES (#{order_id,jdbcType=VARCHAR},#{merch_id,jdbcType=VARCHAR},#{merch_name,jdbcType=VARCHAR},#{amount,jdbcType=VARCHAR},#{unit,jdbcType=VARCHAR},#{price,jdbcType=VARCHAR},DATE_FORMAT(now(),'%Y%m%d%H%i%s'))
+	</insert>
+	
+	<!-- 批量新增订单信息信息 -->
+	<insert id="addBatchOrderDetail" parameterType="OrderDetail">
+		INSERT INTO tbl_order_detail (order_id,merch_id,merch_name,amount,unit,price,create_time) VALUES
+		<foreach item="item" collection="list" separator=",">
+			(#{item.order_id,jdbcType=VARCHAR},#{item.merch_id,jdbcType=VARCHAR},#{item.merch_name,jdbcType=VARCHAR},#{item.amount,jdbcType=VARCHAR},#{item.unit,jdbcType=VARCHAR},#{item.price,jdbcType=VARCHAR},DATE_FORMAT(now(),'%Y%m%d%H%i%s'))
+		</foreach>
+	</insert>
+	
+	<!-- 更新订单信息信息 -->
+	<update id="updateOrderDetail" parameterType="OrderDetail">
+		UPDATE tbl_order_detail
+		<set>
+	      	<if test="order_id != null">order_id = #{order_id,jdbcType=VARCHAR},</if>
+	      	<if test="merch_id != null">merch_id = #{merch_id,jdbcType=INTEGER},</if>
+	      	<if test="merch_name != null">merch_name = #{merch_name,jdbcType=VARCHAR},</if>
+	      	<if test="amount != null">amount = #{amount,jdbcType=INTEGER},</if>
+	      	<if test="unit != null">unit = #{unit,jdbcType=VARCHAR},</if>
+	      	<if test="price != null">price = #{price,jdbcType=FLOAT},</if>
+
+		</set>
+		WHERE order_id = #{order_id,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 删除订单信息信息 -->
+	<delete id="deleteOrderDetail" parameterType="OrderDetail">
+		DELETE FROM tbl_order_detail WHERE order_id = #{order_id,jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 批量删除订单信息信息-->
+	<delete id="deleteBatchOrderDetail" parameterType="OrderDetail">
+		DELETE FROM tbl_order_detail WHERE order_id IN
+		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+			#{item.order_id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+</mapper>

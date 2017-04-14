@@ -7,12 +7,14 @@ import com.huateng.xhcp.model.BaseModel;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 常用地址信息信息Bean
  * @author sam.pan
  *
  */
+@ToString
 public class FreqAddr extends BaseModel{
 	
 	private @Setter @Getter String freq_id;

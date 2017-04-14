@@ -24,24 +24,54 @@
 <%@include file="/WEB-INF/mgr/jsp/main/header.jsp"%>
 
 <article class="sr">
-    <section class="top" style="background-image: url(themes/default/images/search-top.jpg);"></section>
+    <section class="top" style="background-image: url(${ctx}/css/themes/default/images/search-top.jpg);"></section>
     <section class="bottom">
         <div class="maxsize">
             <div class="win">
                 <div class="filter">
-                    搜索结果：<a href="javascript:void(0);" class="active">新闻（）</a> | <a href="javascript:void(0);">产品（）</a>
+                    <c:choose>
+                        <c:when test="${NoKeyWord eq true}">
+                            请输入搜索字符...
+                        </c:when>
+                        <c:when test="${KeyWordShort eq true}">
+                            搜索字符太短，请重新输入...
+                        </c:when>
+                        <c:otherwise>
+                            搜索结果：<a href="javascript:void(0);" class="active">新闻（${fn:length(news)}）</a> |
+                            <a href="javascript:void(0);">产品（${fn:length(products)}）</a>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
                 <div class="pages" firstactive=".page">
                     <div class="page fadeInUp animated news">
                         <div class="list">
-
-
+                            <c:forEach items="${news}" var="new1">
+                                <div class="item">
+                                    <a href="${ctx}/article/news-${new1.article_id}.html">
+                                        <h2>${new1.title}</h2>
+                                        <p>${new1.contents}</p>
+                                    </a>
+                                </div>
+                            </c:forEach>
                         </div>
                     </div>
                     <div class="page fadeInUp animated pros">
                         <div class="list clear">
-
-
+                            <c:forEach items="${products}" var="product">
+                                <div class="item">
+                                    <div class="con">
+                                        <div class="face" style="background-image: url(${ctx}/${product.merch_photo});"></div>
+                                        <div class="text posr">
+                                            <h1>${product.name}</h1>
+                                            <p>${product.desc}</p>
+                                            <div class="price posa">
+                                                <em>￥<strong>${product.price}</strong></em>
+                                                <a href="${ctx}/products-${product.merch_id}.html" class="jianbianhover">点击购买</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:forEach>
                         </div>
                     </div>
                 </div>

@@ -88,7 +88,7 @@
         </div>
     </div>
 </article>
-
+<script src="${ctx}/css/themes/default/script/shopping.js"></script>
 <%@include file="/WEB-INF/mgr/jsp/main/footer1.jsp"%>
 </body>
 </html>

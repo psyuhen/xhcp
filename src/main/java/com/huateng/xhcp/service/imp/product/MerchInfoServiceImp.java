@@ -31,6 +31,14 @@ public class MerchInfoServiceImp implements MerchInfoService {
 
     /**
      * 查询产品信息
+     * @param keywords
+     * @return
+     */
+    public List<MerchInfo> searchKeyWord(String [] keywords){
+        return this.merchInfoMapper.searchKeyWord(keywords);
+    }
+    /**
+     * 查询产品信息
      *
      * @param merchInfo
      * @return
@@ -130,6 +138,13 @@ public class MerchInfoServiceImp implements MerchInfoService {
         return this.merchInfoMapper.updateMerchInfo(merchInfo);
     }
 
+    /**
+     * 更新点击数
+     * @param merch_id
+     */
+    public int updateHits(String merch_id){
+        return this.merchInfoMapper.updateHits(merch_id);
+    }
     /**
      * 根据merch_id删除产品信息
      *

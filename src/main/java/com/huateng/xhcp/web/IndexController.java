@@ -43,13 +43,7 @@ public class IndexController {
         article.setLimit(3);
         article.setStart(1);
         List<Article> articles = articleService.queryArticle(article);
-        if(articles != null){
-            for(Article a : articles){
-                String contents = StringUtil.delHtml(a.getContents());
-                contents = StringUtil.ellipsis(contents, 100);
-                a.setContents(contents);
-            }
-        }
+        StringUtil.rmContentsHtml(articles);
         request.setAttribute("newArticleList", articles);
 
         FileInfo fileInfo = new FileInfo();

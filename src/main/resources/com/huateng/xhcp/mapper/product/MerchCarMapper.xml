@@ -6,8 +6,8 @@
 <mapper namespace="com.huateng.xhcp.mapper.product.MerchCarMapper">
     <!-- 查询购物车信息 -->
 	<select id="queryMerchCar" resultType="MerchCar" parameterType="MerchCar">
-		SELECT car_id,a.merch_id,b.name AS merch_name,b.price,buy_num,account_id,a.create_time
-		FROM tbl_merch_car
+		SELECT car_id,a.merch_id AS merch_id,b.name AS merch_name,b.price AS price,b.unit AS unit,buy_num,account_id,a.create_time AS create_time
+		FROM tbl_merch_car a
 		LEFT JOIN tbl_merch_info b ON a.merch_id = b.merch_id
 		<where>
 			<if test="car_id != null and car_id != ''">AND car_id = #{car_id,jdbcType=INTEGER}</if>
@@ -52,7 +52,11 @@
 	<delete id="deleteMerchCar" parameterType="MerchCar">
 		DELETE FROM tbl_merch_car WHERE car_id = #{car_id,jdbcType=INTEGER}
 	</delete>
-	
+	<!-- 删除购物车信息 -->
+	<delete id="deleteByAccount" parameterType="String">
+		DELETE FROM tbl_merch_car WHERE account_id = #{account_id,jdbcType=VARCHAR}
+	</delete>
+
 	<!-- 批量删除购物车信息-->
 	<delete id="deleteBatchMerchCar" parameterType="MerchCar">
 		DELETE FROM tbl_merch_car WHERE car_id IN

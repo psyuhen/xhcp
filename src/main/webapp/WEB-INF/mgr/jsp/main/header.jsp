@@ -171,7 +171,7 @@
         <a href="javascript:void(0);" class="close" onclick="$('.searchinput').slideUp();"><i class="iconfont">&#xe605;</i></a>
         <div class="tac">
             <div class="inb posr">
-                <form class="search" method="get" action="http://www.yanzhiwu.com/search.html">
+                <form class="search" method="get" action="${ctx}/search.html">
                     <input type="text" placeholder="搜索产品/新闻" name="keywords" value=""><input type="submit" value="&#xe617;" class="iconfont">
                 </form>
             </div>

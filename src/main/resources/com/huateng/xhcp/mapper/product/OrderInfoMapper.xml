@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.huateng.xhcp.mapper.product.OrderInfoMapper">
+    <!-- 查询订单信息信息 -->
+	<select id="queryOrderInfo" resultType="OrderInfo" parameterType="OrderInfo">
+		SELECT order_id,amount_money,buyer_account_id,buyer_user_name,seller_account_id,seller_user_name,currency_unit,buyer_name,buyer_phone,buyer_mobile,send_type,send_no,send_time,freight,invoice_need,invoice_title,pay_type,buyer_pay_time,trad_time,trad_finish_time,update_time,seller_deliver_time,buyer_confirm_time,seller_del,buyer_del,buyer_del_time,seller_del_time,buyer_score,seller_score,status,province_code,city_code,town_code,address,buyer_advise,remark
+		FROM tbl_order_info
+		<where>
+			<if test="order_id != null and order_id != ''">AND order_id = #{order_id,jdbcType=VARCHAR}</if>
+			<if test="amount_money != null and amount_money != ''">AND amount_money = #{amount_money,jdbcType=FLOAT}</if>
+			<if test="buyer_account_id != null and buyer_account_id != ''">AND buyer_account_id = #{buyer_account_id,jdbcType=VARCHAR}</if>
+			<if test="buyer_user_name != null and buyer_user_name != ''">AND buyer_user_name = #{buyer_user_name,jdbcType=VARCHAR}</if>
+			<if test="seller_account_id != null and seller_account_id != ''">AND seller_account_id = #{seller_account_id,jdbcType=VARCHAR}</if>
+			<if test="seller_user_name != null and seller_user_name != ''">AND seller_user_name = #{seller_user_name,jdbcType=VARCHAR}</if>
+			<if test="currency_unit != null and currency_unit != ''">AND currency_unit = #{currency_unit,jdbcType=VARCHAR}</if>
+			<if test="buyer_name != null and buyer_name != ''">AND buyer_name = #{buyer_name,jdbcType=VARCHAR}</if>
+			<if test="buyer_phone != null and buyer_phone != ''">AND buyer_phone = #{buyer_phone,jdbcType=VARCHAR}</if>
+			<if test="buyer_mobile != null and buyer_mobile != ''">AND buyer_mobile = #{buyer_mobile,jdbcType=VARCHAR}</if>
+			<if test="send_type != null and send_type != ''">AND send_type = #{send_type,jdbcType=VARCHAR}</if>
+			<if test="send_no != null and send_no != ''">AND send_no = #{send_no,jdbcType=VARCHAR}</if>
+			<if test="send_time != null and send_time != ''">AND send_time = #{send_time,jdbcType=VARCHAR}</if>
+			<if test="freight != null and freight != ''">AND freight = #{freight,jdbcType=FLOAT}</if>
+			<if test="invoice_need != null and invoice_need != ''">AND invoice_need = #{invoice_need,jdbcType=VARCHAR}</if>
+			<if test="invoice_title != null and invoice_title != ''">AND invoice_title = #{invoice_title,jdbcType=VARCHAR}</if>
+			<if test="pay_type != null and pay_type != ''">AND pay_type = #{pay_type,jdbcType=INTEGER}</if>
+			<if test="buyer_pay_time != null and buyer_pay_time != ''">AND buyer_pay_time = #{buyer_pay_time,jdbcType=VARCHAR}</if>
+			<if test="trad_time != null and trad_time != ''">AND trad_time = #{trad_time,jdbcType=VARCHAR}</if>
+			<if test="trad_finish_time != null and trad_finish_time != ''">AND trad_finish_time = #{trad_finish_time,jdbcType=VARCHAR}</if>
+			<if test="update_time != null and update_time != ''">AND update_time = #{update_time,jdbcType=VARCHAR}</if>
+			<if test="seller_deliver_time != null and seller_deliver_time != ''">AND seller_deliver_time = #{seller_deliver_time,jdbcType=VARCHAR}</if>
+			<if test="buyer_confirm_time != null and buyer_confirm_time != ''">AND buyer_confirm_time = #{buyer_confirm_time,jdbcType=VARCHAR}</if>
+			<if test="seller_del != null and seller_del != ''">AND seller_del = #{seller_del,jdbcType=VARCHAR}</if>
+			<if test="buyer_del != null and buyer_del != ''">AND buyer_del = #{buyer_del,jdbcType=VARCHAR}</if>
+			<if test="buyer_del_time != null and buyer_del_time != ''">AND buyer_del_time = #{buyer_del_time,jdbcType=VARCHAR}</if>
+			<if test="seller_del_time != null and seller_del_time != ''">AND seller_del_time = #{seller_del_time,jdbcType=VARCHAR}</if>
+			<if test="buyer_score != null and buyer_score != ''">AND buyer_score = #{buyer_score,jdbcType=VARCHAR}</if>
+			<if test="seller_score != null and seller_score != ''">AND seller_score = #{seller_score,jdbcType=VARCHAR}</if>
+			<if test="status != null and status != ''">AND status = #{status,jdbcType=VARCHAR}</if>
+			<if test="province_code != null and province_code != ''">AND province_code = #{province_code,jdbcType=VARCHAR}</if>
+			<if test="city_code != null and city_code != ''">AND city_code = #{city_code,jdbcType=VARCHAR}</if>
+			<if test="town_code != null and town_code != ''">AND town_code = #{town_code,jdbcType=VARCHAR}</if>
+			<if test="address != null and address != ''">AND address = #{address,jdbcType=VARCHAR}</if>
+			<if test="buyer_advise != null and buyer_advise != ''">AND buyer_advise = #{buyer_advise,jdbcType=VARCHAR}</if>
+			<if test="remark != null and remark != ''">AND remark = #{remark,jdbcType=VARCHAR}</if>
+
+		</where>
+		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[ORDER BY ${b_order_name} ${b_order_asc}  ]]></if>
+		<if test="b_order_name = null  or b_order_name = ''"><![CDATA[ORDER BY trad_time DESC  ]]></if>
+	</select>
+	
+	<!-- 新增订单信息 -->
+	<insert id="addOrderInfo" parameterType="OrderInfo">
+		INSERT INTO tbl_order_info (order_id,amount_money,buyer_account_id,buyer_user_name,seller_account_id,seller_user_name,currency_unit,buyer_name,buyer_phone,buyer_mobile,send_type,send_no,send_time,freight,invoice_need,invoice_title,pay_type,buyer_pay_time,trad_time,trad_finish_time,update_time,seller_deliver_time,buyer_confirm_time,seller_del,buyer_del,buyer_del_time,seller_del_time,buyer_score,seller_score,status,province_code,city_code,town_code,address,buyer_advise,remark)
+		VALUES (#{order_id,jdbcType=VARCHAR},#{amount_money,jdbcType=FLOAT},#{buyer_account_id,jdbcType=INTEGER},#{buyer_user_name,jdbcType=VARCHAR},#{seller_account_id,jdbcType=VARCHAR},#{seller_user_name,jdbcType=VARCHAR},#{currency_unit,jdbcType=VARCHAR},#{buyer_name,jdbcType=VARCHAR},#{buyer_phone,jdbcType=VARCHAR},#{buyer_mobile,jdbcType=VARCHAR},#{send_type,jdbcType=VARCHAR},#{send_no,jdbcType=VARCHAR},#{send_time,jdbcType=VARCHAR},#{freight,jdbcType=FLOAT},#{invoice_need,jdbcType=VARCHAR},#{invoice_title,jdbcType=VARCHAR},#{pay_type,jdbcType=INTEGER},#{buyer_pay_time,jdbcType=VARCHAR},#{trad_time,jdbcType=VARCHAR},#{trad_finish_time,jdbcType=VARCHAR},#{update_time,jdbcType=VARCHAR},#{seller_deliver_time,jdbcType=VARCHAR},#{buyer_confirm_time,jdbcType=VARCHAR},#{seller_del,jdbcType=VARCHAR},#{buyer_del,jdbcType=VARCHAR},#{buyer_del_time,jdbcType=VARCHAR},#{seller_del_time,jdbcType=VARCHAR},#{buyer_score,jdbcType=VARCHAR},#{seller_score,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{province_code,jdbcType=VARCHAR},#{city_code,jdbcType=VARCHAR},#{town_code,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},#{buyer_advise,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 批量新增订单信息信息 -->
+	<insert id="addBatchOrderInfo" parameterType="OrderInfo">
+		INSERT INTO tbl_order_info (order_id,amount_money,buyer_account_id,buyer_user_name,seller_account_id,seller_user_name,currency_unit,buyer_name,buyer_phone,buyer_mobile,send_type,send_no,send_time,freight,invoice_need,invoice_title,pay_type,buyer_pay_time,trad_time,trad_finish_time,update_time,seller_deliver_time,buyer_confirm_time,seller_del,buyer_del,buyer_del_time,seller_del_time,buyer_score,seller_score,status,province_code,city_code,town_code,address,buyer_advise,remark)
+		<foreach item="item" collection="list" separator="union all">
+			SELECT #{item.order_id,jdbcType=VARCHAR},#{item.amount_money,jdbcType=VARCHAR},#{item.buyer_account_id,jdbcType=VARCHAR},#{item.buyer_user_name,jdbcType=VARCHAR},#{item.seller_account_id,jdbcType=VARCHAR},#{item.seller_user_name,jdbcType=VARCHAR},#{item.currency_unit,jdbcType=VARCHAR},#{item.buyer_name,jdbcType=VARCHAR},#{item.buyer_phone,jdbcType=VARCHAR},#{item.buyer_mobile,jdbcType=VARCHAR},#{item.send_type,jdbcType=VARCHAR},#{item.send_no,jdbcType=VARCHAR},#{item.send_time,jdbcType=VARCHAR},#{item.freight,jdbcType=VARCHAR},#{item.invoice_need,jdbcType=VARCHAR},#{item.invoice_title,jdbcType=VARCHAR},#{item.pay_type,jdbcType=INTEGER},#{item.buyer_pay_time,jdbcType=VARCHAR},#{item.trad_time,jdbcType=VARCHAR},#{item.trad_finish_time,jdbcType=VARCHAR},#{item.update_time,jdbcType=VARCHAR},#{item.seller_deliver_time,jdbcType=VARCHAR},#{item.buyer_confirm_time,jdbcType=VARCHAR},#{item.seller_del,jdbcType=VARCHAR},#{item.buyer_del,jdbcType=VARCHAR},#{item.buyer_del_time,jdbcType=VARCHAR},#{item.seller_del_time,jdbcType=VARCHAR},#{item.buyer_score,jdbcType=VARCHAR},#{item.seller_score,jdbcType=VARCHAR},#{item.status,jdbcType=VARCHAR},#{item.province_code,jdbcType=VARCHAR},#{item.city_code,jdbcType=VARCHAR},#{item.town_code,jdbcType=VARCHAR},#{item.address,jdbcType=VARCHAR},#{item.buyer_advise,jdbcType=VARCHAR},#{item.remark,jdbcType=VARCHAR}
+			FROM dual
+		</foreach>
+	</insert>
+	
+	<!-- 更新订单信息信息 -->
+	<update id="updateOrderInfo" parameterType="OrderInfo">
+		UPDATE tbl_order_info
+		<set>
+	      	<if test="order_id != null">order_id = #{order_id,jdbcType=VARCHAR},</if>
+	      	<if test="amount_money != null">amount_money = #{amount_money,jdbcType=FLOAT},</if>
+	      	<if test="buyer_account_id != null">buyer_account_id = #{buyer_account_id,jdbcType=VARCHAR},</if>
+	      	<if test="buyer_user_name != null">buyer_user_name = #{buyer_user_name,jdbcType=VARCHAR},</if>
+	      	<if test="seller_account_id != null">seller_account_id = #{seller_account_id,jdbcType=VARCHAR},</if>
+	      	<if test="seller_user_name != null">seller_user_name = #{seller_user_name,jdbcType=VARCHAR},</if>
+	      	<if test="currency_unit != null">currency_unit = #{currency_unit,jdbcType=VARCHAR},</if>
+	      	<if test="buyer_name != null">buyer_name = #{buyer_name,jdbcType=VARCHAR},</if>
+	      	<if test="buyer_phone != null">buyer_phone = #{buyer_phone,jdbcType=VARCHAR},</if>
+	      	<if test="buyer_mobile != null">buyer_mobile = #{buyer_mobile,jdbcType=VARCHAR},</if>
+	      	<if test="send_type != null">send_type = #{send_type,jdbcType=VARCHAR},</if>
+	      	<if test="send_no != null">send_no = #{send_no,jdbcType=VARCHAR},</if>
+	      	<if test="send_time != null">send_time = #{send_time,jdbcType=VARCHAR},</if>
+	      	<if test="freight != null">freight = #{freight,jdbcType=FLOAT},</if>
+	      	<if test="invoice_need != null">invoice_need = #{invoice_need,jdbcType=VARCHAR},</if>
+	      	<if test="invoice_title != null">invoice_title = #{invoice_title,jdbcType=VARCHAR},</if>
+	      	<if test="pay_type != null">pay_type = #{pay_type,jdbcType=INTEGER},</if>
+	      	<if test="buyer_pay_time != null">buyer_pay_time = #{buyer_pay_time,jdbcType=VARCHAR},</if>
+	      	<if test="trad_time != null">trad_time = #{trad_time,jdbcType=VARCHAR},</if>
+	      	<if test="trad_finish_time != null">trad_finish_time = #{trad_finish_time,jdbcType=VARCHAR},</if>
+	      	<if test="update_time != null">update_time = #{update_time,jdbcType=VARCHAR},</if>
+	      	<if test="seller_deliver_time != null">seller_deliver_time = #{seller_deliver_time,jdbcType=VARCHAR},</if>
+	      	<if test="buyer_confirm_time != null">buyer_confirm_time = #{buyer_confirm_time,jdbcType=VARCHAR},</if>
+	      	<if test="seller_del != null">seller_del = #{seller_del,jdbcType=VARCHAR},</if>
+	      	<if test="buyer_del != null">buyer_del = #{buyer_del,jdbcType=VARCHAR},</if>
+	      	<if test="buyer_del_time != null">buyer_del_time = #{buyer_del_time,jdbcType=VARCHAR},</if>
+	      	<if test="seller_del_time != null">seller_del_time = #{seller_del_time,jdbcType=VARCHAR},</if>
+	      	<if test="buyer_score != null">buyer_score = #{buyer_score,jdbcType=VARCHAR},</if>
+	      	<if test="seller_score != null">seller_score = #{seller_score,jdbcType=VARCHAR},</if>
+	      	<if test="status != null">status = #{status,jdbcType=VARCHAR},</if>
+	      	<if test="province_code != null">province_code = #{province_code,jdbcType=VARCHAR},</if>
+	      	<if test="city_code != null">city_code = #{city_code,jdbcType=VARCHAR},</if>
+	      	<if test="town_code != null">town_code = #{town_code,jdbcType=VARCHAR},</if>
+	      	<if test="address != null">address = #{address,jdbcType=VARCHAR},</if>
+	      	<if test="buyer_advise != null">buyer_advise = #{buyer_advise,jdbcType=VARCHAR},</if>
+	      	<if test="remark != null">remark = #{remark,jdbcType=VARCHAR},</if>
+
+		</set>
+		WHERE order_id = #{order_id,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 删除订单信息信息 -->
+	<delete id="deleteOrderInfo" parameterType="OrderInfo">
+		DELETE FROM tbl_order_info WHERE order_id = #{order_id,jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 批量删除订单信息信息-->
+	<delete id="deleteBatchOrderInfo" parameterType="OrderInfo">
+		DELETE FROM tbl_order_info WHERE order_id IN
+		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+			#{item.order_id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+</mapper>

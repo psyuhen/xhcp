@@ -7,6 +7,7 @@ import com.huateng.xhcp.model.BaseModel;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * @author sam.pan
  *
  */
+@ToString
 public class MerchInfo extends BaseModel{
 	
 	private @Setter @Getter String merch_id;

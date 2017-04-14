@@ -4,6 +4,15 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.huateng.xhcp.mapper.article.ArticleMapper">
+	<!-- 查询资讯信息信息 -->
+	<select id="searchKeyWord" resultType="Article" parameterType="String">
+		SELECT article_id,title,article_date,contents,hits,update_time,create_time
+		FROM tbl_article_info
+		WHERE 1=1 AND
+		<foreach collection="keywords" item="key" separator=" OR " open="(" close=")">
+			title LIKE CONCAT('%',#{key,jdbcType=VARCHAR},'%')
+		</foreach>
+	</select>
     <!-- 查询资讯信息信息 -->
 	<select id="queryArticle" resultType="Article" parameterType="Article">
 		SELECT article_id,title,article_date,contents,hits,update_time,create_time
@@ -62,6 +71,11 @@
             ]]>
 		</set>
 		WHERE article_id = #{article_id,jdbcType=INTEGER}
+	</update>
+
+	<!-- 更新点击数 -->
+	<update id="updateHits" parameterType="String">
+		UPDATE tbl_article_info SET hits = IFNULL(hits, 0) + 1 WHERE article_id = #{article_id,jdbcType=INTEGER}
 	</update>
 	
 	<!-- 删除资讯信息信息 -->

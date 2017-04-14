@@ -33,6 +33,7 @@
             </div>
             <div class="inputs">
                 <form onSubmit="return check_login()">
+                    <input type="hidden" id="blackUrl" name="blackUrl" value="${blackUrl}"/>
                     <div class="line error">
                         <input type="text" placeholder="手机号/用户" id="username_login">
                         <p class="info"><i class="iconfont" id="username_login_icon">&#xe6be;</i><font id="username_login_info"></font></p>

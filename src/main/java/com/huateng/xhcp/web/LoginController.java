@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +36,11 @@ public class LoginController {
     private @Autowired FreqAddrService freqAddrService;
 
     @RequestMapping(value="/login.html")
-    public String loginPage(){
+    public String loginPage(HttpServletRequest request){
+        final HttpSession session = request.getSession();
+        String referer = request.getHeader("Referer");
+        session.setAttribute("blackUrl", referer);
+
         return "login";
     }
 
@@ -81,7 +86,7 @@ public class LoginController {
      */
     @RequestMapping(value="/login.do", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<ResponseInfo> login(Account account, HttpServletRequest request) {
+    public ResponseEntity<ResponseInfo> login(Account account, @RequestParam  String blackUrl, HttpServletRequest request) {
         String account_id = account.getAccount_id();
         String mobile = account.getMobile();
         String validate_code = account.getValidate_code();
@@ -126,7 +131,10 @@ public class LoginController {
 
         session.setAttribute(SecurityContext.FRONT_ACCOUNT, accounts);
 
-        return HttpUtil.success("登录成功", accounts);
+        final ResponseEntity<ResponseInfo> success = HttpUtil.success("登录成功", blackUrl);
+
+        session.setAttribute("blackUrl", "");
+        return success;
     }
 
     /**
