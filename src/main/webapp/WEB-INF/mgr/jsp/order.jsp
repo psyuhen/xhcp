@@ -48,7 +48,73 @@
                         </ul>
                     </div>
                     <div class="md9">
-                        <div class="table shuTable normal hengTable" responsetable="true"><div class="tr tr0"><div class="th th0"><span>订单号</span></div><div class="th th1"><span>订单金额</span></div><div class="th th2"><span>订单状态</span></div><div class="th th3"><span>操作</span></div></div></div>
+                        <div class="table shuTable normal hengTable" responsetable="true">
+                            <div class="tr tr0">
+                                <div class="th th0">
+                                    <span>订单号</span>
+                                </div>
+                                <div class="th th1">
+                                    <span>订单金额</span>
+                                </div>
+                                <div class="th th2">
+                                    <span>订单状态</span>
+                                </div>
+                                <div class="th th3">
+                                    <span>操作</span>
+                                </div>
+                            </div>
+                            <c:forEach items="${orderlist}" var="order" varStatus="loop">
+                                <div class="tr tr${loop.index}">
+                                    <div class="td td0">
+                                        <i class="key">订单号</i>
+                                        <span>${order.order_id}</span>
+                                    </div>
+                                    <div class="td td1">
+                                        <i class="key">订单金额</i>
+                                        <span>${order.amount_money}</span>
+                                    </div>
+                                    <div class="td td2">
+                                        <i class="key">订单状态</i>
+                                        <c:choose>
+                                            <c:when test="${order.status eq '0'}" >
+                                                <span>买方待付款</span>
+                                            </c:when>
+                                            <c:when test="${order.status eq '1'}" >
+                                                <span>卖方确认订单</span>
+                                            </c:when>
+                                            <c:when test="${order.status eq '2'}" >
+                                                <span>买方已付款</span>
+                                            </c:when>
+                                            <c:when test="${order.status eq '3'}" >
+                                                <span>卖方已发货</span>
+                                            </c:when>
+                                            <c:when test="${order.status eq '4'}" >
+                                                <span>交易完成/买方确认收货</span>
+                                            </c:when>
+                                            <c:when test="${order.status eq '5'}" >
+                                                <span>交易取消</span>
+                                            </c:when>
+                                            <c:when test="${order.status eq '6'}" >
+                                                <span>交易关闭</span>
+                                            </c:when>
+                                        </c:choose>
+                                    </div>
+                                    <div class="td td3">
+                                        <i class="key">操作</i>
+                                        <span>
+                                            <a href="${ctx}/orderview.html?order_id=${order.order_id}">查看</a>
+                                            <c:if test="${order.status eq '0'}" >
+                                                /
+                                                <a href="${ctx}/ordercancel.html?order_id=${order.order_id}" onclick="if (!confirm('确认取消此订单？')) return false;">取消</a>
+                                            </c:if>
+                                            <c:if test="${order.status eq '5'}" >
+                                                / 交易取消
+                                            </c:if>
+                                        </span>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </div>
                     </div>
                 </div>
             </div>

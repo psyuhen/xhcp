@@ -20,7 +20,7 @@
 			
 		</where>
 		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[ORDER BY ${b_order_name} ${b_order_asc}  ]]></if>
-		<if test="b_order_name = null  and b_order_name = ''"><![CDATA[ORDER BY order_id ASC  ]]></if>
+		<if test='b_order_name == null  and b_order_name == ""'><![CDATA[ORDER BY order_id ASC  ]]></if>
 	</select>
 
 	<select id="querySubNav" resultType="NavInfo">

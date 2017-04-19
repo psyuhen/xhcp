@@ -55,18 +55,17 @@ public class MerchCarController implements com.huateng.xhcp.service.upload.Valid
 	 */
 	@RequestMapping(value = "/shopping_checkout.html")
 	public String toShoppingCheckout(HttpServletRequest request, HttpServletResponse response){
-
-		Province province = new Province();
-		List<Province> provinces = this.provinceService.queryBy(province);
-		request.setAttribute("provinces", provinces);
-
-
 		final Account frontAccount = SecurityContext.getFrontAccount();
 
 		//没有登录要先登录才能结算
 		if(frontAccount == null){
 			return "forward:/login.html";
 		}
+
+		Province province = new Province();
+		List<Province> provinces = this.provinceService.queryBy(province);
+		request.setAttribute("provinces", provinces);
+
 
 		final List<FreqAddr> freqAddrs = this.freqAddrService.queryByAccountId(frontAccount.getAccount_id());
 

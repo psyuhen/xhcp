@@ -2,13 +2,15 @@ package com.huateng.xhcp.web;
 
 import com.huateng.xhcp.model.ResponseInfo;
 import com.huateng.xhcp.model.product.FreqAddr;
-import com.huateng.xhcp.model.system.Account;
-import com.huateng.xhcp.model.system.Province;
+import com.huateng.xhcp.model.product.OrderInfo;
+import com.huateng.xhcp.model.system.*;
 import com.huateng.xhcp.security.RandomValidateCode;
 import com.huateng.xhcp.security.SecurityContext;
 import com.huateng.xhcp.service.product.FreqAddrService;
+import com.huateng.xhcp.service.product.OrderInfoService;
 import com.huateng.xhcp.service.system.AccountService;
 import com.huateng.xhcp.service.system.ProvinceService;
+import com.huateng.xhcp.service.system.UserLoginHistService;
 import com.huateng.xhcp.util.DateUtil;
 import com.huateng.xhcp.util.HttpUtil;
 import com.huateng.xhcp.util.SecureUtil;
@@ -34,6 +36,8 @@ public class LoginController {
     private @Autowired AccountService accountService;
     private @Autowired ProvinceService provinceService;
     private @Autowired FreqAddrService freqAddrService;
+    private @Autowired UserLoginHistService userLoginHistService;
+    private @Autowired OrderInfoService orderInfoService;
 
     @RequestMapping(value="/login.html")
     public String loginPage(HttpServletRequest request){
@@ -47,6 +51,12 @@ public class LoginController {
     @RequestMapping(value="/register.html")
     public String registerPage(){
         return "register";
+    }
+
+    @RequestMapping(value="/forget.html")
+    public String forgetPage(HttpServletRequest request){
+        request.setAttribute("step1", "true");
+        return "forget";
     }
 
     @RequestMapping(value="/usercenter.html")
@@ -69,7 +79,24 @@ public class LoginController {
     }
 
     @RequestMapping(value="/order.html")
-    public String orderPage(){
+    public String orderPage(HttpServletRequest request){
+
+        final Account frontAccount = SecurityContext.getFrontAccount();
+        if(frontAccount == null){
+            return "login";
+        }
+
+
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setB_order_name("trad_time");
+        orderInfo.setB_order_asc("desc");
+        orderInfo.setBuyer_account_id(frontAccount.getAccount_id());
+        orderInfo.setLimit(15);
+        orderInfo.setStart(1);
+        final List<OrderInfo> orderInfos = orderInfoService.queryOrderInfo(orderInfo);
+
+        request.setAttribute("orderlist", orderInfos);
+
         return "order";
     }
 
@@ -113,6 +140,7 @@ public class LoginController {
         account_password = SecureUtil.shaEncode(account_password);
         Account acc = new Account();
         acc.setAccount_id(account_id);
+        acc.setAccount_name(account_id);
         acc.setMobile(mobile);
         acc.setAccount_password(account_password);
         Account accounts = accountService.queryAccountByIdAndPwd(acc);
@@ -128,6 +156,12 @@ public class LoginController {
         if(!StringUtils.isBlank(invDate) && invDate.compareTo(DateUtil.today("yyyyMMdd")) < 0){
             return HttpUtil.failure("用户已失效！");
         }
+
+        /*登录信息*/
+        UserLoginHist userLoginHist = new UserLoginHist();
+        userLoginHist.setAccount_id(account_id);
+        userLoginHist.setAccount_name(account_id);
+        userLoginHistService.addUserLoginHist(userLoginHist);
 
         session.setAttribute(SecurityContext.FRONT_ACCOUNT, accounts);
 
@@ -174,8 +208,9 @@ public class LoginController {
 
         account_password = SecureUtil.shaEncode(account_password);
         account.setAccount_id(mobile);
-        account.setAccount_status("1");
+        account.setAccount_status(AccountStatus.ACTIVE.toString());
         account.setAccount_password(account_password);
+        account.setAccount_type(AccountType.MEMBER.toString());
 
         int c = accountService.addAccount(account);
         if(c == 0){
@@ -253,4 +288,116 @@ public class LoginController {
         acc.setAccount_password(tmp.getAccount_password());
         return HttpUtil.success("密码已修改", account);
     }
+
+
+    /**
+     * 忘记密码
+     * @param account 手机号
+     * @return 查询到返回用户 信息否则返回null
+     */
+    @RequestMapping(value="/forget.do", method = RequestMethod.POST)
+    public String forget(Account account,String step, HttpServletRequest request) {
+
+        if(StringUtils.isBlank(step)){
+            String mobile = account.getMobile();
+            String validate_code = account.getValidate_code();
+
+            if(StringUtils.isBlank(mobile)){
+                request.setAttribute("step1", "true");
+                request.setAttribute("mobileError", "手机号不能为空！");
+                return "forget";
+            }
+
+            if(StringUtils.isBlank(validate_code)){
+                request.setAttribute("step1", "true");
+                request.setAttribute("validateError", "验证码不能为空！");
+                return "forget";
+            }
+
+            HttpSession session = request.getSession();
+            String code = (String)session.getAttribute(RandomValidateCode.RANDOMCODEKEY);
+            if(!StringUtils.equals(validate_code, code)){
+                request.setAttribute("step1", "true");
+                request.setAttribute("validateError", "验证码不正确！");
+                return "forget";
+            }
+
+            Account tmp = new Account();
+            tmp.setMobile(mobile);
+            Account tmp1 = accountService.queryByMobile(mobile);
+
+            if(tmp1 == null){
+                request.setAttribute("step1", "true");
+                request.setAttribute("mobileError", "手机号码不存在！");
+                return "forget";
+            }
+
+            request.setAttribute("mobile", mobile);
+            request.setAttribute("step2", "true");
+            return "forget";
+        }
+
+
+        if(StringUtils.equals(step, "2")){
+            String old_pwd = account.getOld_password();
+            String new_pwd = account.getAccount_password();
+            String validate_code = account.getValidate_code();
+
+            if(StringUtils.isBlank(new_pwd)){
+                request.setAttribute("step2", "true");
+                request.setAttribute("pwdError", "新密码不能为空！");
+                return "forget";
+            }
+
+            if(new_pwd.length() < 6){
+                request.setAttribute("step2", "true");
+                request.setAttribute("pwdError", "新密码长度不能少于6位！");
+                return "forget";
+            }
+
+            if(StringUtils.isBlank(old_pwd)){
+                request.setAttribute("step2", "true");
+                request.setAttribute("confirmPwdError", "确认密码不能为空！");
+                return "forget";
+            }
+
+            if(!StringUtils.equals(new_pwd, old_pwd)){
+                request.setAttribute("step2", "true");
+                request.setAttribute("confirmPwdError", "新密码与确认密码不相等！");
+                return "forget";
+            }
+
+            HttpSession session = request.getSession();
+            String code = (String)session.getAttribute(RandomValidateCode.RANDOMCODEKEY);
+            if(!StringUtils.equals(validate_code, code)){
+                request.setAttribute("step2", "true");
+                request.setAttribute("validateError", "验证码不正确！");
+                return "forget";
+            }
+
+            final String mobile = account.getMobile();
+            Account tmp1 = accountService.queryByMobile(mobile);
+            if(tmp1 == null){
+                request.setAttribute("step1", "true");
+                request.setAttribute("mobileError", "手机号码不存在！");
+                return "forget";
+            }
+
+            Account tmp = new Account();
+            tmp.setAccount_id(tmp1.getAccount_id());
+            tmp.setAccount_password(SecureUtil.shaEncode(new_pwd));
+            int c = accountService.updateAccount(tmp);
+            if(c == 0){
+                request.setAttribute("step2", "true");
+                request.setAttribute("pwdError", "修改密码失败！");
+                return "forget";
+            }
+
+            return "login";
+        }
+
+
+        return "forget";
+    }
+
 }

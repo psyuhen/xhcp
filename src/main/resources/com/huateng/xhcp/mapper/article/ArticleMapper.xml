@@ -30,7 +30,7 @@
 			
 		</where>
 		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[order by ${b_order_name} ${b_order_asc}  ]]></if>
-        <if test="b_order_name == null  or b_order_name == ''"><![CDATA[order by article_date DESC  ]]></if>
+        <if test='b_order_name == null  or b_order_name == "" '><![CDATA[order by article_date DESC  ]]></if>
 	</select>
 
     <select id="queryPAndN" resultType="Article" parameterType="String">

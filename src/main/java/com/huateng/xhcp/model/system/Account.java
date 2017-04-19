@@ -29,8 +29,9 @@ public class Account extends BaseModel{
 	private @Setter @Getter String create_time;
 	private @Setter @Getter String old_password;
 	private @Setter @Getter String validate_code;
+	private @Setter @Getter String account_type;
 
 	/* 获取本系统账号(0)与其他系统账号ectip(1)*/
-	private @Setter @Getter Integer client = AccountType.LOCAL.value();
+	//private @Setter @Getter Integer client = AccountType.LOCAL.value();
 	private @Setter @Getter boolean isSuperUser;
 }

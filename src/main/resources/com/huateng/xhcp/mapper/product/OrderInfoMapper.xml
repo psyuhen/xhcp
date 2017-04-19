@@ -6,8 +6,48 @@
 <mapper namespace="com.huateng.xhcp.mapper.product.OrderInfoMapper">
     <!-- 查询订单信息信息 -->
 	<select id="queryOrderInfo" resultType="OrderInfo" parameterType="OrderInfo">
-		SELECT order_id,amount_money,buyer_account_id,buyer_user_name,seller_account_id,seller_user_name,currency_unit,buyer_name,buyer_phone,buyer_mobile,send_type,send_no,send_time,freight,invoice_need,invoice_title,pay_type,buyer_pay_time,trad_time,trad_finish_time,update_time,seller_deliver_time,buyer_confirm_time,seller_del,buyer_del,buyer_del_time,seller_del_time,buyer_score,seller_score,status,province_code,city_code,town_code,address,buyer_advise,remark
-		FROM tbl_order_info
+		SELECT
+			order_id,
+			amount_money,
+			buyer_account_id,
+			buyer_user_name,
+			seller_account_id,
+			seller_user_name,
+			currency_unit,
+			buyer_name,
+			buyer_phone,
+			buyer_mobile,
+			send_type,
+			send_no,
+			send_time,
+			freight,
+			invoice_need,
+			invoice_title,
+			pay_type,
+			buyer_pay_time,
+			trad_time,
+			trad_finish_time,
+			update_time,
+			seller_deliver_time,
+			buyer_confirm_time,
+			seller_del,
+			buyer_del,
+			buyer_del_time,
+			seller_del_time,
+			buyer_score,
+			seller_score,
+			STATUS,
+			province_code,
+			(SELECT province_name FROM tbl_province_info WHERE PROVINCE_CODE=t.PROVINCE_CODE LIMIT 1) province_name,
+			city_code,
+			(SELECT city_name FROM tbl_city_info WHERE city_code=t.city_code LIMIT 1) city_name,
+			town_code,
+			(SELECT town_name FROM tbl_city_town_info WHERE town_code=t.town_code LIMIT 1) town_name,
+			address,
+			buyer_advise,
+			remark
+		FROM
+			tbl_order_info t
 		<where>
 			<if test="order_id != null and order_id != ''">AND order_id = #{order_id,jdbcType=VARCHAR}</if>
 			<if test="amount_money != null and amount_money != ''">AND amount_money = #{amount_money,jdbcType=FLOAT}</if>
@@ -48,13 +88,13 @@
 
 		</where>
 		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[ORDER BY ${b_order_name} ${b_order_asc}  ]]></if>
-		<if test="b_order_name = null  or b_order_name = ''"><![CDATA[ORDER BY trad_time DESC  ]]></if>
+		<if test='b_order_name == null  or b_order_name == "" '><![CDATA[ORDER BY trad_time DESC  ]]></if>
 	</select>
 	
 	<!-- 新增订单信息 -->
 	<insert id="addOrderInfo" parameterType="OrderInfo">
 		INSERT INTO tbl_order_info (order_id,amount_money,buyer_account_id,buyer_user_name,seller_account_id,seller_user_name,currency_unit,buyer_name,buyer_phone,buyer_mobile,send_type,send_no,send_time,freight,invoice_need,invoice_title,pay_type,buyer_pay_time,trad_time,trad_finish_time,update_time,seller_deliver_time,buyer_confirm_time,seller_del,buyer_del,buyer_del_time,seller_del_time,buyer_score,seller_score,status,province_code,city_code,town_code,address,buyer_advise,remark)
-		VALUES (#{order_id,jdbcType=VARCHAR},#{amount_money,jdbcType=FLOAT},#{buyer_account_id,jdbcType=INTEGER},#{buyer_user_name,jdbcType=VARCHAR},#{seller_account_id,jdbcType=VARCHAR},#{seller_user_name,jdbcType=VARCHAR},#{currency_unit,jdbcType=VARCHAR},#{buyer_name,jdbcType=VARCHAR},#{buyer_phone,jdbcType=VARCHAR},#{buyer_mobile,jdbcType=VARCHAR},#{send_type,jdbcType=VARCHAR},#{send_no,jdbcType=VARCHAR},#{send_time,jdbcType=VARCHAR},#{freight,jdbcType=FLOAT},#{invoice_need,jdbcType=VARCHAR},#{invoice_title,jdbcType=VARCHAR},#{pay_type,jdbcType=INTEGER},#{buyer_pay_time,jdbcType=VARCHAR},#{trad_time,jdbcType=VARCHAR},#{trad_finish_time,jdbcType=VARCHAR},#{update_time,jdbcType=VARCHAR},#{seller_deliver_time,jdbcType=VARCHAR},#{buyer_confirm_time,jdbcType=VARCHAR},#{seller_del,jdbcType=VARCHAR},#{buyer_del,jdbcType=VARCHAR},#{buyer_del_time,jdbcType=VARCHAR},#{seller_del_time,jdbcType=VARCHAR},#{buyer_score,jdbcType=VARCHAR},#{seller_score,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{province_code,jdbcType=VARCHAR},#{city_code,jdbcType=VARCHAR},#{town_code,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},#{buyer_advise,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR})
+		VALUES (#{order_id,jdbcType=VARCHAR},#{amount_money,jdbcType=FLOAT},#{buyer_account_id,jdbcType=INTEGER},#{buyer_user_name,jdbcType=VARCHAR},#{seller_account_id,jdbcType=VARCHAR},#{seller_user_name,jdbcType=VARCHAR},#{currency_unit,jdbcType=VARCHAR},#{buyer_name,jdbcType=VARCHAR},#{buyer_phone,jdbcType=VARCHAR},#{buyer_mobile,jdbcType=VARCHAR},#{send_type,jdbcType=VARCHAR},#{send_no,jdbcType=VARCHAR},#{send_time,jdbcType=VARCHAR},#{freight,jdbcType=FLOAT},#{invoice_need,jdbcType=VARCHAR},#{invoice_title,jdbcType=VARCHAR},#{pay_type,jdbcType=INTEGER},#{buyer_pay_time,jdbcType=VARCHAR},date_format(now(),'%Y%m%d%H%i%s'),#{trad_finish_time,jdbcType=VARCHAR},#{update_time,jdbcType=VARCHAR},#{seller_deliver_time,jdbcType=VARCHAR},#{buyer_confirm_time,jdbcType=VARCHAR},#{seller_del,jdbcType=VARCHAR},#{buyer_del,jdbcType=VARCHAR},#{buyer_del_time,jdbcType=VARCHAR},#{seller_del_time,jdbcType=VARCHAR},#{buyer_score,jdbcType=VARCHAR},#{seller_score,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{province_code,jdbcType=VARCHAR},#{city_code,jdbcType=VARCHAR},#{town_code,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},#{buyer_advise,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR})
 	</insert>
 	
 	<!-- 批量新增订单信息信息 -->
@@ -88,9 +128,8 @@
 	      	<if test="invoice_title != null">invoice_title = #{invoice_title,jdbcType=VARCHAR},</if>
 	      	<if test="pay_type != null">pay_type = #{pay_type,jdbcType=INTEGER},</if>
 	      	<if test="buyer_pay_time != null">buyer_pay_time = #{buyer_pay_time,jdbcType=VARCHAR},</if>
-	      	<if test="trad_time != null">trad_time = #{trad_time,jdbcType=VARCHAR},</if>
 	      	<if test="trad_finish_time != null">trad_finish_time = #{trad_finish_time,jdbcType=VARCHAR},</if>
-	      	<if test="update_time != null">update_time = #{update_time,jdbcType=VARCHAR},</if>
+	      	<if test="update_time != null">update_time = date_format(now(),'%Y%m%d%H%i%s'),</if>
 	      	<if test="seller_deliver_time != null">seller_deliver_time = #{seller_deliver_time,jdbcType=VARCHAR},</if>
 	      	<if test="buyer_confirm_time != null">buyer_confirm_time = #{buyer_confirm_time,jdbcType=VARCHAR},</if>
 	      	<if test="seller_del != null">seller_del = #{seller_del,jdbcType=VARCHAR},</if>

@@ -15,6 +15,7 @@ import com.huateng.xhcp.model.product.OrderDetail;
 import com.huateng.xhcp.model.system.Account;
 import com.huateng.xhcp.security.SecurityContext;
 import com.huateng.xhcp.service.product.FreqAddrService;
+import com.huateng.xhcp.service.product.OrderDetailService;
 import com.huateng.xhcp.util.DateUtil;
 import com.huateng.xhcp.util.StringUtil;
 import lombok.Getter;
@@ -28,6 +29,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.Page;
@@ -46,6 +48,50 @@ public class OrderInfoController implements com.huateng.xhcp.service.upload.Vali
 	private static final Log LOGGER = LogFactory.getLog(OrderInfoController.class);
 	private @Autowired @Setter @Getter OrderInfoService orderInfoService;
 	private @Autowired @Setter @Getter FreqAddrService freqAddrService;
+	private @Autowired @Setter @Getter OrderDetailService orderDetailService;
+
+	@RequestMapping(value="/ordercancel.html")
+	public String orderCancelPage(@RequestParam String order_id, HttpServletRequest request){
+		final Account frontAccount = SecurityContext.getFrontAccount();
+		if(frontAccount == null){
+			LOGGER.warn("用户还没登录");
+			return "forward:/login.html";
+		}
+		if(StringUtils.isBlank(order_id)){
+			return "forward:/order.html";
+		}
+
+		OrderInfo orderInfo = new OrderInfo();
+		orderInfo.setOrder_id(order_id);
+		orderInfo.setStatus("5");
+		orderInfo.setTrad_finish_time(DateUtil.currentTime());
+
+		orderInfoService.updateOrderInfo(orderInfo);
+
+		return "forward:/order.html";
+	}
+	@RequestMapping(value="/orderview.html")
+	public String orderViewPage(@RequestParam String order_id, HttpServletRequest request){
+		final Account frontAccount = SecurityContext.getFrontAccount();
+		if(frontAccount == null){
+			LOGGER.warn("用户还没登录");
+			return "forward:/login.html";
+		}
+
+		if(StringUtils.isBlank(order_id)){
+			return "forward:/order.html";
+		}
+
+		final OrderInfo orderInfo = orderInfoService.queryByKey(order_id);
+		request.setAttribute("order", orderInfo);
+
+		OrderDetail orderDetail = new OrderDetail();
+		orderDetail.setOrder_id(order_id);
+		final List<OrderDetail> details = orderDetailService.queryBy(orderDetail);
+		request.setAttribute("details", details);
+
+		return "orderview";
+	}
 	/**
 	 * 初始化页面
 	 * @return
@@ -103,7 +149,7 @@ public class OrderInfoController implements com.huateng.xhcp.service.upload.Vali
 		orderInfo.setAmount_money(Float.toString((Float) session.getAttribute("TotalPrice")));
 		orderInfo.setCurrency_unit("人民币");
 		orderInfo.setPay_type(payment);
-		orderInfo.setTrad_time(DateUtil.currentTime());
+//		orderInfo.setTrad_time(DateUtil.currentTime());
 		orderInfo.setStatus("0");//0-买方待付款
 
 
@@ -115,6 +161,7 @@ public class OrderInfoController implements com.huateng.xhcp.service.upload.Vali
 			od.setAmount(mc.getBuy_num());
 			od.setMerch_name(mc.getMerch_name());
 			od.setUnit(mc.getUnit());
+			od.setPrice(mc.getPrice());
 			//od.setCreate_time(DateUtil.currentTime());
 
 			details.add(od);

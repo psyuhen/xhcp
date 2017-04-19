@@ -195,3 +195,46 @@ function change_password(){
 
     return false;
 }
+
+function forget(step) {
+    if(step == "step1"){
+        var mobile = $("#mobile").val();
+        if(mobile == ""){
+            $("#mobile_phone_info").html("手机号码不能为空！").show();
+            return false;
+        }
+
+        var validate_code = $("#validate_code").val();
+        if(validate_code == ""){
+            $("#checkcode_info").html("验证码不能为空！").show();
+            return false;
+        }
+    }
+
+    if(step == "step2"){
+        var account_password = $("#account_password").val();
+        if(account_password == ""){
+            $("#password_info").html("新密码不能为空！").show();
+            return false;
+        }
+
+        var password_confirm = $("#password_confirm").val();
+        if(password_confirm == ""){
+            $("#password_confirm_info").html("确认密码不能为空！").show();
+            return false;
+        }
+
+        if(account_password != password_confirm){
+            $("#password_confirm_info").html("两次密码不相等！").show();
+            return false;
+        }
+
+        var validate_code = $("#validate_code").val();
+        if(validate_code == ""){
+            $("#checkcode_info").html("验证码不能为空！").show();
+            return false;
+        }
+    }
+
+    return true;
+}

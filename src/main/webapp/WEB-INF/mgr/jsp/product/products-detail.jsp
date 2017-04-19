@@ -65,7 +65,7 @@
                                     <input type="text" id="count" value="1" max="10" min="1">
                                 </div>
                             </div>
-                            <p>服务：由燕之屋直接销售和供货，并提供售后服务。</p>
+                            <p>服务：由陈皮皇直接销售和供货，并提供售后服务。(超过200元免运费，200元以下按实际重量按公式征收运费)</p>
 
                             <input type="hidden" id="price_value" value="${merchInfo.price}" />
                             <input type="hidden" id="specificationsid" value="53" />

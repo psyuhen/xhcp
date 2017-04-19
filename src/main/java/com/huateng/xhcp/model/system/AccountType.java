@@ -11,7 +11,7 @@ import lombok.Getter;
  *
  */
 public enum AccountType{
-	LOCAL(0, "本系统"),ECTIP(1, "ECTIP系统");
+	BACKUSER(0, "后台用户"),MEMBER(1, "会员用户");
 	
 	private final int value;
 	private final @Getter String reasonPhrase;
