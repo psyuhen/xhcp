@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.huateng.xhcp.mapper.system.GuestBookMapper">
+    <!-- 查询访客留言簿信息信息 -->
+	<select id="queryGuestBook" resultType="GuestBook" parameterType="GuestBook">
+		SELECT msg_id,msg_info,name,phone,email,address,create_time
+		FROM tbl_guest_book
+		<where>
+			<if test="msg_id != null and msg_id != ''">AND msg_id = #{msg_id,jdbcType=VARCHAR}</if>
+			<if test="msg_info != null and msg_info != ''">AND msg_info = #{msg_info,jdbcType=VARCHAR}</if>
+			<if test="name != null and name != ''">AND name = #{name,jdbcType=VARCHAR}</if>
+			<if test="phone != null and phone != ''">AND phone = #{phone,jdbcType=VARCHAR}</if>
+			<if test="email != null and email != ''">AND email = #{email,jdbcType=VARCHAR}</if>
+			<if test="address != null and address != ''">AND address = #{address,jdbcType=VARCHAR}</if>
+			<if test="create_time != null and create_time != ''">AND create_time = #{create_time,jdbcType=VARCHAR}</if>
+			
+		</where>
+		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[order by ${b_order_name} ${b_order_asc}  ]]></if>
+	</select>
+	
+	<!-- 新增访客留言簿信息 -->
+	<insert id="addGuestBook" parameterType="GuestBook">
+		INSERT INTO tbl_guest_book (msg_id,msg_info,name,phone,email,address,create_time)
+		VALUES (#{msg_id,jdbcType=VARCHAR},#{msg_info,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},#{create_time,jdbcType=VARCHAR})
+	</insert>
+	
+	<!-- 批量新增访客留言簿信息信息 -->
+	<insert id="addBatchGuestBook" parameterType="GuestBook">
+		INSERT INTO tbl_guest_book (msg_id,msg_info,name,phone,email,address,create_time)
+		<foreach item="item" collection="list" separator="union all">
+			SELECT #{item.msg_id,jdbcType=VARCHAR},#{item.msg_info,jdbcType=VARCHAR},#{item.name,jdbcType=VARCHAR},#{item.phone,jdbcType=VARCHAR},#{item.email,jdbcType=VARCHAR},#{item.address,jdbcType=VARCHAR},#{item.create_time,jdbcType=VARCHAR}
+			FROM dual
+		</foreach>
+	</insert>
+	
+	<!-- 更新访客留言簿信息信息 -->
+	<update id="updateGuestBook" parameterType="GuestBook">
+		UPDATE tbl_guest_book
+		<set>
+	      	<if test="msg_id != null">msg_id = #{msg_id,jdbcType=VARCHAR},</if>
+	      	<if test="msg_info != null">msg_info = #{msg_info,jdbcType=VARCHAR},</if>
+	      	<if test="name != null">name = #{name,jdbcType=VARCHAR},</if>
+	      	<if test="phone != null">phone = #{phone,jdbcType=VARCHAR},</if>
+	      	<if test="email != null">email = #{email,jdbcType=VARCHAR},</if>
+	      	<if test="address != null">address = #{address,jdbcType=VARCHAR},</if>
+	      	<if test="create_time != null">create_time = #{create_time,jdbcType=VARCHAR},</if>
+	      	
+		</set>
+		WHERE msg_id = #{msg_id,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 删除访客留言簿信息信息 -->
+	<delete id="deleteGuestBook" parameterType="GuestBook">
+		DELETE FROM tbl_guest_book WHERE msg_id = #{msg_id,jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 批量删除访客留言簿信息信息-->
+	<delete id="deleteBatchGuestBook" parameterType="GuestBook">
+		DELETE FROM tbl_guest_book WHERE msg_id IN
+		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+			#{item.msg_id,jdbcType=VARCHAR}
+		</foreach>
+	</delete>
+</mapper>

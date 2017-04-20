@@ -24,7 +24,7 @@
 <%@include file="/WEB-INF/mgr/jsp/main/header.jsp"%>
 
 <article class="login">
-    <section class="top" style="background-image: url(themes/default/images/login-top-bg.jpg);"></section>
+    <section class="top" style="background-image: url(${ctx}/css/themes/default/images/login-top-bg.jpg);"></section>
     <section class="form">
         <div class="win">
             <div class="title">

@@ -71,6 +71,7 @@ if(typeof jQuery === 'undefined'){
 
 <link rel="stylesheet" href="${ctx}/css/themes/default/style/animate.css" />
 <link rel="stylesheet" href="${ctx}/css/themes/default/style/main.css" />
+<link rel="stylesheet" href="${ctx}/css/themes/default/style/main1.css" />
 <link rel="stylesheet" href="${ctx}/css/themes/default/style/responces.css" />
 <link rel="stylesheet" href="${ctx}/css/themes/default/style/fonts.css" />
 
@@ -78,3 +79,4 @@ if(typeof jQuery === 'undefined'){
 <script src="${ctx}/css/themes/default/script/pubuliu.js"></script>
 <script src="${ctx}/css/themes/default/script/main.js"></script>
 <script src="${ctx}/js/common/StringUtil.${__min}js"></script>
+<script src="${ctx}/css/themes/default/script/pc_nb.js"></script>

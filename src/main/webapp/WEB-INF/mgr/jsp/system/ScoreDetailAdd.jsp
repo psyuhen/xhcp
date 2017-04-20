@@ -19,16 +19,48 @@
 			<%-- 主页开始 --%>
 	        <div id="content" class="col-lg-10 col-sm-10">
 	        <%-- content starts --%>
-	        <% //request.setAttribute("module_id", "{module_id}"); %>
+	        <% //request.setAttribute("module_id", "scoremgr"); %>
 	 		<%@include file="/WEB-INF/mgr/jsp/main/nav.jsp" %>
 	 
 	 			<%-- 新增的内容 --%>
-	 			<form id="{model.object.lowercase}Form">
+	 			<form id="scoreDetailForm">
 					<div class="row">
 				        <div class="box col-md-12">
 				            <div class="box-inner">
 				                <div class="box-content">
-				                	{add.field}
+				                	<div class="row">
+			                	    <div class="col-md-6">
+			                	    	<%-- 积分ID --%>
+			                		    <div class="form-group">
+			                		        <label class="control-label" for="score_id"><spring:message code="积分ID" /></label>
+			                		        <input type="text" name="score_id" class="form-control" id="score_id" placeholder="<spring:message code="积分ID" />">
+			                		    </div>
+			                		</div>
+			                	    <div class="col-md-6">
+			                	    	<%-- 用户ID --%>
+			                		    <div class="form-group">
+			                		        <label class="control-label" for="account_id"><spring:message code="用户ID" /></label>
+			                		        <input type="text" name="account_id" class="form-control" id="account_id" placeholder="<spring:message code="用户ID" />">
+			                		    </div>
+			                		</div>
+			                	    <div class="col-md-6">
+			                	    	<%-- 积分 --%>
+			                		    <div class="form-group">
+			                		        <label class="control-label" for="score"><spring:message code="积分" /></label>
+			                		        <input type="text" name="score" class="form-control" id="score" placeholder="<spring:message code="积分" />">
+			                		    </div>
+			                		</div>
+			                	</div>
+			                	<div class="row">
+			                	    <div class="col-md-6">
+			                	    	<%-- 原因 --%>
+			                		    <div class="form-group">
+			                		        <label class="control-label" for="reason"><spring:message code="原因" /></label>
+			                		        <input type="text" name="reason" class="form-control" id="reason" placeholder="<spring:message code="原因" />">
+			                		    </div>
+			                		</div>
+			                	</div>
+
 				                </div>
 				            </div>
 				        </div>
@@ -50,13 +82,13 @@
 					    </button>
 				    </c:if>
 				    <c:if test="${param.page eq 'mgr' }">
-				    	<a href="${ctx}{request.param}/listmgr?module_id=${requestScope.module_id}" class="btn btn-primary btn-sm">
+				    	<a href="${ctx}/mgr/system/score/listmgr?module_id=${requestScope.module_id}" class="btn btn-primary btn-sm">
 					    	<i class="glyphicon glyphicon-chevron-left"></i>
 					    	<spring:message code="btn_back" />
 					    </a>
 				    </c:if>
 				    <c:if test="${param.page eq 'query' }">
-				    	<a href="${ctx}{request.param}/query?module_id=${requestScope.module_id}" class="btn btn-primary btn-sm">
+				    	<a href="${ctx}/mgr/system/score/query?module_id=${requestScope.module_id}" class="btn btn-primary btn-sm">
 					    	<i class="glyphicon glyphicon-chevron-left"></i>
 					    	<spring:message code="btn_back" />
 					    </a>
@@ -74,12 +106,12 @@
 	</div><%--/.fluid-container--%>
 
 	<%-- 加载JS --%>
-	<script src="${ctx}/js/{jsp.path}/{model.object}Add.${__min}js" ></script>
+	<script src="${ctx}/js/system/ScoreDetailAdd.${__min}js" ></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			new {model.object}({
+			new ScoreDetail({
 				"oper" : "${requestScope.page}",
-				"{table.key}" : "${param.{table.key}}"
+				"score_id" : "${param.score_id}"
 			});
 		});
 	</script>

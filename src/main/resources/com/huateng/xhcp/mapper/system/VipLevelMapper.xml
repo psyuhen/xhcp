@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.huateng.xhcp.mapper.system.VipLevelMapper">
+    <!-- 查询会员等级信息 -->
+	<select id="queryVipLevel" resultType="VipLevel" parameterType="VipLevel">
+		SELECT vip_id,name,score,discount,create_time
+		FROM tbl_vip_level
+		<where>
+			<if test="vip_id != null and vip_id != ''">AND vip_id = #{vip_id,jdbcType=INTEGER}</if>
+			<if test="name != null and name != ''">AND name = #{name,jdbcType=VARCHAR}</if>
+			<if test="score != null and score != ''">AND score = #{score,jdbcType=INTEGER}</if>
+			<if test="discount != null and discount != ''">AND discount = #{discount,jdbcType=FLOAT}</if>
+			<if test="create_time != null and create_time != ''">AND create_time = #{create_time,jdbcType=VARCHAR}</if>
+			
+		</where>
+		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[order by ${b_order_name} ${b_order_asc}  ]]></if>
+	</select>
+	
+	<!-- 新增会员等级 -->
+	<insert id="addVipLevel" parameterType="VipLevel" useGeneratedKeys="true" keyProperty="vip_id">
+		INSERT INTO tbl_vip_level (name,score,discount,create_time)
+		VALUES (#{name,jdbcType=VARCHAR},#{score,jdbcType=INTEGER},#{discount,jdbcType=FLOAT},DATE_FORMAT(now(),'%Y%m%d%H%i%s'))
+	</insert>
+	
+	<!-- 批量新增会员等级信息 -->
+	<insert id="addBatchVipLevel" parameterType="VipLevel">
+		INSERT INTO tbl_vip_level (name,score,discount,create_time) VALUES
+		<foreach item="item" collection="list" separator=",">
+			(#{item.name,jdbcType=VARCHAR},#{item.score,jdbcType=INTEGER},#{item.discount,jdbcType=FLOAT},DATE_FORMAT(now(),'%Y%m%d%H%i%s'))
+		</foreach>
+	</insert>
+	
+	<!-- 更新会员等级信息 -->
+	<update id="updateVipLevel" parameterType="VipLevel">
+		UPDATE tbl_vip_level
+		<set>
+	      	<if test="vip_id != null">vip_id = #{vip_id,jdbcType=INTEGER},</if>
+	      	<if test="name != null">name = #{name,jdbcType=VARCHAR},</if>
+	      	<if test="score != null">score = #{score,jdbcType=INTEGER},</if>
+	      	<if test="discount != null">discount = #{discount,jdbcType=FLOAT},</if>
+	      	<if test="create_time != null">create_time = #{create_time,jdbcType=VARCHAR},</if>
+	      	
+		</set>
+		WHERE vip_id = #{vip_id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 删除会员等级信息 -->
+	<delete id="deleteVipLevel" parameterType="VipLevel">
+		DELETE FROM tbl_vip_level WHERE vip_id = #{vip_id,jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 批量删除会员等级信息-->
+	<delete id="deleteBatchVipLevel" parameterType="VipLevel">
+		DELETE FROM tbl_vip_level WHERE vip_id IN
+		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+			#{item.vip_id,jdbcType=INTEGER}
+		</foreach>
+	</delete>
+</mapper>

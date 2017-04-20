@@ -19,16 +19,48 @@
 			<%-- 主页开始 --%>
 	        <div id="content" class="col-lg-10 col-sm-10">
 	        <%-- content starts --%>
-	        <% //request.setAttribute("module_id", "{module_id}"); %>
+	        <% //request.setAttribute("module_id", "vipmgr"); %>
 	 		<%@include file="/WEB-INF/mgr/jsp/main/nav.jsp" %>
 	 
 	 			<%-- 新增的内容 --%>
-	 			<form id="{model.object.lowercase}Form">
+	 			<form id="vipLevelForm">
 					<div class="row">
 				        <div class="box col-md-12">
 				            <div class="box-inner">
 				                <div class="box-content">
-				                	{add.field}
+				                	<div class="row">
+			                	    <div class="col-md-6">
+			                	    	<%-- 会员等级ID --%>
+			                		    <div class="form-group">
+			                		        <label class="control-label" for="vip_id"><spring:message code="会员等级ID" /></label>
+			                		        <input type="text" name="vip_id" class="form-control" id="vip_id" placeholder="<spring:message code="会员等级ID" />">
+			                		    </div>
+			                		</div>
+			                	    <div class="col-md-6">
+			                	    	<%-- 等级名称 --%>
+			                		    <div class="form-group">
+			                		        <label class="control-label" for="name"><spring:message code="等级名称" /></label>
+			                		        <input type="text" name="name" class="form-control" id="name" placeholder="<spring:message code="等级名称" />">
+			                		    </div>
+			                		</div>
+			                	    <div class="col-md-6">
+			                	    	<%-- 积分要求 --%>
+			                		    <div class="form-group">
+			                		        <label class="control-label" for="score"><spring:message code="积分要求" /></label>
+			                		        <input type="text" name="score" class="form-control" id="score" placeholder="<spring:message code="积分要求" />">
+			                		    </div>
+			                		</div>
+			                	</div>
+			                	<div class="row">
+			                	    <div class="col-md-6">
+			                	    	<%-- 享受折扣 --%>
+			                		    <div class="form-group">
+			                		        <label class="control-label" for="discount"><spring:message code="享受折扣" /></label>
+			                		        <input type="text" name="discount" class="form-control" id="discount" placeholder="<spring:message code="享受折扣" />">
+			                		    </div>
+			                		</div>
+			                	</div>
+
 				                </div>
 				            </div>
 				        </div>
@@ -50,13 +82,13 @@
 					    </button>
 				    </c:if>
 				    <c:if test="${param.page eq 'mgr' }">
-				    	<a href="${ctx}{request.param}/listmgr?module_id=${requestScope.module_id}" class="btn btn-primary btn-sm">
+				    	<a href="${ctx}/mgr/system/vip/listmgr?module_id=${requestScope.module_id}" class="btn btn-primary btn-sm">
 					    	<i class="glyphicon glyphicon-chevron-left"></i>
 					    	<spring:message code="btn_back" />
 					    </a>
 				    </c:if>
 				    <c:if test="${param.page eq 'query' }">
-				    	<a href="${ctx}{request.param}/query?module_id=${requestScope.module_id}" class="btn btn-primary btn-sm">
+				    	<a href="${ctx}/mgr/system/vip/query?module_id=${requestScope.module_id}" class="btn btn-primary btn-sm">
 					    	<i class="glyphicon glyphicon-chevron-left"></i>
 					    	<spring:message code="btn_back" />
 					    </a>
@@ -74,12 +106,12 @@
 	</div><%--/.fluid-container--%>
 
 	<%-- 加载JS --%>
-	<script src="${ctx}/js/{jsp.path}/{model.object}Add.${__min}js" ></script>
+	<script src="${ctx}/js/system/VipLevelAdd.${__min}js" ></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			new {model.object}({
+			new VipLevel({
 				"oper" : "${requestScope.page}",
-				"{table.key}" : "${param.{table.key}}"
+				"vip_id" : "${param.vip_id}"
 			});
 		});
 	</script>

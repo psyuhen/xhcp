@@ -1,23 +1,23 @@
 /**
  * function:
- * {model.object}List.js
- * @author {author}
- * @createTime {now.time}
+ * ScoreDetailList.js
+ * @author sam.pan
+ * @createTime 2017-04-20 15:44:15
  */
-var {model.object}List = function (options){
+var ScoreDetailList = function (options){
 	var $this = this;
 	var $dataTable = null;
 	var $rowData = null;
 	var $table = null;
-	var _service_name = "com.huateng.xhcp.web.{model.package}.{model.object}Controller";
-	var _param_type = "com.huateng.xhcp.model.{model.package}.{model.object}";
+	var _service_name = "com.huateng.xhcp.web.system.ScoreDetailController";
+	var _param_type = "com.huateng.xhcp.model.system.ScoreDetail";
 	var _page = options.page;
 	var _module_id = options.module_id;
 	
 	/*初始化数据表格*/
 	this.initTable = function(){
 		var t = new Table({
-			"table_id"			: "{model.object.lowercase}List",
+			"table_id"			: "scoreDetailList",
 			"ordering"			: false,
 			"download"			: {enabled:false},
 			"row_btn_enabled"	: true,
@@ -25,13 +25,13 @@ var {model.object}List = function (options){
 			"btn_edit_callback"	: btnEditEvent,
 			"btn_del_callback"	: btnDelEvent,
 			"service_name"		: _service_name,
-			"method_name"		: "query{model.object}",
+			"method_name"		: "queryScoreDetail",
 			"param_type"		: _param_type,
-			"module_name"		: "{table.name}维护",
-			"url"				: ctx + "{request.param}/query{model.object}Page",
+			"module_name"		: "会员积分明细维护",
+			"url"				: ctx + "/mgr/system/score/queryScoreDetailPage",
 			"formId"			: "conditionForm",
-			"tableHeaders"		: [{table.title}],
-			"columnNames"		: [{table.render}]
+			"tableHeaders"		: ["积分ID","用户ID","积分","原因","创建时间"],
+			"columnNames"		: ["score_id","account_id","score","reason","create_time"]
 		});
 		$dataTable = t.getDataTable();
 		$table = t;
@@ -44,14 +44,14 @@ var {model.object}List = function (options){
 	
 	/* 查看*/
 	function btnViewEvent($rowData){
-		var {table.key} = $rowData.{table.key};
-		window.location.href = ctx + "{request.param}/view?{table.key}=" + {table.key} + "&page=" + _page + "&module_id=" + _module_id;
+		var score_id = $rowData.score_id;
+		window.location.href = ctx + "/mgr/system/score/view?score_id=" + score_id + "&page=" + _page + "&module_id=" + _module_id;
 	}
 	
 	/* 编辑*/
 	function btnEditEvent($rowData){
-		var {table.key} = $rowData.{table.key};
-		window.location.href = ctx + "{request.param}/update?page=mgr&{table.key}=" + {table.key} + "&module_id=" + _module_id;
+		var score_id = $rowData.score_id;
+		window.location.href = ctx + "/mgr/system/score/update?page=mgr&score_id=" + score_id + "&module_id=" + _module_id;
 	}
 	
 	/* 删除*/
@@ -75,18 +75,18 @@ var {model.object}List = function (options){
 	/* 删除*/
 	function btnDelCallback(rowdata){
 		var params = [
-		    ParamCheck.initChkObj("{table.key}", "{table.key.name}", rowdata.{table.key})
+		    ParamCheck.initChkObj("score_id", "会员积分明细ID", rowdata.score_id)
 		];
 		
 		ParamCheck.commonSubmit({
 			service_name : _service_name,
-			method_name : "delete{model.object}",
+			method_name : "deleteScoreDetail",
 			parameter_type : _param_type,
 			oper_type : "delete",
-			oper_desc : "删除{table.name}信息",
-			switch_name : "{model.object.lowercase}Switch",
-			module_id : "{module_id}",
-			check_fields : ["{table.key}"],
+			oper_desc : "删除会员积分明细信息",
+			switch_name : "scoreDetailSwitch",
+			module_id : "scoremgr",
+			check_fields : ["score_id"],
 			params : params,
 			success : function(){
 				$("#btn_search").click();

@@ -6,7 +6,7 @@
 <mapper namespace="com.huateng.xhcp.mapper.system.AccountMapper">
     <!-- 查询用户信息 -->
 	<select id="queryAccount" resultType="Account" parameterType="Account">
-		SELECT account_id, account_password, account_status, account_inv_date, account_name, mobile, qq, wechat, create_time
+		SELECT account_id, account_password, account_status, account_inv_date, account_name, mobile, qq, wechat, create_time,account_type,total_score
 		FROM sys_account
 		<where>
 			<if test="account_id != null and account_id != ''">account_id = #{account_id,jdbcType=VARCHAR}</if>
@@ -16,6 +16,7 @@
 			<if test="mobile != null  and mobile != ''">AND mobile = #{mobile,jdbcType=VARCHAR}</if>
 			<if test="wechat != null  and wechat != ''">AND wechat = #{wechat,jdbcType=VARCHAR}</if>
 	      	<if test="account_status != null and account_status != '' ">AND account_status = #{account_status,jdbcType=INTEGER}</if>
+	      	<if test="account_type != null and account_type != '' ">AND account_type = #{account_type,jdbcType=CHAR}</if>
 	      	<if test="b_start_date != null and b_start_date != ''"><![CDATA[AND account_inv_date >= #{b_start_date,jdbcType=VARCHAR}  ]]></if>
 	      	<if test="b_end_date != null and b_end_date != ''"><![CDATA[AND account_inv_date <= #{b_end_date,jdbcType=VARCHAR}  ]]></if>
 		</where>
@@ -23,28 +24,29 @@
 	</select>
     <!-- 根据用户ID查询用户信息 -->
 	<select id="queryAccountById" resultType="Account" parameterType="String">
-		SELECT account_id, account_password, account_status, account_inv_date, account_name,mobile, qq, wechat, create_time
+		SELECT account_id, account_password, account_status, account_inv_date, account_name,mobile, qq, wechat, create_time,account_type,total_score
 		FROM sys_account WHERE account_id = #{account_id,jdbcType=VARCHAR}
 	</select>
     <!-- 根据手机号查询用户信息 -->
 	<select id="queryByMobile" resultType="Account" parameterType="String">
-		SELECT account_id, account_password, account_status, account_inv_date, account_name,mobile, qq, wechat, create_time
+		SELECT account_id, account_password, account_status, account_inv_date, account_name,mobile, qq, wechat, create_time,account_type,total_score
 		FROM sys_account WHERE mobile = #{mobile,jdbcType=VARCHAR}
 	</select>
     <!-- 根据用户ID和密码查询用户信息 -->
 	<select id="queryAccountByIdAndPwd" resultType="Account" parameterType="Account">
-		SELECT account_id, account_password, account_status, account_inv_date, account_name,mobile, qq, wechat, create_time
+		SELECT account_id, account_password, account_status, account_inv_date, account_name,mobile, qq, wechat, create_time,account_type,total_score
 		FROM sys_account 
 		WHERE (account_id = #{account_id,jdbcType=VARCHAR} OR mobile = #{mobile,jdbcType=VARCHAR})
 		AND account_password=#{account_password,jdbcType=VARCHAR}
 	</select>
 	<!-- 新增账号 -->
 	<insert id="addAccount" parameterType="Account">
-		INSERT INTO sys_account (account_id, account_password, account_status, account_inv_date, account_name,mobile, qq, wechat, create_time)
+		INSERT INTO sys_account (account_id, account_password, account_status, account_inv_date, account_name,mobile, qq, wechat, create_time,account_type,total_score)
 		VALUES (#{account_id,jdbcType=VARCHAR},#{account_password,jdbcType=VARCHAR},
 		#{account_status,jdbcType=INTEGER},#{account_inv_date,jdbcType=VARCHAR},
 		#{account_name,jdbcType=VARCHAR},#{mobile,jdbcType=VARCHAR},
-		#{qq,jdbcType=VARCHAR},#{wechat,jdbcType=VARCHAR},DATE_FORMAT(now(),'%Y%m%d%H%i%s'))
+		#{qq,jdbcType=VARCHAR},#{wechat,jdbcType=VARCHAR},DATE_FORMAT(now(),'%Y%m%d%H%i%s'),
+		#{account_type,jdbcType=CHAR},#{total_score,jdbcType=INTEGER})
 	</insert>
 	<!-- 更新账号信息 -->
 	<update id="updateAccount" parameterType="Account">
@@ -57,6 +59,8 @@
 	      	<if test="qq != null">qq = #{qq,jdbcType=VARCHAR},</if>
 	      	<if test="wechat != null">wechat = #{wechat,jdbcType=VARCHAR},</if>
 	      	<if test="mobile != null">mobile = #{mobile,jdbcType=VARCHAR}</if>
+	      	<if test="account_type != null">account_type = #{account_type,jdbcType=CHAR}</if>
+	      	<if test="total_score != null">total_score = #{total_score,jdbcType=INTEGER}</if>
 		</set>
 		WHERE  account_id = #{account_id}
 	</update>

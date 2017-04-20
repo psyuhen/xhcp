@@ -208,9 +208,11 @@ public class LoginController {
 
         account_password = SecureUtil.shaEncode(account_password);
         account.setAccount_id(mobile);
+        account.setAccount_name(mobile);
         account.setAccount_status(AccountStatus.ACTIVE.toString());
         account.setAccount_password(account_password);
         account.setAccount_type(AccountType.MEMBER.toString());
+        account.setTotal_score("800");
 
         int c = accountService.addAccount(account);
         if(c == 0){

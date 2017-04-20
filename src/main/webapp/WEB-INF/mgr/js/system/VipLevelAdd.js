@@ -1,15 +1,15 @@
 /**
  * function:
- * {model.object}Add.js
- * @author {author}
- * @createTime {now.time}
+ * VipLevelAdd.js
+ * @author sam.pan
+ * @createTime 2017-04-20 10:18:58
  */
-var {model.object} = function (options){
+var VipLevel = function (options){
 	var $this = this;
 	var _oper = options.oper || "add";
-	var _{table.key} = options.{table.key};
-	var _controller_name = "com.huateng.xhcp.web.{model.package}.{model.object}Controller";
-	var _param_type = "com.huateng.xhcp.model.{model.package}.{model.object}";
+	var _vip_id = options.vip_id;
+	var _controller_name = "com.huateng.xhcp.web.system.VipLevelController";
+	var _param_type = "com.huateng.xhcp.model.system.VipLevel";
 	
 	/*查询按钮事件初始化*/
 	this.initBtn = function(){
@@ -23,7 +23,11 @@ var {model.object} = function (options){
 	function __fieldValidator(){
 		var _field = {};
 
-{jsvalidate.field}	
+		_field.vip_id = Validator.validate(false, {max:10});
+		_field.name = Validator.validate(false, {max:10});
+		_field.score = Validator.validate(false, {max:10}, {r:/^\d{1,10}$/,m:"请输入整数"});
+		_field.discount = Validator.validate(false, {max:6}, null, Validator.d(6,2));
+	
 		
 		return _field;
 	}
@@ -40,14 +44,14 @@ var {model.object} = function (options){
 	this.submit = function(type){
 		ParamCheck.commonSubmit({
 			service_name 	: _controller_name,
-			method_name 	: ("add" === type ? "add{model.object}" : "update{model.object}"),
+			method_name 	: ("add" === type ? "addVipLevel" : "updateVipLevel"),
 			parameter_type  : _param_type,
 			oper_type 		: type,
-			oper_desc 		: ("add" === type ? "新增" : "编辑") + "{table.name}信息",
-			switch_name 	: "{model.object.lowercase}Switch",
-			module_id 		: "{module_id}",
-			check_fields 	: ["{table.key}"],
-			form_id			: "{model.object.lowercase}Form",
+			oper_desc 		: ("add" === type ? "新增" : "编辑") + "会员等级信息",
+			switch_name 	: "vipLevelSwitch",
+			module_id 		: "vipmgr",
+			check_fields 	: ["vip_id"],
+			form_id			: "vipLevelForm",
 			oparams			: {}
 		});
 	};
@@ -55,17 +59,17 @@ var {model.object} = function (options){
 	/* form 校验 */
 	this.formvalidator = function(){
 		var options={
-			formId				: "{model.object.lowercase}Form",
+			formId				: "vipLevelForm",
 	        fields				: __fieldValidator(),
 	        successFormFv		: __formCommit
 		};
 		
 		new FormValidator(options);
 	};
-	/* 查询{table.name}信息*/
+	/* 查询会员等级信息*/
 	this.queryByKey = function(){
-		tableSupport.get(ctx + "{request.param}/queryByKey", {"{table.key}" : _{table.key}}, function({model.object.lowercase}){
-			Form.setValue({model.object.lowercase});
+		tableSupport.get(ctx + "/mgr/system/vip/queryByKey", {"vip_id" : _vip_id}, function(vipLevel){
+			Form.setValue(vipLevel);
 		});
 	};
 	
@@ -79,9 +83,9 @@ var {model.object} = function (options){
 		}
 		
 		if("update" === _oper){
-			$("#{table.key}").attr("readonly", true);
+			$("#vip_id").attr("readonly", true);
 		}else if("view" === _oper){
-			Form.setDisabled("{model.object.lowercase}Form");
+			Form.setDisabled("vipLevelForm");
 		}
 	}
 	

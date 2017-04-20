@@ -1,23 +1,23 @@
 /**
  * function:
- * {model.object}List.js
- * @author {author}
- * @createTime {now.time}
+ * VipLevelList.js
+ * @author sam.pan
+ * @createTime 2017-04-20 10:18:58
  */
-var {model.object}List = function (options){
+var VipLevelList = function (options){
 	var $this = this;
 	var $dataTable = null;
 	var $rowData = null;
 	var $table = null;
-	var _service_name = "com.huateng.xhcp.web.{model.package}.{model.object}Controller";
-	var _param_type = "com.huateng.xhcp.model.{model.package}.{model.object}";
+	var _service_name = "com.huateng.xhcp.web.system.VipLevelController";
+	var _param_type = "com.huateng.xhcp.model.system.VipLevel";
 	var _page = options.page;
 	var _module_id = options.module_id;
 	
 	/*初始化数据表格*/
 	this.initTable = function(){
 		var t = new Table({
-			"table_id"			: "{model.object.lowercase}List",
+			"table_id"			: "vipLevelList",
 			"ordering"			: false,
 			"download"			: {enabled:false},
 			"row_btn_enabled"	: true,
@@ -25,13 +25,13 @@ var {model.object}List = function (options){
 			"btn_edit_callback"	: btnEditEvent,
 			"btn_del_callback"	: btnDelEvent,
 			"service_name"		: _service_name,
-			"method_name"		: "query{model.object}",
+			"method_name"		: "queryVipLevel",
 			"param_type"		: _param_type,
-			"module_name"		: "{table.name}维护",
-			"url"				: ctx + "{request.param}/query{model.object}Page",
+			"module_name"		: "会员等级维护",
+			"url"				: ctx + "/mgr/system/vip/queryVipLevelPage",
 			"formId"			: "conditionForm",
-			"tableHeaders"		: [{table.title}],
-			"columnNames"		: [{table.render}]
+			"tableHeaders"		: ["会员等级ID","等级名称","积分要求","享受折扣","创建时间"],
+			"columnNames"		: ["vip_id","name","score","discount","create_time"]
 		});
 		$dataTable = t.getDataTable();
 		$table = t;
@@ -44,14 +44,14 @@ var {model.object}List = function (options){
 	
 	/* 查看*/
 	function btnViewEvent($rowData){
-		var {table.key} = $rowData.{table.key};
-		window.location.href = ctx + "{request.param}/view?{table.key}=" + {table.key} + "&page=" + _page + "&module_id=" + _module_id;
+		var vip_id = $rowData.vip_id;
+		window.location.href = ctx + "/mgr/system/vip/view?vip_id=" + vip_id + "&page=" + _page + "&module_id=" + _module_id;
 	}
 	
 	/* 编辑*/
 	function btnEditEvent($rowData){
-		var {table.key} = $rowData.{table.key};
-		window.location.href = ctx + "{request.param}/update?page=mgr&{table.key}=" + {table.key} + "&module_id=" + _module_id;
+		var vip_id = $rowData.vip_id;
+		window.location.href = ctx + "/mgr/system/vip/update?page=mgr&vip_id=" + vip_id + "&module_id=" + _module_id;
 	}
 	
 	/* 删除*/
@@ -75,18 +75,18 @@ var {model.object}List = function (options){
 	/* 删除*/
 	function btnDelCallback(rowdata){
 		var params = [
-		    ParamCheck.initChkObj("{table.key}", "{table.key.name}", rowdata.{table.key})
+		    ParamCheck.initChkObj("vip_id", "会员等级ID", rowdata.vip_id)
 		];
 		
 		ParamCheck.commonSubmit({
 			service_name : _service_name,
-			method_name : "delete{model.object}",
+			method_name : "deleteVipLevel",
 			parameter_type : _param_type,
 			oper_type : "delete",
-			oper_desc : "删除{table.name}信息",
-			switch_name : "{model.object.lowercase}Switch",
-			module_id : "{module_id}",
-			check_fields : ["{table.key}"],
+			oper_desc : "删除会员等级信息",
+			switch_name : "vipLevelSwitch",
+			module_id : "vipmgr",
+			check_fields : ["vip_id"],
 			params : params,
 			success : function(){
 				$("#btn_search").click();

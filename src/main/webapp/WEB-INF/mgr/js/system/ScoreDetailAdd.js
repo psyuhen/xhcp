@@ -1,15 +1,15 @@
 /**
  * function:
- * {model.object}Add.js
- * @author {author}
- * @createTime {now.time}
+ * ScoreDetailAdd.js
+ * @author sam.pan
+ * @createTime 2017-04-20 15:44:15
  */
-var {model.object} = function (options){
+var ScoreDetail = function (options){
 	var $this = this;
 	var _oper = options.oper || "add";
-	var _{table.key} = options.{table.key};
-	var _controller_name = "com.huateng.xhcp.web.{model.package}.{model.object}Controller";
-	var _param_type = "com.huateng.xhcp.model.{model.package}.{model.object}";
+	var _score_id = options.score_id;
+	var _controller_name = "com.huateng.xhcp.web.system.ScoreDetailController";
+	var _param_type = "com.huateng.xhcp.model.system.ScoreDetail";
 	
 	/*查询按钮事件初始化*/
 	this.initBtn = function(){
@@ -23,7 +23,11 @@ var {model.object} = function (options){
 	function __fieldValidator(){
 		var _field = {};
 
-{jsvalidate.field}	
+		_field.score_id = Validator.validate(false, {max:10});
+		_field.account_id = Validator.validate(false, {max:96});
+		_field.score = Validator.validate(false, {max:10});
+		_field.reason = Validator.validate(false, {max:96});
+	
 		
 		return _field;
 	}
@@ -40,14 +44,14 @@ var {model.object} = function (options){
 	this.submit = function(type){
 		ParamCheck.commonSubmit({
 			service_name 	: _controller_name,
-			method_name 	: ("add" === type ? "add{model.object}" : "update{model.object}"),
+			method_name 	: ("add" === type ? "addScoreDetail" : "updateScoreDetail"),
 			parameter_type  : _param_type,
 			oper_type 		: type,
-			oper_desc 		: ("add" === type ? "新增" : "编辑") + "{table.name}信息",
-			switch_name 	: "{model.object.lowercase}Switch",
-			module_id 		: "{module_id}",
-			check_fields 	: ["{table.key}"],
-			form_id			: "{model.object.lowercase}Form",
+			oper_desc 		: ("add" === type ? "新增" : "编辑") + "会员积分明细信息",
+			switch_name 	: "scoreDetailSwitch",
+			module_id 		: "scoremgr",
+			check_fields 	: ["score_id"],
+			form_id			: "scoreDetailForm",
 			oparams			: {}
 		});
 	};
@@ -55,17 +59,17 @@ var {model.object} = function (options){
 	/* form 校验 */
 	this.formvalidator = function(){
 		var options={
-			formId				: "{model.object.lowercase}Form",
+			formId				: "scoreDetailForm",
 	        fields				: __fieldValidator(),
 	        successFormFv		: __formCommit
 		};
 		
 		new FormValidator(options);
 	};
-	/* 查询{table.name}信息*/
+	/* 查询会员积分明细信息*/
 	this.queryByKey = function(){
-		tableSupport.get(ctx + "{request.param}/queryByKey", {"{table.key}" : _{table.key}}, function({model.object.lowercase}){
-			Form.setValue({model.object.lowercase});
+		tableSupport.get(ctx + "/mgr/system/score/queryByKey", {"score_id" : _score_id}, function(scoreDetail){
+			Form.setValue(scoreDetail);
 		});
 	};
 	
@@ -79,9 +83,9 @@ var {model.object} = function (options){
 		}
 		
 		if("update" === _oper){
-			$("#{table.key}").attr("readonly", true);
+			$("#score_id").attr("readonly", true);
 		}else if("view" === _oper){
-			Form.setDisabled("{model.object.lowercase}Form");
+			Form.setDisabled("scoreDetailForm");
 		}
 	}
 	

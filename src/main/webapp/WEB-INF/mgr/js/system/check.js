@@ -141,6 +141,9 @@ function check_reginfo(){
 
     $.post(ctx + "/register.do",obj,function (resp) {
         alert(resp.desc);
+        if(resp.status == "0"){
+            window.location.href = ctx + "/login.html";
+        }
     });
     return false;
 }

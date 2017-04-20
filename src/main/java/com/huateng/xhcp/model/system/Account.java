@@ -30,6 +30,7 @@ public class Account extends BaseModel{
 	private @Setter @Getter String old_password;
 	private @Setter @Getter String validate_code;
 	private @Setter @Getter String account_type;
+	private @Setter @Getter String total_score;
 
 	/* 获取本系统账号(0)与其他系统账号ectip(1)*/
 	//private @Setter @Getter Integer client = AccountType.LOCAL.value();

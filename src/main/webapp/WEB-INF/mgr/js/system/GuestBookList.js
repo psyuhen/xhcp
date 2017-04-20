@@ -1,23 +1,23 @@
 /**
  * function:
- * {model.object}List.js
- * @author {author}
- * @createTime {now.time}
+ * GuestBookList.js
+ * @author sam.pan
+ * @createTime 2017-04-20 17:53:20
  */
-var {model.object}List = function (options){
+var GuestBookList = function (options){
 	var $this = this;
 	var $dataTable = null;
 	var $rowData = null;
 	var $table = null;
-	var _service_name = "com.huateng.xhcp.web.{model.package}.{model.object}Controller";
-	var _param_type = "com.huateng.xhcp.model.{model.package}.{model.object}";
+	var _service_name = "com.huateng.xhcp.web.system.GuestBookController";
+	var _param_type = "com.huateng.xhcp.model.system.GuestBook";
 	var _page = options.page;
 	var _module_id = options.module_id;
 	
 	/*初始化数据表格*/
 	this.initTable = function(){
 		var t = new Table({
-			"table_id"			: "{model.object.lowercase}List",
+			"table_id"			: "guestBookList",
 			"ordering"			: false,
 			"download"			: {enabled:false},
 			"row_btn_enabled"	: true,
@@ -25,13 +25,13 @@ var {model.object}List = function (options){
 			"btn_edit_callback"	: btnEditEvent,
 			"btn_del_callback"	: btnDelEvent,
 			"service_name"		: _service_name,
-			"method_name"		: "query{model.object}",
+			"method_name"		: "queryGuestBook",
 			"param_type"		: _param_type,
-			"module_name"		: "{table.name}维护",
-			"url"				: ctx + "{request.param}/query{model.object}Page",
+			"module_name"		: "访客留言簿信息维护",
+			"url"				: ctx + "/mgr/system/guest/queryGuestBookPage",
 			"formId"			: "conditionForm",
-			"tableHeaders"		: [{table.title}],
-			"columnNames"		: [{table.render}]
+			"tableHeaders"		: ["留言ID","姓名","电话","邮箱","地址","留言","创建时间"],
+			"columnNames"		: ["msg_id","name","phone","email","address","msg_info","create_time"]
 		});
 		$dataTable = t.getDataTable();
 		$table = t;
@@ -44,14 +44,14 @@ var {model.object}List = function (options){
 	
 	/* 查看*/
 	function btnViewEvent($rowData){
-		var {table.key} = $rowData.{table.key};
-		window.location.href = ctx + "{request.param}/view?{table.key}=" + {table.key} + "&page=" + _page + "&module_id=" + _module_id;
+		var msg_id = $rowData.msg_id;
+		window.location.href = ctx + "/mgr/system/guest/view?msg_id=" + msg_id + "&page=" + _page + "&module_id=" + _module_id;
 	}
 	
 	/* 编辑*/
 	function btnEditEvent($rowData){
-		var {table.key} = $rowData.{table.key};
-		window.location.href = ctx + "{request.param}/update?page=mgr&{table.key}=" + {table.key} + "&module_id=" + _module_id;
+		var msg_id = $rowData.msg_id;
+		window.location.href = ctx + "/mgr/system/guest/update?page=mgr&msg_id=" + msg_id + "&module_id=" + _module_id;
 	}
 	
 	/* 删除*/
@@ -75,18 +75,18 @@ var {model.object}List = function (options){
 	/* 删除*/
 	function btnDelCallback(rowdata){
 		var params = [
-		    ParamCheck.initChkObj("{table.key}", "{table.key.name}", rowdata.{table.key})
+		    ParamCheck.initChkObj("msg_id", "信息ID", rowdata.msg_id)
 		];
 		
 		ParamCheck.commonSubmit({
 			service_name : _service_name,
-			method_name : "delete{model.object}",
+			method_name : "deleteGuestBook",
 			parameter_type : _param_type,
 			oper_type : "delete",
-			oper_desc : "删除{table.name}信息",
-			switch_name : "{model.object.lowercase}Switch",
-			module_id : "{module_id}",
-			check_fields : ["{table.key}"],
+			oper_desc : "删除访客留言簿信息信息",
+			switch_name : "guestBookSwitch",
+			module_id : "msgmgr",
+			check_fields : ["msg_id"],
 			params : params,
 			success : function(){
 				$("#btn_search").click();

@@ -20,7 +20,7 @@
 			<%-- 主页开始 --%>
 	        <div id="content" class="col-lg-10 col-sm-10">
 	        <%-- content starts --%>
-	        <% request.setAttribute("module_id", "{module_id}"); %>
+	        <% request.setAttribute("module_id", "scoremgr"); %>
 	 		<%@include file="/WEB-INF/mgr/jsp/main/nav.jsp" %>
 	 		
 	 		<%-- 查询条件 --%>
@@ -30,7 +30,23 @@
 						<form id="conditionForm">
 	                       	<%-- 查询条件输入 --%>
 			                <div class="box-content">
-			                	{condition.content}
+			                	<div class="row">
+			                	    <div class="col-md-6">
+			                	    	<%-- 用户ID --%>
+			                		    <div class="form-group">
+			                		        <label class="control-label" for="account_id"><spring:message code="用户ID" /></label>
+			                		        <input type="text" name="account_id" class="form-control" id="account_id" placeholder="<spring:message code="用户ID" />">
+			                		    </div>
+			                		</div>
+			                	    <div class="col-md-6">
+			                	    	<%-- 原因 --%>
+			                		    <div class="form-group">
+			                		        <label class="control-label" for="reason"><spring:message code="原因" /></label>
+			                		        <input type="text" name="reason" class="form-control" id="reason" placeholder="<spring:message code="原因" />">
+			                		    </div>
+			                		</div>
+			                	</div>
+
 			                </div>
 		                </form>
 		                
@@ -45,7 +61,7 @@
 						    	<spring:message code="btn_reset" />
 						    </button>
 						    <c:if test="${requestScope.page eq 'mgr'}">
-							    <a href="${ctx}{request.param}/add?module_id=${requestScope.module_id}&page=${requestScope.page}" class="btn btn-primary btn-sm">
+							    <a href="${ctx}/mgr/system/score/add?module_id=${requestScope.module_id}&page=${requestScope.page}" class="btn btn-primary btn-sm">
 							    	<i class="glyphicon glyphicon-plus"></i>
 							    	<spring:message code="btn_add" />
 							    </a>
@@ -60,7 +76,7 @@
 		            <div class="box-inner">
 		            	<div class="box-content">
 			            	<%-- 列表 --%>
-							<table id="{model.object.lowercase}List" class="table table-striped table-bordered" cellspacing="0" width="100%">
+							<table id="scoreDetailList" class="table table-striped table-bordered" cellspacing="0" width="100%">
 							    <thead>
 							        <tr>
 							        </tr>
@@ -81,11 +97,11 @@
 	
 	
 	<%-- 加载JS --%>
-	<script src="${ctx}/js/{jsp.path}/{model.object}List.${__min}js"></script>
+	<script src="${ctx}/js/system/ScoreDetailList.${__min}js"></script>
 	
 	<script type="text/javascript">
 	$(document).ready(function(){
-		new {model.object}List({
+		new ScoreDetailList({
 			"page" : "${requestScope.page}",
 			"module_id" : "${requestScope.module_id}"
 		});
