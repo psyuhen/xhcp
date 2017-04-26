@@ -137,3 +137,35 @@ RenderUtil.free_shipping = function (data, type, row){
     }
     return "";
 };
+
+/**
+ * "0" >买方待付款
+ "1" >卖方确认订单
+ "2" >买方已付款
+ "3" >卖方已发货
+ "4" >交易完成/买方确认收货
+ "5" >交易取消
+ "6" >交易关闭
+ * @param data
+ * @param type
+ * @param row
+ * @returns
+ */
+RenderUtil.trad_status = function (data, type, row){
+    if(data == "0"){
+        return '<span class="label-info label label-default">买方待付款</span>';
+    }else if(data == "1"){
+        return '<span class="label-info label label-default">卖方确认订单</span>';
+    }else if(data == "2"){
+        return '<span class="label-info label label-default">买方已付款</span>';
+    }else if(data == "3"){
+        return '<span class="label-info label label-default">卖方已发货</span>';
+    }else if(data == "4"){
+        return '<span class="label-success label label-default">交易完成/买方确认收货</span>';
+    }else if(data == "5"){
+        return '<span class="label-default label label-danger">交易取消</span>';
+    }else if(data == "6"){
+        return '<span class="label-warning label label-default">交易关闭</span>';
+    }
+    return "";
+};

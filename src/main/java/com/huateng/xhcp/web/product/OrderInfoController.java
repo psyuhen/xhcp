@@ -13,9 +13,11 @@ import com.huateng.xhcp.model.product.FreqAddr;
 import com.huateng.xhcp.model.product.MerchCar;
 import com.huateng.xhcp.model.product.OrderDetail;
 import com.huateng.xhcp.model.system.Account;
+import com.huateng.xhcp.model.system.Province;
 import com.huateng.xhcp.security.SecurityContext;
 import com.huateng.xhcp.service.product.FreqAddrService;
 import com.huateng.xhcp.service.product.OrderDetailService;
+import com.huateng.xhcp.service.system.ProvinceService;
 import com.huateng.xhcp.util.DateUtil;
 import com.huateng.xhcp.util.StringUtil;
 import lombok.Getter;
@@ -49,6 +51,7 @@ public class OrderInfoController implements com.huateng.xhcp.service.upload.Vali
 	private @Autowired @Setter @Getter OrderInfoService orderInfoService;
 	private @Autowired @Setter @Getter FreqAddrService freqAddrService;
 	private @Autowired @Setter @Getter OrderDetailService orderDetailService;
+	private @Autowired @Setter @Getter ProvinceService provinceService;
 
 	@RequestMapping(value="/ordercancel.html")
 	public String orderCancelPage(@RequestParam String order_id, HttpServletRequest request){
@@ -209,6 +212,11 @@ public class OrderInfoController implements com.huateng.xhcp.service.upload.Vali
 	public String toAddPage(HttpServletRequest request){
 		request.setAttribute("page", "add");
 		request.setAttribute("module_id", "ordermgr");
+
+		Province province = new Province();
+		List<Province> provinces = this.provinceService.queryBy(province);
+		request.setAttribute("provinces", provinces);
+
 		return "product/OrderInfoAdd";
 	}
 	
@@ -220,6 +228,10 @@ public class OrderInfoController implements com.huateng.xhcp.service.upload.Vali
 	public String toUpdatePage(HttpServletRequest request){
 		request.setAttribute("page", "update");
 		request.setAttribute("module_id", "ordermgr");
+
+		Province province = new Province();
+		List<Province> provinces = this.provinceService.queryBy(province);
+		request.setAttribute("provinces", provinces);
 		return "product/OrderInfoAdd";
 	}
 	/**
@@ -230,9 +242,38 @@ public class OrderInfoController implements com.huateng.xhcp.service.upload.Vali
 	public String toViewPage(HttpServletRequest request){
 		request.setAttribute("page", "view");
 		request.setAttribute("module_id", request.getParameter("module_id"));
+
+		Province province = new Province();
+		List<Province> provinces = this.provinceService.queryBy(province);
+		request.setAttribute("provinces", provinces);
 		return "product/OrderInfoAdd";
 	}
-	
+
+	/**
+	 * 跳转到查看页面
+	 * @return
+	 */
+	@RequestMapping(value = "/mgr/product/order/detail")
+	public String toOrderDetailPage(HttpServletRequest request){
+		request.setAttribute("page", "view");
+		request.setAttribute("module_id", request.getParameter("module_id"));
+
+		return "product/OrderDetailList";
+	}
+
+	/**
+	 * 查询订单详情信息(分页)
+	 * @param orderDetail
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/mgr/product/order/queryOrderDetailInfo", method = RequestMethod.POST)
+	public com.huateng.xhcp.web.page.Page queryOrderDetailInfo(OrderDetail orderDetail){
+		Page<OrderDetail> list = (Page<OrderDetail>)this.orderDetailService.queryOrderDetail(orderDetail);
+
+		return new com.huateng.xhcp.web.page.Page(list);
+	}
+
 	/**
 	 * 查询订单信息信息(分页)
 	 * @param orderInfo

@@ -15,6 +15,8 @@ import com.huateng.xhcp.util.DateUtil;
 import com.huateng.xhcp.util.HttpUtil;
 import com.huateng.xhcp.util.SecureUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,9 +25,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -33,6 +37,7 @@ import java.util.List;
  */
 @Controller
 public class LoginController {
+    private static final Log LOGGER = LogFactory.getLog(LoginController.class);
     private @Autowired AccountService accountService;
     private @Autowired ProvinceService provinceService;
     private @Autowired FreqAddrService freqAddrService;
@@ -46,6 +51,11 @@ public class LoginController {
         session.setAttribute("blackUrl", referer);
 
         return "login";
+    }
+
+    @RequestMapping(value="/mgr/login")
+    public String tologinPage(HttpServletRequest request, HttpServletResponse response){
+        return "system/Login";
     }
 
     @RequestMapping(value="/register.html")
@@ -105,12 +115,114 @@ public class LoginController {
         RandomValidateCode.getInstance().getRandcode(request, response);
     }
 
-
     /**
      * 根据手机号码和密码登录
      * @param account 用户 信息
      * @return 查询到返回用户 信息否则返回null
      */
+    @RequestMapping(value="/mgr/tologin.do", method = RequestMethod.POST)
+    public String loginMgr(Account account, @RequestParam  String toBlackUrl, HttpServletRequest request, HttpServletResponse response) {
+        request.setAttribute("toBlackUrl", toBlackUrl);
+        if(account == null){
+            LOGGER.info("account is null");
+            return "system/Login";
+        }
+
+        String account_id = account.getAccount_id();
+        String mobile = account.getMobile();
+        String account_password = account.getAccount_password();
+
+        if(StringUtils.isBlank(account_id) && StringUtils.isBlank(mobile)){
+            LOGGER.info("用户账号和手机号码不能同时为空");
+            request.setAttribute("msg", "用户账号和手机号码不能同时为空");
+            return "system/Login";
+        }
+
+        if(StringUtils.isBlank(account_password)){
+            LOGGER.info("密码不能为空！");
+            request.setAttribute("msg", "密码不能为空！");
+            return "system/Login";
+        }
+
+        if(account_password.length() < 40){
+            account_password = SecureUtil.shaEncode(account_password);
+        }
+        Account acc = new Account();
+        acc.setAccount_id(account_id);
+        acc.setAccount_name(account_id);
+        acc.setMobile(mobile);
+        acc.setAccount_password(account_password);
+        Account accounts = accountService.queryAccountByIdAndPwd(acc);
+        if(accounts == null){
+            LOGGER.info("用户/密码错误");
+            request.setAttribute("msg", "用户/密码错误");
+            return "system/Login";
+        }
+
+        if("0".equals(accounts.getAccount_status())){
+            LOGGER.info("用户已被锁定");
+            request.setAttribute("msg", "用户已被锁定");
+            return "system/Login";
+        }
+
+        String invDate = accounts.getAccount_inv_date();
+        if(!StringUtils.isBlank(invDate) && invDate.compareTo(DateUtil.today("yyyyMMdd")) < 0){
+            LOGGER.info("用户已失效");
+            request.setAttribute("msg", "用户已失效");
+            return "system/Login";
+        }
+
+        if(StringUtils.equals(AccountType.MEMBER.toString(), accounts.getAccount_type())){
+            LOGGER.info("会员用户不能登录");
+            request.setAttribute("msg", "会员用户不能登录后台管理");
+            return "system/Login";
+        }
+
+        //保存用户密码到cookie中
+        String remember = request.getParameter("remember");
+        LOGGER.info("remember :" + remember);
+        if("1".equals(remember)){//写入cookie
+            Cookie nameCookie = new Cookie("account_id", account.getAccount_id());
+            Cookie pwdCookie = new Cookie("account_password", account_password);
+            Cookie rmCookie = new Cookie("remember",remember);
+            nameCookie.setMaxAge(24 * 60 * 60);
+            pwdCookie.setMaxAge(24 * 60 * 60);
+            rmCookie.setMaxAge(24 * 60 * 60);
+            response.addCookie(nameCookie);
+            response.addCookie(pwdCookie);
+            response.addCookie(rmCookie);
+        }else{//不保存cookie，要清空
+            Cookie[] cookies = request.getCookies();
+            for(Cookie cookie : cookies){
+                if("account_id".equals(cookie.getName()) || "account_password".equals(cookie.getName())
+                        || "remember".equals(cookie.getName())){
+                    cookie.setMaxAge(0);
+                    response.addCookie(cookie);
+                }
+            }
+        }
+
+        /*登录信息*/
+        UserLoginHist userLoginHist = new UserLoginHist();
+        userLoginHist.setAccount_id(account_id);
+        userLoginHist.setAccount_name(account_id);
+        userLoginHistService.addUserLoginHist(userLoginHist);
+
+        HttpSession session = request.getSession();
+        session.setAttribute(SecurityContext.BACK_ACCOUNT, accounts);
+
+        /* 返回之前的url*/
+        if(!StringUtils.isBlank(toBlackUrl)){
+            return "redirect:" + toBlackUrl;
+        }
+
+        return "main";
+    }
+        /**
+         * 根据手机号码和密码登录
+         * @param account 用户 信息
+         * @return 查询到返回用户 信息否则返回null
+         */
     @RequestMapping(value="/login.do", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<ResponseInfo> login(Account account, @RequestParam  String blackUrl, HttpServletRequest request) {
@@ -246,7 +358,16 @@ public class LoginController {
         request.getSession().setAttribute(SecurityContext.FRONT_ACCOUNT, null);
         return "redirect:/index";
     }
-
+    /**
+     * 后端用户退出
+     * @return
+     */
+    @RequestMapping(value="/mgr/logout", method = RequestMethod.GET)
+    public String tologout(HttpServletRequest request) {
+        request.getSession().setAttribute(SecurityContext.BACK_ACCOUNT, null);
+        request.getSession().invalidate();
+        return "forward:/mgr/login";
+    }
     /**
      * 修改密码
      * @param account 手机号

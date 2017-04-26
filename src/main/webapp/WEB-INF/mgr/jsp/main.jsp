@@ -18,9 +18,10 @@
 <%@include file="/WEB-INF/mgr/jsp/main/topbar.jsp" %>
 <div class="ch-container">
     <div class="row">
-        <%@include file="/WEB-INF/mgr/jsp/main/left_menu1.jsp" %>
+        <%@include file="/WEB-INF/mgr/jsp/main/left_menu.jsp" %>
         <%-- 主页开始 --%>
         <div id="content" class="col-lg-10 col-sm-10">
+            <%@include file="/WEB-INF/mgr/jsp/main/nav.jsp" %>
             <%-- content starts --%>
 
         </div><%--/#content.col-md-0--%>

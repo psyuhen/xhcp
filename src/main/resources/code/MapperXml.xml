@@ -11,21 +11,21 @@
 		<where>
 			{wif.c}
 		</where>
-		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[order by ${b_order_name} ${b_order_asc}  ]]></if>
+		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[ORDER BY ${b_order_name} ${b_order_asc}  ]]></if>
+		<if test='b_order_name == null  and b_order_name == ""'><![CDATA[ORDER BY create_time DESC   ]]></if>
 	</select>
 	
 	<!-- 新增{table.name} -->
-	<insert id="add{model.object}" parameterType="{model.object}">
+	<insert id="add{model.object}" parameterType="{model.object}" useGeneratedKeys="true" keyProperty="{table.key}">
 		INSERT INTO {table.en} ({field.all})
 		VALUES ({in.field})
 	</insert>
 	
 	<!-- 批量新增{table.name}信息 -->
-	<insert id="addBatch{model.object}" parameterType="{model.object}">
-		INSERT INTO {table.en} ({field.all})
-		<foreach item="item" collection="list" separator="union all">
-			SELECT {bin.field}
-			FROM dual
+	<insert id="addBatch{model.object}" parameterType="{model.object}" useGeneratedKeys="true" keyProperty="{table.key}">
+		INSERT INTO {table.en} ({field.all}) VALUES
+		<foreach item="item" collection="list" separator=",">
+			({bin.field})
 		</foreach>
 	</insert>
 	

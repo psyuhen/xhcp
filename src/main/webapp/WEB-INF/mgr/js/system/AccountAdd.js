@@ -115,6 +115,7 @@ var Account = function (options){
 		_field.account_name = Validator.validate(false, {max:64});
 		_field.account_password = Validator.validate(true, {min: 6,max: 192},null,Validator.pwdScore());
 		_field.account_status = Validator.validate(true);
+		_field.account_type = Validator.validate(true);
 		_field.account_inv_date = Validator.validate(false, {max:8});
 
 

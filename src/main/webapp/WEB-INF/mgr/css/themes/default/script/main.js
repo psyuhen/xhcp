@@ -64,7 +64,53 @@ $(document).ready(function() {
 	if($(window).width()<=640){
 		$('.mendian .item').width($(window).width()-30);
 	}
-	
+
+
+	$("#nb_nodeboard_close").on("click", function () {
+
+		if($(this).hasClass("nb-nodeboard-max")){
+			$(this).removeClass("nb-nodeboard-max");
+            $("#nb_nodeboard_form > ins").show();
+            $("#nb_node_contain").show();
+		}else{
+            $(this).addClass("nb-nodeboard-max");
+            $("#nb_nodeboard_form > ins").hide();
+            $("#nb_node_contain").hide();
+		}
+    });
+
+	$("#nb-nodeboard-set-content-js,#nb_nodeboard_set_phone").on("focus", function () {
+		$("#nb-nodeboard-tips-js").remove();
+    });
+
+	$("#nb_node_contain").on("click", function () {
+		var msg = $("#nb-nodeboard-set-content-js").val();
+		var name = $("#nb_nodeboard_set_name").val();
+		var phone = $("#nb_nodeboard_set_phone").val();
+		var email = $("#nb_nodeboard_set_email").val();
+		var address = $("#nb_nodeboard_set_address").val();
+
+		if(msg == ""){
+			$("#nb-nodeboard-set-content-js").after('<ins class="nb-nodeboard-tips" id="nb-nodeboard-tips-js">不允许为空!</ins>');
+			return;
+		}
+
+        if(phone == ""){
+            $("#nb_nodeboard_set_phone").after('<ins class="nb-nodeboard-tips" id="nb-nodeboard-tips-js">不允许为空!</ins>');
+            return;
+        }
+
+        ///guest/addGuestBook
+		var obj = {};
+        obj.msg_info = msg;
+        obj.name = name;
+        obj.phone = phone;
+        obj.email = email;
+        obj.address = address;
+        $.post(ctx + '/guest/addGuestBook',obj,function(resp) {
+        	alert(resp.desc);
+        });
+    });
 });
 
 // 首页新闻
@@ -1000,7 +1046,7 @@ function renderlist() {
 								+'<a href="'+ctx+'/article/news-'+item.article_id+'.html">'
 									+'<div class="con">'
 										+'<div class="maxsize">'
-											+'<div class="face" style="background-image: url(a);"></div>'
+											+'<div class="face" style="background-image: url('+item.article_photo+');"></div>'
 											+'<div class="text">'
 												+'<h1>'+item.title+'</h1>'
 												+'<h2>'+item.article_date+'</h2>'
@@ -1032,6 +1078,4 @@ function refreshCode(obj){
 	obj.src=ctx + "/validatecode?r=" + Math.random();
 }
 
-function check_reginfo(){
 
-}

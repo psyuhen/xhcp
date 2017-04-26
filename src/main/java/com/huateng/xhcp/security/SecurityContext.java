@@ -23,7 +23,8 @@ import com.huateng.xhcp.util.PropertiesReader;
 public class SecurityContext {
 	private static final Log LOGGER = LogFactory.getLog(SecurityContext.class);
 	public static final String FRONT_ACCOUNT = "Front_Account";
-	
+	public static final String BACK_ACCOUNT = "Back_Account";
+
 	/**
 	 * 获取登录用户
 	 * @return
@@ -43,7 +44,7 @@ public class SecurityContext {
 		/* 获取当前请求的session*/
 		HttpSession session = request.getSession();
 		/* 获取当前请求的登录用户*/
-		Account account = (Account)session.getAttribute("user");
+		Account account = (Account)session.getAttribute(BACK_ACCOUNT);
 		
 		LOGGER.debug("获取当前后台登录用户信息:" + account);
 		

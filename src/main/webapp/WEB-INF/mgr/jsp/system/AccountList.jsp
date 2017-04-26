@@ -46,10 +46,14 @@
 									    </div>
 			                        </div>
 			                        <div class="col-md-4">
-			                        	<%-- 密码 --%>
+			                        	<%-- 账户类型 --%>
 									    <div class="form-group">
-									        <label class="control-label" for="account_password"><spring:message code="password" /></label>
-									        <input type="text" name="account_password" class="form-control" id="account_password" placeholder="<spring:message code="password" />">
+									        <label class="control-label" for="account_type"><spring:message code="account_type" /></label>
+											<select id="account_type" class="form-control" name="account_type" >
+												<option value="" selected="selected">请选择...</option>
+												<option value="0" >后台用户</option>
+												<option value="1" >会员</option>
+											</select>
 									    </div>
 									</div>
 			                    </div>
@@ -93,7 +97,7 @@
 						    	<i class="glyphicon glyphicon-remove"></i>
 						    	<spring:message code="btn_reset" />
 						    </button>
-						    <a href="${ctx}/mgr/user/add?module_id=UserMgr" class="btn btn-primary btn-sm">
+						    <a href="${ctx}/mgr/user/add?module_id=usermgr" class="btn btn-primary btn-sm">
 						    	<i class="glyphicon glyphicon-plus"></i>
 						    	<spring:message code="btn_add" />
 						    </a>

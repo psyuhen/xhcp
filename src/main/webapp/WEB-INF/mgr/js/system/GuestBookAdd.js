@@ -82,8 +82,10 @@ var GuestBook = function (options){
 		
 		if("add" !== _oper){
 			$this.queryByKey();
+		}else{
+            $("#msg_id").attr("readonly", true);
 		}
-		
+
 		if("update" === _oper){
 			$("#msg_id").attr("readonly", true);
 		}else if("view" === _oper){

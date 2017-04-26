@@ -56,24 +56,13 @@
 
             <div class="pull-right" style="padding-right: 15px;">
             	<label style="color: #ffffff;font-size: 10px;">
-            		欢迎您:${user.account_id}(${user.account_name})|角色:
-            		<c:choose>
-            			<c:when test="${sessionScope.user.superUser}">
-            				超级管理员
-            			</c:when>
-	            		<c:when test="${not empty sessionScope.user_role}">
-		            		${sessionScope.user_role[0].role_desc}
-		            	</c:when>
-		            	<c:otherwise>
-		            		未知角色
-		            	</c:otherwise>
-	            	</c:choose>
+            		欢迎您:${Back_Account.account_id}(${Back_Account.account_name})
 	            	|日期:<span id="now_time"></span>
             	</label><br/>
             	<label class="pull-right" id="topmenu">
-            		<a href="${ctx}/mgr/main"><spring:message code="main_page" /></a>
+            		<a href="${ctx}/mgr"><spring:message code="main_page" /></a>
             		<%-- |<a href="${ctx}/mgr/logout" title="更好体验的浏览器chrome"><spring:message code="下载" /></a> --%>
-            		|<a href="javascript:void(0);" onclick="logout(this)"><spring:message code="logout" /></a>
+            		|<a href="${ctx}/mgr/logout" ><spring:message code="logout" /></a>
             	</label>
             </div>
             <%-- user dropdown ends --%>

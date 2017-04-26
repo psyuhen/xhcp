@@ -196,10 +196,33 @@ public class StringUtil {
 	public static void rmContentsHtml(List<Article> articles){
 		if(articles != null){
 			for(Article a : articles){
-				String contents = delHtml(a.getContents());
+				final String contents1 = a.getContents();
+				a.setArticle_photo(getSrcUrl(contents1));
+				String contents = delHtml(contents1);
 				contents = ellipsis(contents, 100);
 				a.setContents(contents);
 			}
 		}
+	}
+
+	/**
+	 * 获取url
+	 * @param contents
+	 * @return
+	 */
+	public static String getSrcUrl(String contents){
+		String regex = "src=\".*[.jpg|.png|.bmp|.jpeg|.gif]\"";
+
+		Pattern pattern = Pattern.compile(regex);
+		Matcher matcher = pattern.matcher(contents);
+		if(matcher.find()){
+			String src = matcher.group();
+
+			src = StringUtils.removeStartIgnoreCase(src, "src=\"");
+			src = StringUtils.removeEnd(src, "\"");
+			return src;
+		}
+
+		return "";
 	}
 }

@@ -31,21 +31,21 @@
 	                       	<%-- 查询条件输入 --%>
 			                <div class="box-content">
 			                	<div class="row">
-			                	    <div class="col-md-6">
+			                	    <div class="col-md-4">
 			                	    	<%-- 订单ID --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="order_id"><spring:message code="订单ID" /></label>
 			                		        <input type="text" name="order_id" class="form-control" id="order_id" placeholder="<spring:message code="订单ID" />">
 			                		    </div>
 			                		</div>
-			                	    <div class="col-md-6">
+			                	    <div class="col-md-4">
 			                	    	<%-- 买家用户名 --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="buyer_user_name"><spring:message code="买家用户名" /></label>
 			                		        <input type="text" name="buyer_user_name" class="form-control" id="buyer_user_name" placeholder="<spring:message code="买家用户名" />">
 			                		    </div>
 			                		</div>
-			                	    <div class="col-md-6">
+			                	    <div class="col-md-4">
 			                	    	<%-- 收货人 --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="buyer_name"><spring:message code="收货人" /></label>
@@ -69,12 +69,12 @@
 						    	<i class="glyphicon glyphicon-remove"></i>
 						    	<spring:message code="btn_reset" />
 						    </button>
-						    <c:if test="${requestScope.page eq 'mgr'}">
-							    <a href="${ctx}/mgr/mgr/product/order/add?module_id=${requestScope.module_id}&page=${requestScope.page}" class="btn btn-primary btn-sm">
+						    <%--<c:if test="${requestScope.page eq 'mgr'}">
+							    <a href="${ctx}/mgr/product/order/add?module_id=${requestScope.module_id}&page=${requestScope.page}" class="btn btn-primary btn-sm">
 							    	<i class="glyphicon glyphicon-plus"></i>
 							    	<spring:message code="btn_add" />
 							    </a>
-						    </c:if>
+						    </c:if>--%>
 				        </div>
 		            </div>
 		        </div>

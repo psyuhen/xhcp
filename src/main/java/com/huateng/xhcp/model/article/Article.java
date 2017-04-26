@@ -24,6 +24,7 @@ public class Article extends BaseModel{
 	private @Setter @Getter String hits;
 	private @Setter @Getter String update_time;
 	private @Setter @Getter String create_time;
-	
+	private @Setter @Getter String article_photo;
+
 	
 }

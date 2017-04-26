@@ -42,23 +42,21 @@
 				            <div class="box-inner">
 				                <div class="box-content">
 				                    <div class="row">
-				                        <div class="col-md-6">
+				                        <div class="col-md-4">
 				                        	<%-- 账户ID --%>
 										    <div class="form-group">
 										        <label class="control-label" for="account_id"><spring:message code="account_id" /></label>
 										        <input type="text" name="account_id" class="form-control" id="account_id" placeholder="<spring:message code="account_id" />">
 										    </div>
 										</div>
-				                        <div class="col-md-6">
+				                        <div class="col-md-4">
 				                        	<%-- 账户名称 --%>
 										    <div class="form-group">
 										        <label class="control-label" for="account_name"><spring:message code="account_name" /></label>
 										        <input type="text" name="account_name" class="form-control" id="account_name" placeholder="<spring:message code="account_name" />">
 										    </div>
 				                        </div>
-				                    </div>
-				                    <div class="row">
-				                        <div class="col-md-6">
+				                        <div class="col-md-4">
 				                        	<%-- 密码 --%>
 										    <div class="form-group">
 										        <label class="control-label" for="account_password"><spring:message code="password" /></label>
@@ -68,7 +66,9 @@
 									            </div>
 										    </div>
 										</div>
-				                        <div class="col-md-6">
+									</div>
+									<div class="row">
+				                        <div class="col-md-4">
 				                        	<%-- 账户状态 --%>
 										    <div class="form-group">
 										    	<label class="control-label" for="account_status"><spring:message code="account_status" /></label>
@@ -79,9 +79,7 @@
 									            </select>
 										    </div>
 				                        </div>
-				                    </div>
-				                    <div class="row">
-				                        <div class="col-md-6">
+				                        <div class="col-md-4">
 				                        	<%-- 失效日期 --%>
 										    <div class="form-group">
 										    	<%-- 使用bootstrap datatimepicker --%>
@@ -94,7 +92,7 @@
 								                </div>
 										    </div>
 										</div>
-				                        <div class="col-md-6">
+				                        <div class="col-md-4">
 											<%-- 手机号码 --%>
 											<div class="form-group">
 												<label class="control-label" for="mobile"><spring:message code="mobile" /></label>
@@ -103,14 +101,25 @@
 				                        </div>
 				                    </div>
 									<div class="row">
-										<div class="col-md-6">
+										<div class="col-md-4">
+											<%-- 账户类型 --%>
+											<div class="form-group">
+												<label class="control-label" for="account_type"><spring:message code="account_type" /></label>
+												<select id="account_type" class="form-control" name="account_type" >
+													<option value="" selected="selected">请选择...</option>
+													<option value="0" >后台用户</option>
+													<option value="1" >会员</option>
+												</select>
+											</div>
+										</div>
+										<div class="col-md-4">
 											<%-- QQ --%>
 											<div class="form-group">
 												<label class="control-label" for="qq"><spring:message code="qq" /></label>
 												<input type="text" name="qq" class="form-control" id="qq" placeholder="<spring:message code="qq" />">
 											</div>
 										</div>
-										<div class="col-md-6">
+										<div class="col-md-4">
 											<%-- WeChat --%>
 											<div class="form-group">
 												<label class="control-label" for="wechat"><spring:message code="wechat" /></label>
@@ -139,7 +148,7 @@
 					    	<spring:message code="btn_view" />
 				    	</c:if>
 				    </button>
-				    <a href="${ctx}/mgr/user?module_id=UserMgr" class="btn btn-primary btn-sm">
+				    <a href="${ctx}/mgr/user?module_id=usermgr" class="btn btn-primary btn-sm">
 				    	<i class="glyphicon glyphicon-chevron-left"></i>
 				    	<spring:message code="btn_back" />
 				    </a>

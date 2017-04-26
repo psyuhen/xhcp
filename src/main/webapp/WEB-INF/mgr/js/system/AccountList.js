@@ -25,9 +25,9 @@ var AccountList = function (options){
 			"module_name"	: "用户管理",
 			"url"		: ctx + "/mgr/user/queryAccountPage",
 			"formId"			: "conditionForm",
-			"tableHeaders"		: ["账号","名称","密码","状态","可用日期","手机号码","qq","微信"],
+			"tableHeaders"		: ["账号","名称","密码","状态","类型","可用日期","手机号码","qq","微信"],
 			"columnNames"		: ["account_id","account_name",{"account_password":renderPwd},
-				{"account_status":renderStatus},{"account_inv_date":renderDate},"mobile","qq","wechat"]
+				{"account_status":renderStatus},{"account_type":renderType},{"account_inv_date":renderDate},"mobile","qq","wechat"]
 		});
 		$dataTable = t.getDataTable();
 		$table = t;
@@ -39,6 +39,13 @@ var AccountList = function (options){
 		}
 		return "<span class='label-default label label-danger'>锁定</span>";
 	}
+	function renderType(data, type, row){
+		if(data == "1"){
+			return "<span class='label-success label label-default'>会员</span>";
+		}
+		return "<span class='label-default label label-danger'>后台用户</span>";
+	}
+
 	function renderDate(data, type, row){
 		var tmp = $.trim(data);
 		if(tmp == ""){

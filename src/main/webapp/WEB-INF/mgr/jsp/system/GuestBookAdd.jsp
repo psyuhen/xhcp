@@ -29,21 +29,21 @@
 				            <div class="box-inner">
 				                <div class="box-content">
 				                	<div class="row">
-			                	    <div class="col-md-6">
+			                	    <div class="col-md-4">
 			                	    	<%-- 留言ID --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="msg_id"><spring:message code="留言ID" /></label>
 			                		        <input type="text" name="msg_id" class="form-control" id="msg_id" placeholder="<spring:message code="留言ID" />">
 			                		    </div>
 			                		</div>
-			                	    <div class="col-md-6">
+			                	    <div class="col-md-4">
 			                	    	<%-- 姓名 --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="name"><spring:message code="姓名" /></label>
 			                		        <input type="text" name="name" class="form-control" id="name" placeholder="<spring:message code="姓名" />">
 			                		    </div>
 			                		</div>
-			                	    <div class="col-md-6">
+			                	    <div class="col-md-4">
 			                	    	<%-- 电话 --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="phone"><spring:message code="电话" /></label>
@@ -52,23 +52,21 @@
 			                		</div>
 			                	</div>
 			                	<div class="row">
-			                	    <div class="col-md-6">
+			                	    <div class="col-md-4">
 			                	    	<%-- 邮箱 --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="email"><spring:message code="邮箱" /></label>
 			                		        <input type="text" name="email" class="form-control" id="email" placeholder="<spring:message code="邮箱" />">
 			                		    </div>
 			                		</div>
-			                	    <div class="col-md-6">
+			                	    <div class="col-md-4">
 			                	    	<%-- 地址 --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="address"><spring:message code="地址" /></label>
 			                		        <input type="text" name="address" class="form-control" id="address" placeholder="<spring:message code="地址" />">
 			                		    </div>
 			                		</div>
-			                	</div>
-			                	<div class="row">
-			                	    <div class="col-md-6">
+			                	    <div class="col-md-4">
 			                	    	<%-- 留言 --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="msg_info"><spring:message code="留言" /></label>

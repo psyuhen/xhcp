@@ -24,14 +24,20 @@ var OrderInfoList = function (options){
 			"btn_view_callback"	: btnViewEvent,
 			"btn_edit_callback"	: btnEditEvent,
 			"btn_del_callback"	: btnDelEvent,
+            "row_other_btn_enabled" : true,
+            "row_other_btns"	: [{
+                name : "btn_belong_role",
+                text : "订单详情",
+                event: btnDetailEvent
+            }],
 			"service_name"		: _service_name,
 			"method_name"		: "queryOrderInfo",
 			"param_type"		: _param_type,
 			"module_name"		: "订单信息维护",
-			"url"				: ctx + "/mgr/mgr/product/order/queryOrderInfoPage",
+			"url"				: ctx + "/mgr/product/order/queryOrderInfoPage",
 			"formId"			: "conditionForm",
-			"tableHeaders"		: ["订单ID","买家用户名","收货人","成交金额","交易状态"],
-			"columnNames"		: ["order_id","buyer_user_name","buyer_name","amount_money","status"]
+			"tableHeaders"		: ["订单ID","买家用户账号","买家用户名","收货人","成交金额","交易状态"],
+			"columnNames"		: ["order_id","buyer_account_id","buyer_user_name","buyer_name","amount_money",{"status":RenderUtil.trad_status}]
 		});
 		$dataTable = t.getDataTable();
 		$table = t;
@@ -45,19 +51,25 @@ var OrderInfoList = function (options){
 	/* 查看*/
 	function btnViewEvent($rowData){
 		var order_id = $rowData.order_id;
-		window.location.href = mgr_path + "/mgr/product/order/view?order_id=" + order_id + "&page=" + _page + "&module_id=" + _module_id;
+		window.location.href = ctx + "/mgr/product/order/view?order_id=" + order_id + "&page=" + _page + "&module_id=" + _module_id;
 	}
 	
 	/* 编辑*/
 	function btnEditEvent($rowData){
 		var order_id = $rowData.order_id;
-		window.location.href = mgr_path + "/mgr/product/order/update?page=mgr&order_id=" + order_id + "&module_id=" + _module_id;
+		window.location.href = ctx + "/mgr/product/order/update?page=mgr&order_id=" + order_id + "&module_id=" + _module_id;
 	}
 	
 	/* 删除*/
 	function btnDelEvent($rowData){
 		btnDelCallback($rowData);
 	}
+
+	/* 订单详情*/
+    function btnDetailEvent($rowData){
+        var order_id = $rowData.order_id;
+        window.location.href = ctx + "/mgr/product/order/detail?module_id=" +_module_id+ "&order_id=" + order_id+ "&page=" + _page;
+    }
 	
 	/*查询按钮事件初始化*/
 	this.initBtn = function(){

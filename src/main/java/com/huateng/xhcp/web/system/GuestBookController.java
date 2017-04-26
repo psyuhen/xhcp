@@ -111,6 +111,17 @@ public class GuestBookController implements com.huateng.xhcp.service.upload.Vali
 	public GuestBook queryByKey(String msg_id){
 		return this.guestBookService.queryByKey(msg_id);
 	}
+
+	/**
+	 * 新增访客留言簿信息信息
+	 * @param guestBook
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/guest/addGuestBook", method = RequestMethod.POST)
+	public ResponseEntity<ResponseInfo> insertGuestBook(GuestBook guestBook){
+		return addGuestBook(guestBook);
+	}
 	/**
 	 * 新增访客留言簿信息信息
 	 * @param guestBook
