@@ -33,8 +33,8 @@
 			SELECT
 				MAX(GALLERY_ID) GALLERY_ID,
 				MERCH_ID,
-				NAME,
-				path
+				MAX(`NAME`) AS NAME,
+				MAX(PATH) AS PATH
 			FROM
 				tbl_merch_gallery
 			GROUP BY MERCH_ID
@@ -73,8 +73,8 @@
 			SELECT
 				MAX(GALLERY_ID) GALLERY_ID,
 				MERCH_ID,
-				NAME,
-				path
+				MAX(`NAME`) AS NAME,
+				MAX(PATH) AS PATH
 			FROM
 				tbl_merch_gallery
 			GROUP BY MERCH_ID
@@ -127,10 +127,10 @@
 		LEFT JOIN tbl_classify_info b ON a.classify_id = b.classify_id
 		LEFT JOIN (
 			SELECT
-				MAX(GALLERY_ID) GALLERY_ID,
+				MAX(GALLERY_ID) AS GALLERY_ID,
 				MERCH_ID,
-				NAME,
-				path
+				MAX(`NAME`) AS NAME,
+				MAX(PATH) AS PATH
 			FROM
 				tbl_merch_gallery
 			GROUP BY
@@ -145,6 +145,58 @@
 				WHERE
 					pcls_id = #{classify_id,jdbcType=INTEGER}
 			)
+	</select>
+
+	<!-- 查询销售最多的商品信息 -->
+	<select id="queryHotMerch" resultType="MerchInfo">
+		SELECT
+			a.merch_id,
+			b. NAME,
+			b.price,
+			a.merch_photo
+		FROM
+			(
+				SELECT
+					a.merch_id,
+					(
+						SELECT
+							CONCAT(t.path, t. NAME)
+						FROM
+							tbl_merch_gallery t
+						WHERE
+							t.MERCH_ID = a.MERCH_ID
+						LIMIT 1
+					) merch_photo
+				FROM
+					tbl_merch_stat a
+				GROUP BY
+					a.merch_id
+				ORDER BY
+					sum(a.order_count) DESC
+				LIMIT 3
+			) a
+		LEFT JOIN tbl_merch_info b ON a.merch_id = b.MERCH_ID
+	</select>
+	<!-- 查询浏览量最多的商品信息 -->
+	<select id="queryHotHitsMerch" resultType="MerchInfo">
+		SELECT
+			a.merch_id,
+			a.`NAME`,
+			a.PRICE,
+			(
+				SELECT
+					CONCAT(t.path, t. NAME)
+				FROM
+					tbl_merch_gallery t
+				WHERE
+					t.MERCH_ID = a.MERCH_ID
+				LIMIT 1
+			) merch_photo
+		FROM
+			tbl_merch_info a
+		ORDER BY
+			a.HITS DESC
+		LIMIT 3
 	</select>
 	<!-- 新增产品 -->
 	<insert id="addMerchInfo" parameterType="MerchInfo" useGeneratedKeys="true" keyProperty="merch_id">

@@ -69,6 +69,21 @@ public class MerchInfoServiceImp implements MerchInfoService {
     public List<MerchInfo> queryByPclsId(String classify_id){
         return this.merchInfoMapper.queryByPclsId(classify_id);
     }
+
+    /**
+     * 查询销售最多的商品信息
+     * @return
+     */
+    public List<MerchInfo> queryHotMerch(){
+        return this.merchInfoMapper.queryHotMerch();
+    }
+    /**
+     * 查询销售最多的商品信息
+     * @return
+     */
+    public List<MerchInfo> queryHotHitsMerch(){
+        return this.merchInfoMapper.queryHotHitsMerch();
+    }
     /**
      * 根据Key查询产品信息
      *

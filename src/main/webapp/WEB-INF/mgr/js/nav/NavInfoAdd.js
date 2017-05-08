@@ -23,8 +23,8 @@ var NavInfo = function (options){
 	function __fieldValidator(){
 		var _field = {};
 		_field.nav_id = Validator.validate(false, {max:10});
-		_field.pnav_id = Validator.validate(false, {max:10});
-		_field.name = Validator.validate(false, {max:30});
+		_field.pnav_id = Validator.validate(true, {max:10});
+		_field.name = Validator.validate(true, {max:30});
 		_field.url = Validator.validate(false, {max:500});
 		_field.is_out_link = Validator.validate(false, {max:1});
 		_field.is_default = Validator.validate(false, {max:1});

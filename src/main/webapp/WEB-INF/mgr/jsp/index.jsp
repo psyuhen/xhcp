@@ -37,32 +37,38 @@
     <%-- 图片展示区，产品图片展示 --%>
     <section class="product clear animateall" reach="fadeInUpBig" effect=".anim" eachdelay=".anim" delaytime="150" >
         <div class="md6 l anim">
-            <div class="item" style="background-image: url(upfiles/onepage/1484089890205565745.jpg);" >
-                <div class="text">
-                    <h1>尊享款碗燕</h1>
-                    <h3>￥4536.00</h3>
-                    <a href="products-1.html">点击购买</a>
+            <c:if test="${fn:length(hotMerchs) gt 0}">
+                <div class="item" style="background-image: url(${ctx}/${hotMerchs[0].merch_photo});" >
+                    <div class="text">
+                        <h1>${hotMerchs[0].name}</h1>
+                        <h3>￥${hotMerchs[0].price}</h3>
+                        <a href="${ctx}/products-${hotMerchs[0].merch_id}.html">点击购买</a>
+                    </div>
                 </div>
-            </div>
+            </c:if>
         </div>
         <div class="md6 r">
             <div class="t anim">
-                <div class="item" style="background-image: url(upfiles/onepage/1482345925995272712.jpg);">
-                    <div class="text">
-                        <h1>孕智款碗燕</h1>
-                        <h3>￥2180.00</h3>
-                        <a href="products-13.html">点击购买</a>
+                <c:if test="${fn:length(hotMerchs) gt 1}">
+                    <div class="item" style="background-image: url(${ctx}/${hotMerchs[1].merch_photo});">
+                        <div class="text">
+                            <h1>${hotMerchs[1].name}</h1>
+                            <h3>￥${hotMerchs[1].price}</h3>
+                            <a href="${ctx}/products-${hotMerchs[1].merch_id}.html">点击购买</a>
+                        </div>
                     </div>
-                </div>
+                </c:if>
             </div>
             <div class="b anim">
-                <div class="item" style="background-image: url(upfiles/onepage/1482345925426456266.jpg);">
-                    <div class="text">
-                        <h1>经典款碗燕</h1>
-                        <h3>￥3180.00</h3>
-                        <a href="products-18.html">点击购买</a>
+                <c:if test="${fn:length(hotMerchs) gt 2}">
+                    <div class="item" style="background-image: url(${ctx}/${hotMerchs[2].merch_photo});">
+                        <div class="text">
+                            <h1>${hotMerchs[2].name}</h1>
+                            <h3>￥${hotMerchs[2].price}</h3>
+                            <a href="${ctx}/products-${hotMerchs[2].merch_id}.html">点击购买</a>
+                        </div>
                     </div>
-                </div>
+                </c:if>
             </div>
         </div>
     </section>

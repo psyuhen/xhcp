@@ -3,8 +3,10 @@ package com.huateng.xhcp.web;
 import com.huateng.xhcp.model.ResponseInfo;
 import com.huateng.xhcp.model.article.Article;
 import com.huateng.xhcp.model.kindeditor.KEMsg;
+import com.huateng.xhcp.model.product.MerchInfo;
 import com.huateng.xhcp.model.system.FileInfo;
 import com.huateng.xhcp.service.article.ArticleService;
+import com.huateng.xhcp.service.product.MerchInfoService;
 import com.huateng.xhcp.service.system.FileInfoService;
 import com.huateng.xhcp.service.upload.UploadCallback;
 import com.huateng.xhcp.service.upload.UploadType;
@@ -36,9 +38,12 @@ public class IndexController {
     private static final Log LOGGER = LogFactory.getLog(IndexController.class);
     private @Autowired ArticleService articleService;
     private @Autowired FileInfoService fileInfoService;
+    private @Autowired MerchInfoService merchInfoService;
+
 
     @RequestMapping("/index")
     public String mainPage(HttpServletRequest request){
+        //首页新闻
         Article article = new Article();
         article.setLimit(3);
         article.setStart(1);
@@ -46,12 +51,14 @@ public class IndexController {
         StringUtil.rmContentsHtml(articles);
         request.setAttribute("newArticleList", articles);
 
+        //首页图片展示
         FileInfo fileInfo = new FileInfo();
         fileInfo.setFile_type("1");
         fileInfo.setFile_suffix("0");
         List<FileInfo> photos = this.fileInfoService.queryBy(fileInfo);
         request.setAttribute("photosList", photos);
 
+        //首页视频
         fileInfo.setFile_type("2");
         fileInfo.setFile_suffix("1");
         photos = this.fileInfoService.queryBy(fileInfo);
@@ -66,6 +73,14 @@ public class IndexController {
         if(!photos.isEmpty()){
             request.setAttribute("indexnewsphoto", photos.get(0));
         }
+
+        //查询最火的商品
+        final List<MerchInfo> hotMerchs = this.merchInfoService.queryHotMerch();
+        if(hotMerchs == null || hotMerchs.isEmpty()){
+            final List<MerchInfo> hotHitsMerchs = this.merchInfoService.queryHotHitsMerch();
+            hotMerchs.addAll(hotHitsMerchs);
+        }
+        request.setAttribute("hotMerchs", hotMerchs);
 
         return "index";
     }
@@ -158,152 +173,6 @@ public class IndexController {
     @ResponseBody
     @RequestMapping(value = "/mgr/index/indexupload", method = RequestMethod.POST)
     public KEMsg uploadFile(HttpServletRequest request) {
-        /*String realPath = request.getServletContext().getRealPath("upfiles/");
-        LOGGER.info("readlPath =>" + realPath);
-
-        try{
-            //文件保存目录URL
-            String saveUrl  = request.getContextPath() + "/upfiles/";
-
-            if (!ServletFileUpload.isMultipartContent(request)) {
-                LOGGER.error("no file to upload");
-                return StringUtil.error("请选择目录");
-            }
-
-            //检查目录
-            File uploadDir = new File(realPath);
-            if (!uploadDir.isDirectory()) {
-                LOGGER.error("upload file dir is not exists");
-                return StringUtil.error("上传的目录不存在");
-            }
-            //检查目录写权限
-            if (!uploadDir.canWrite()) {
-                LOGGER.error("upload file dir cannot write");
-                return StringUtil.error("上传的目录没有写权限");
-            }
-
-            long maxSize = 104857600;//最大文件大小
-            FileItemFactory factory = new DiskFileItemFactory();
-            ServletFileUpload upload = new ServletFileUpload(factory);
-            upload.setHeaderEncoding("UTF-8");
-            List<FileItem> items = upload.parseRequest(request);
-            Iterator<FileItem> itr = items.iterator();
-
-            //找出其他字段
-            String fileType = "";
-            String fileSuffix = "";
-            FileItem fileItem = null;
-            while(itr.hasNext()){
-                FileItem item = itr.next();
-                if(item.isFormField()){
-                    String fieldName = item.getFieldName();
-                    String fieldVal = item.getString();
-                    if("file_type".equals(fieldName)){
-                        fileType = fieldVal;
-                    }else if("file_suffix".equals(fieldName)){
-                        fileSuffix = fieldVal;
-                    }
-                }else{
-                    fileItem = item;
-                }
-            }
-
-            //定义允许上传的文件扩展名
-            HashMap<String, String> extMap = new HashMap<String, String>();
-            String filePath = "upfiles/";
-            if("0".equals(fileSuffix)){//图片
-                String path = "";
-                if("0".equals(fileType)){
-                    path = PropertiesReader.getString("logopath", "indeximg/");
-                }else if("1".equals(fileType)){
-                    path = PropertiesReader.getString("indexphoto", "indeximg/");
-                }else if("3".equals(fileType)){
-                    path = PropertiesReader.getString("indexnews", "onepage/");
-                }else{
-                    LOGGER.error("no dir to write");
-                    return StringUtil.error("上传的目录找不到");
-                }
-                path = StringUtils.endsWith(path, "/") ? path : (path + "/");
-                realPath += path;
-                saveUrl += path;
-                filePath += path;
-                extMap.put("format", "gif,jpg,jpeg,png,bmp");
-            }else if("1".equals(fileSuffix)){
-                if("2".equals(fileType)){//首页视频
-                    String indexvideo = PropertiesReader.getString("indexvideo", "onepage/");
-                    indexvideo = StringUtils.endsWith(indexvideo, "/") ? indexvideo : (indexvideo + "/");
-                    realPath += indexvideo;
-                    saveUrl += indexvideo;
-                    filePath += indexvideo;
-                    extMap.put("format", "mp4");
-                }else{
-                    LOGGER.error("no dir to write");
-                    return StringUtil.error("上传的目录找不到");
-                }
-            }else {
-                LOGGER.error("no dir to write");
-                return StringUtil.error("上传的目录找不到");
-            }
-
-
-            File dirFile = new File(realPath);
-            if (!dirFile.exists()) {
-                dirFile.mkdirs();
-            }
-
-            if(fileItem == null){
-                LOGGER.error("没有文件需要上传！");
-                return StringUtil.error("没有文件需要上传！");
-            }
-
-            String fileName = fileItem.getName();
-            long fileSize = fileItem.getSize();
-            //检查文件大小
-            if (fileSize > maxSize) {
-                LOGGER.error("上传文件大小超过限制。");
-                return StringUtil.error("上传文件大小超过限制。");
-            }
-
-            //检查扩展名
-            String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
-            String format = extMap.get("format");
-            if (!Arrays.<String>asList(format.split(",")).contains(fileExt)) {
-                LOGGER.error("上传文件扩展名是不允许的扩展名。\n只允许" + format + "格式。");
-                return StringUtil.error("上传文件扩展名是不允许的扩展名。\n只允许" + format + "格式。");
-            }
-
-            String prefix = "2".equals(fileType) ? "video" :"image";
-
-            String newFileName = prefix + DateUtil.currentTime() + StringUtil.random(6) + "." + fileExt;
-            try {
-                File uploadedFile = new File(realPath, newFileName);
-                fileItem.write(uploadedFile);
-
-                FileInfo fileInfo = new FileInfo();
-                fileInfo.setName(newFileName);
-                fileInfo.setFile_name(fileName);
-                fileInfo.setFile_path(filePath);
-                fileInfo.setFile_type(fileType);
-                fileInfo.setFile_suffix(fileSuffix);
-                int c = this.fileInfoService.addFileInfo(fileInfo);
-                if(c==0){
-                    uploadedFile.deleteOnExit();
-                    return StringUtil.error("插入文件信息失败");
-                }else{
-                    KEMsg keMsg = StringUtil.success("上传成功!");
-                    keMsg.setData(fileInfo.getFile_id());
-                    keMsg.setUrl(saveUrl + newFileName);
-                    return keMsg;
-                }
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage(), e);
-                return StringUtil.error(e.getMessage());
-            }
-        }catch (Exception e){
-            LOGGER.error(e.getMessage(), e);
-        }
-        return StringUtil.error("");*/
-
         final List<FileInfo> list = new ArrayList<FileInfo>();
         UploadType uploadType =  UploadFileUtil.upload(request, new UploadCallback<FileInfo>() {
             @Override

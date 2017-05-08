@@ -39,6 +39,16 @@ public interface MerchInfoService {
 	 */
 	List<MerchInfo> queryByPclsId(String classify_id);
 	/**
+	 * 查询销售最多的商品信息
+	 * @return
+	 */
+	List<MerchInfo> queryHotMerch();
+	/**
+	 * 查询销售最多的商品信息
+	 * @return
+	 */
+	List<MerchInfo> queryHotHitsMerch();
+	/**
 	 * 根据Key查询产品信息
 	 * @param merch_id
 	 * @return

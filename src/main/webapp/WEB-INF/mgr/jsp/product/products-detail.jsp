@@ -59,10 +59,10 @@
                         <div class="amount">
                             <div class="shuliang">
                                 <p>数量：</p>
-                                <div class="uikit_amount" max="10" min="1">
+                                <div class="uikit_amount" max="10000" min="1">
                                     <a href="javascript:void(0);" class="add iconfont" id="add">&#xe6b2;</a>
                                     <a href="javascript:void(0);" class="min iconfont" id="min">&#xe6b1;</a>
-                                    <input type="text" id="count" value="1" max="10" min="1">
+                                    <input type="text" id="count" value="1" max="10000" min="1">
                                 </div>
                             </div>
                             <p>服务：由陈皮皇直接销售和供货，并提供售后服务。(超过200元免运费，200元以下按实际重量按公式征收运费)</p>

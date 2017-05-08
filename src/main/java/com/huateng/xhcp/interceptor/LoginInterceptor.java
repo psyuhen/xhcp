@@ -12,6 +12,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * HandlerInterceptor 接口中定义了三个方法，我们就是通过这三个方法来对用户的请求进行拦截处理的。
@@ -45,6 +47,18 @@ public class LoginInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
 			Object arg2) throws Exception {
 
+		if(set.isEmpty()){
+			set.add("/usercenter.html");
+			set.add("/forget.html");
+			set.add("/address.html");
+			set.add("/order.html");
+			set.add("/shopping_checkout.html");
+			set.add("/ordercancel.html");
+			set.add("/orderview.html");
+			set.add("/shopping_confirm.html");
+		}
+
+
 		final HttpSession session = request.getSession();
 		final Object develop_mode = session.getAttribute("develop_mode");
 		if(develop_mode == null){
@@ -63,6 +77,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 			return true;
 		}
 
+
 		// || StringUtils.contains(url, "/mgr")
 		if(StringUtils.startsWith(url, "/mgr")){
 
@@ -77,10 +92,22 @@ public class LoginInterceptor implements HandlerInterceptor {
 				request.getRequestDispatcher("/WEB-INF/mgr/jsp/system/Login.jsp").forward(request, response);
 				return false;
 			}
+		}else{
+			if(set.contains(url)){
+				final Account frontAccount = SecurityContext.getFrontAccount();
+				if(frontAccount == null){
+					request.setAttribute("blackUrl", url.concat("?").concat(StringUtils.trimToEmpty(request.getQueryString())));
+					request.getRequestDispatcher("/WEB-INF/mgr/jsp/login.jsp").forward(request, response);
+					return false;
+				}
+			}
 		}
 
 
 		return true;
 	}
-	
+
+
+	private final HashSet<String> set = new HashSet<String>();
+
 }

@@ -53,7 +53,7 @@ function check_login(){
             if(StringUtil.isBlank(resp.dataObj)){
                 window.location.href = ctx + "/usercenter.html";
             }else{
-                window.location.href = resp.dataObj;
+                window.location.href = ctx + resp.dataObj;
             }
         }else{
             $("#validateCode").click();

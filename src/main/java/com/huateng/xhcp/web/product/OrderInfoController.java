@@ -101,6 +101,11 @@ public class OrderInfoController implements com.huateng.xhcp.service.upload.Vali
 	 */
 	@RequestMapping(value = "/shopping_confirm.html")
 	public String checkoutPage(String address_id, String payment, String remark, HttpSession session, HttpServletRequest request){
+		final Account frontAccount = SecurityContext.getFrontAccount();
+		if(frontAccount == null){
+			LOGGER.warn("用户还没登录");
+			return "forward:/login.html";
+		}
 
 		if(StringUtils.isBlank(address_id) || StringUtils.isBlank(payment)){
 			return "forward:/shopping_checkout.html";
@@ -116,12 +121,6 @@ public class OrderInfoController implements com.huateng.xhcp.service.upload.Vali
 		if(shoppingCars == null){
 			LOGGER.warn("购物车里面没有商品，不需要创建订单");
 			return "forward:/shopping_checkout.html";
-		}
-
-		final Account frontAccount = SecurityContext.getFrontAccount();
-		if(frontAccount == null){
-			LOGGER.warn("用户还没登录");
-			return "forward:/login.html";
 		}
 
 		//创建订单

@@ -32,6 +32,16 @@ public interface MerchInfoMapper {
 	 * @return
 	 */
 	List<MerchInfo> queryByPclsId(String classify_id);
+	/**
+	 * 查询销售最多的商品信息
+	 * @return
+	 */
+	List<MerchInfo> queryHotMerch();
+	/**
+	 * 查询销售最多的商品信息
+	 * @return
+	 */
+	List<MerchInfo> queryHotHitsMerch();
 
 	/**
 	 * 新增产品信息
