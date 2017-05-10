@@ -1,5 +1,6 @@
 package com.huateng.xhcp.web;
 
+import com.huateng.xhcp.event.ScoreDetailEvent;
 import com.huateng.xhcp.model.ResponseInfo;
 import com.huateng.xhcp.model.product.FreqAddr;
 import com.huateng.xhcp.model.product.OrderInfo;
@@ -10,6 +11,7 @@ import com.huateng.xhcp.service.product.FreqAddrService;
 import com.huateng.xhcp.service.product.OrderInfoService;
 import com.huateng.xhcp.service.system.AccountService;
 import com.huateng.xhcp.service.system.ProvinceService;
+import com.huateng.xhcp.service.system.ScoreDetailService;
 import com.huateng.xhcp.service.system.UserLoginHistService;
 import com.huateng.xhcp.util.DateUtil;
 import com.huateng.xhcp.util.HttpUtil;
@@ -18,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,6 +46,7 @@ public class LoginController {
     private @Autowired FreqAddrService freqAddrService;
     private @Autowired UserLoginHistService userLoginHistService;
     private @Autowired OrderInfoService orderInfoService;
+    private @Autowired ApplicationEventPublisher publisher;
 
     @RequestMapping(value="/login.html")
     public String loginPage(HttpServletRequest request){
@@ -330,6 +334,15 @@ public class LoginController {
         if(c == 0){
             return HttpUtil.failure("用户注册失败！");
         }
+
+        //
+        ScoreDetail sd = new ScoreDetail();
+        sd.setAccount_id(account.getAccount_id());
+        sd.setScore("800");
+        sd.setReason("新会员注册");
+        sd.setScore_bal("800");
+        publisher.publishEvent(new ScoreDetailEvent(sd));
+
 
         return HttpUtil.success("注册成功", account);
     }

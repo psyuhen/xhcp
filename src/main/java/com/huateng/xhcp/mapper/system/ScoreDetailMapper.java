@@ -19,6 +19,13 @@ public interface ScoreDetailMapper {
 	 * @return
 	 */
 	List<ScoreDetail> queryScoreDetail(ScoreDetail scoreDetail);
+
+	/**
+	 * 查询积分余额
+	 * @param account_id
+	 * @return
+	 */
+	Integer queryScoreBal(String account_id);
 	/**
 	 * 新增会员积分明细信息
 	 * @param scoreDetail

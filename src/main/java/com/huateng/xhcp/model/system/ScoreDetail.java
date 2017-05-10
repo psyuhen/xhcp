@@ -19,6 +19,7 @@ public class ScoreDetail extends BaseModel{
 	private @Setter @Getter String account_id;
 	private @Setter @Getter String score;
 	private @Setter @Getter String reason;
+	private @Setter @Getter String score_bal;
 	private @Setter @Getter String create_time;
 	
 	

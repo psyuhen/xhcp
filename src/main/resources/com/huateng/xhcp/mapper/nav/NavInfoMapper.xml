@@ -30,14 +30,14 @@
 	<!-- 新增导航信息 -->
 	<insert id="addNavInfo" parameterType="NavInfo" useGeneratedKeys="true" keyProperty="nav_id">
 		INSERT INTO tbl_nav_info (pnav_id,name,url,is_out_link,is_default,order_id,create_time)
-		VALUES (#{pnav_id,jdbcType=INTEGER},#{name,jdbcType=VARCHAR},#{url,jdbcType=VARCHAR},#{is_out_link,jdbcType=VARCHAR},#{is_default,jdbcType=VARCHAR},#{order_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},DATE_FORMAT(now(),'%Y%m%d%H%i%s'))
+		VALUES (#{pnav_id,jdbcType=INTEGER},#{name,jdbcType=VARCHAR},#{url,jdbcType=VARCHAR},#{is_out_link,jdbcType=VARCHAR},#{is_default,jdbcType=VARCHAR},#{order_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.handler.IntegerNullValueHandler},DATE_FORMAT(now(),'%Y%m%d%H%i%s'))
 	</insert>
 	
 	<!-- 批量新增导航信息信息 -->
 	<insert id="addBatchNavInfo" parameterType="NavInfo">
 		INSERT INTO tbl_nav_info (nav_id,pnav_id,name,url,is_out_link,is_default,order_id,create_time)
 		<foreach item="item" collection="list" separator="union all">
-			SELECT #{item.nav_id,jdbcType=INTEGER},#{item.pnav_id,jdbcType=INTEGER},#{item.name,jdbcType=VARCHAR},#{item.url,jdbcType=VARCHAR},#{item.is_out_link,jdbcType=VARCHAR},#{item.is_default,jdbcType=VARCHAR},#{item.order_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},DATE_FORMAT(now(),'%Y%m%d%H%i%s')
+			SELECT #{item.nav_id,jdbcType=INTEGER},#{item.pnav_id,jdbcType=INTEGER},#{item.name,jdbcType=VARCHAR},#{item.url,jdbcType=VARCHAR},#{item.is_out_link,jdbcType=VARCHAR},#{item.is_default,jdbcType=VARCHAR},#{item.order_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.handler.IntegerNullValueHandler},DATE_FORMAT(now(),'%Y%m%d%H%i%s')
 			FROM dual
 		</foreach>
 	</insert>
@@ -51,7 +51,7 @@
 	      	<if test="url != null">url = #{url,jdbcType=VARCHAR},</if>
 	      	<if test="is_out_link != null">is_out_link = #{is_out_link,jdbcType=VARCHAR},</if>
 	      	<if test="is_default != null">is_default = #{is_default,jdbcType=VARCHAR},</if>
-	      	<if test="order_id != null">order_id = #{order_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},</if>
+	      	<if test="order_id != null">order_id = #{order_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.handler.IntegerNullValueHandler},</if>
 
 		</set>
 		WHERE nav_id = #{nav_id,jdbcType=INTEGER}

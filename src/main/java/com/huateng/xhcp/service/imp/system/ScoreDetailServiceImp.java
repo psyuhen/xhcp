@@ -38,6 +38,18 @@ public class ScoreDetailServiceImp implements ScoreDetailService {
 		return this.scoreDetailMapper.queryScoreDetail(scoreDetail);
 	}
 	/**
+	 * 查询积分余额
+	 * @param account_id
+	 * @return
+	 */
+	public Integer queryScoreBal(String account_id){
+		Integer bal = this.scoreDetailMapper.queryScoreBal(account_id);
+		if(bal == null){
+			return 0;
+		}
+		return bal;
+	}
+	/**
 	 * 查询会员积分明细信息
 	 * @param scoreDetail
 	 * @return

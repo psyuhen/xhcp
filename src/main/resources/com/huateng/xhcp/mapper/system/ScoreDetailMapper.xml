@@ -9,28 +9,45 @@
 		SELECT score_id,account_id,score,reason,create_time
 		FROM tbl_score_detail
 		<where>
-			<if test="score_id != null and score_id != ''">AND score_id = #{score_id,jdbcType=VARCHAR}</if>
+			<if test="score_id != null and score_id != ''">AND score_id = #{score_id,jdbcType=INTEGER}</if>
 			<if test="account_id != null and account_id != ''">AND account_id = #{account_id,jdbcType=VARCHAR}</if>
-			<if test="score != null and score != ''">AND score = #{score,jdbcType=VARCHAR}</if>
+			<if test="score != null and score != ''">AND score = #{score,jdbcType=INTEGER}</if>
 			<if test="reason != null and reason != ''">AND reason = #{reason,jdbcType=VARCHAR}</if>
+			<if test="score_bal != null and score_bal != ''">AND score_bal = #{score_bal,jdbcType=INTEGER}</if>
 			<if test="create_time != null and create_time != ''">AND create_time = #{create_time,jdbcType=VARCHAR}</if>
 			
 		</where>
 		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[order by ${b_order_name} ${b_order_asc}  ]]></if>
 	</select>
-	
+
+	<!-- 查询会员积分余额 -->
+	<select id="queryScoreBal" parameterType="String" resultType="java.lang.Integer">
+		SELECT
+			IFNULL(score_bal,0) score_bal
+		FROM
+			tbl_score_detail
+		WHERE
+			score_id = (
+				SELECT
+					MAX(score_id)
+				FROM
+					tbl_score_detail
+				WHERE
+					account_id = #{account_id,jdbcType=VARCHAR}
+			)
+	</select>
+
 	<!-- 新增会员积分明细 -->
-	<insert id="addScoreDetail" parameterType="ScoreDetail">
-		INSERT INTO tbl_score_detail (score_id,account_id,score,reason,create_time)
-		VALUES (#{score_id,jdbcType=VARCHAR},#{account_id,jdbcType=VARCHAR},#{score,jdbcType=VARCHAR},#{reason,jdbcType=VARCHAR},#{create_time,jdbcType=VARCHAR})
+	<insert id="addScoreDetail" parameterType="ScoreDetail" useGeneratedKeys="true" keyProperty="score_id">
+		INSERT INTO tbl_score_detail (account_id,score,reason,score_bal,create_time)
+		VALUES (#{account_id,jdbcType=VARCHAR},#{score,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.handler.IntegerNullValueHandler},#{reason,jdbcType=VARCHAR},#{score_bal,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.handler.IntegerNullValueHandler},DATE_FORMAT(now(),'%Y%m%d%H%i%s'))
 	</insert>
 	
 	<!-- 批量新增会员积分明细信息 -->
-	<insert id="addBatchScoreDetail" parameterType="ScoreDetail">
-		INSERT INTO tbl_score_detail (score_id,account_id,score,reason,create_time)
-		<foreach item="item" collection="list" separator="union all">
-			SELECT #{item.score_id,jdbcType=VARCHAR},#{item.account_id,jdbcType=VARCHAR},#{item.score,jdbcType=VARCHAR},#{item.reason,jdbcType=VARCHAR},#{item.create_time,jdbcType=VARCHAR}
-			FROM dual
+	<insert id="addBatchScoreDetail" parameterType="ScoreDetail" useGeneratedKeys="true" keyProperty="score_id">
+		INSERT INTO tbl_score_detail (account_id,score,reason,score_bal,create_time)
+		<foreach item="item" collection="list" separator=",">
+			(#{item.account_id,jdbcType=VARCHAR},#{item.score,jdbcType=VARCHAR},#{item.reason,jdbcType=VARCHAR},#{item.score_bal,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.handler.IntegerNullValueHandler},DATE_FORMAT(now(),'%Y%m%d%H%i%s'))
 		</foreach>
 	</insert>
 	
@@ -38,10 +55,10 @@
 	<update id="updateScoreDetail" parameterType="ScoreDetail">
 		UPDATE tbl_score_detail
 		<set>
-	      	<if test="score_id != null">score_id = #{score_id,jdbcType=VARCHAR},</if>
 	      	<if test="account_id != null">account_id = #{account_id,jdbcType=VARCHAR},</if>
-	      	<if test="score != null">score = #{score,jdbcType=VARCHAR},</if>
+	      	<if test="score != null">score = #{score,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.handler.IntegerNullValueHandler},</if>
 	      	<if test="reason != null">reason = #{reason,jdbcType=VARCHAR},</if>
+			<if test="score_bal != null">score_bal = #{score_bal,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.handler.IntegerNullValueHandler},</if>
 	      	<if test="create_time != null">create_time = #{create_time,jdbcType=VARCHAR},</if>
 	      	
 		</set>
@@ -50,14 +67,14 @@
 	
 	<!-- 删除会员积分明细信息 -->
 	<delete id="deleteScoreDetail" parameterType="ScoreDetail">
-		DELETE FROM tbl_score_detail WHERE score_id = #{score_id,jdbcType=VARCHAR}
+		DELETE FROM tbl_score_detail WHERE score_id = #{score_id,jdbcType=INTEGER}
 	</delete>
 	
 	<!-- 批量删除会员积分明细信息-->
 	<delete id="deleteBatchScoreDetail" parameterType="ScoreDetail">
 		DELETE FROM tbl_score_detail WHERE score_id IN
 		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
-			#{item.score_id,jdbcType=VARCHAR}
+			#{item.score_id,jdbcType=INTEGER}
 		</foreach>
 	</delete>
 </mapper>

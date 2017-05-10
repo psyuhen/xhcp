@@ -1,4 +1,4 @@
-package com.huateng.xhcp.db;
+package com.huateng.xhcp.handler;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.type.JdbcType;

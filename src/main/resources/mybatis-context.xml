@@ -32,11 +32,12 @@
     </bean>
     
     <!-- mybatis的SessionFactory -->
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	<!--<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">-->
+	<bean id="sqlSessionFactory" class="com.huateng.xhcp.mybatis.HotDeploySqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="mapperLocations" value="classpath*:com/huateng/xhcp/mapper/*.xml" />
+		<property name="mapperLocations" value="classpath*:com/huateng/xhcp/mapper/**/*.xml" />
 		<property name="typeAliasesPackage" value="com.huateng.xhcp.model" />
-		<property name="typeHandlersPackage" value="com.huateng.xhcp.db.IntegerNullValueHandler"/>
+		<property name="typeHandlersPackage" value="com.huateng.xhcp.handler"/>
 		<!-- 配置Mybatis的插件plugin -->
 		<property name="plugins">
 			<array>

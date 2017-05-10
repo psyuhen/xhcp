@@ -17,6 +17,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
+import static org.apache.commons.lang3.StringUtils.trimToEmpty;
+
 /**
  * 字符串操作工具类
  * 
@@ -224,5 +227,29 @@ public class StringUtil {
 		}
 
 		return "";
+	}
+
+	/**
+	 * 两数相加
+	 * @param num1
+	 * @param num2
+	 * @return
+	 */
+	public static int add(String num1, String num2){
+		num1 = defaultIfBlank(trimToEmpty(num1),"0");
+		num2 = defaultIfBlank(trimToEmpty(num2),"0");
+
+		return Integer.parseInt(num1) + Integer.parseInt(num2);
+	}
+	/**
+	 * 两数相加
+	 * @param num1
+	 * @param num2
+	 * @return
+	 */
+	public static int add(String num1, Integer num2){
+		num1 = defaultIfBlank(trimToEmpty(num1),"0");
+
+		return Integer.parseInt(num1) + (num2 == null ? 0 : num2);
 	}
 }

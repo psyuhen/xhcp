@@ -27,14 +27,14 @@
 	<!-- 新增视频信息 -->
 	<insert id="addVideoInfo" parameterType="VideoInfo" useGeneratedKeys="true" keyProperty="video_id">
 		INSERT INTO tbl_video_info (title,img_file_id,video_file_id,create_time)
-		VALUES (#{title,jdbcType=VARCHAR},#{img_file_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},#{video_file_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},DATE_FORMAT(now(),'%Y%m%d%H%i%s'))
+		VALUES (#{title,jdbcType=VARCHAR},#{img_file_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.handler.IntegerNullValueHandler},#{video_file_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.handler.IntegerNullValueHandler},DATE_FORMAT(now(),'%Y%m%d%H%i%s'))
 	</insert>
 	
 	<!-- 批量新增视频信息信息 -->
 	<insert id="addBatchVideoInfo" parameterType="VideoInfo">
 		INSERT INTO tbl_video_info (title,img_file_id,video_file_id,create_time)
 		<foreach item="item" collection="list" separator="union all">
-			SELECT #{item.title,jdbcType=VARCHAR},#{item.img_file_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},#{item.video_file_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},DATE_FORMAT(now(),'%Y%m%d%H%i%s')
+			SELECT #{item.title,jdbcType=VARCHAR},#{item.img_file_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.handler.IntegerNullValueHandler},#{item.video_file_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.handler.IntegerNullValueHandler},DATE_FORMAT(now(),'%Y%m%d%H%i%s')
 			FROM dual
 		</foreach>
 	</insert>
@@ -45,8 +45,8 @@
 		<set>
 	      	<if test="video_id != null">video_id = #{video_id,jdbcType=INTEGER},</if>
 	      	<if test="title != null">title = #{title,jdbcType=VARCHAR},</if>
-	      	<if test="img_file_id != null">img_file_id = #{img_file_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},</if>
-	      	<if test="video_file_id != null">video_file_id = #{video_file_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.db.IntegerNullValueHandler},</if>
+	      	<if test="img_file_id != null">img_file_id = #{img_file_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.handler.IntegerNullValueHandler},</if>
+	      	<if test="video_file_id != null">video_file_id = #{video_file_id,jdbcType=INTEGER,typeHandler=com.huateng.xhcp.handler.IntegerNullValueHandler},</if>
 
 		</set>
 		WHERE video_id = #{video_id,jdbcType=INTEGER}

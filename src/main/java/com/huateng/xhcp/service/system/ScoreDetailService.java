@@ -20,6 +20,12 @@ public interface ScoreDetailService {
 	 */
 	List<ScoreDetail> queryScoreDetail(ScoreDetail scoreDetail);
 	/**
+	 * 查询积分余额
+	 * @param account_id
+	 * @return
+	 */
+	Integer queryScoreBal(String account_id);
+	/**
 	 * 查询会员积分明细信息
 	 * @param scoreDetail
 	 * @return
