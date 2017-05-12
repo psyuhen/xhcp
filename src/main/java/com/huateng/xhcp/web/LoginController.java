@@ -9,10 +9,7 @@ import com.huateng.xhcp.security.RandomValidateCode;
 import com.huateng.xhcp.security.SecurityContext;
 import com.huateng.xhcp.service.product.FreqAddrService;
 import com.huateng.xhcp.service.product.OrderInfoService;
-import com.huateng.xhcp.service.system.AccountService;
-import com.huateng.xhcp.service.system.ProvinceService;
-import com.huateng.xhcp.service.system.ScoreDetailService;
-import com.huateng.xhcp.service.system.UserLoginHistService;
+import com.huateng.xhcp.service.system.*;
 import com.huateng.xhcp.util.DateUtil;
 import com.huateng.xhcp.util.HttpUtil;
 import com.huateng.xhcp.util.SecureUtil;
@@ -33,7 +30,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by sam.pan on 2017/3/23.
@@ -46,6 +45,7 @@ public class LoginController {
     private @Autowired FreqAddrService freqAddrService;
     private @Autowired UserLoginHistService userLoginHistService;
     private @Autowired OrderInfoService orderInfoService;
+    private @Autowired ModuleService moduleService;
     private @Autowired ApplicationEventPublisher publisher;
 
     @RequestMapping(value="/login.html")
@@ -213,6 +213,36 @@ public class LoginController {
         userLoginHistService.addUserLoginHist(userLoginHist);
 
         HttpSession session = request.getSession();
+
+        /* 超级用户的判断 */
+        accounts.setSuperUser(SecurityContext.isSuperUser(account_id));
+        /* 查询用户角色*/
+        List<Role> roleList = accountService.queryBelongRoleByAccountId(account_id);
+        if(roleList != null && !roleList.isEmpty()){
+            //写入session
+            session.setAttribute("user_role", roleList);
+        }
+
+        //超级用户不查资源
+        if(!accounts.isSuperUser()){
+            List<Module> moduleList = moduleService.findModuleByAccount(account_id);
+            if(moduleList != null){
+                int length = moduleList.size();
+                Set<String> urlSet = new HashSet<String>(length, 1);
+                for (int i = 0; i < length; i++) {
+                    Module m = moduleList.get(i);
+                    String module_entry = m.getModule_entry();
+                    if(module_entry == null){
+                        continue;
+                    }
+
+                    urlSet.add("/mgr" + module_entry);
+                }
+                session.setAttribute("urlSet", urlSet);
+            }
+        }
+
+
         session.setAttribute(SecurityContext.BACK_ACCOUNT, accounts);
 
         /* 返回之前的url*/

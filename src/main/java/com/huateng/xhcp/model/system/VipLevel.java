@@ -7,12 +7,14 @@ import com.huateng.xhcp.model.BaseModel;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 会员等级信息Bean
  * @author sam.pan
  *
  */
+@ToString
 public class VipLevel extends BaseModel{
 	
 	private @Setter @Getter String vip_id;

@@ -88,7 +88,7 @@
 		]]>
 	</select>
     <!-- 只查询用户有权限的菜单 -->
-	<select id="findModuleByAccount" resultType="Module" parameterType="String">
+	<!--<select id="findModuleByAccount" resultType="Module" parameterType="String">
 		<![CDATA[ 
 			SELECT DISTINCT *
 			  FROM sys_module
@@ -103,11 +103,22 @@
 			CONNECT BY PRIOR pmodule_id = module_id
 			ORDER BY module_order NULLS FIRST
 		]]>
+	</select>-->
+
+	<select id="findLeafByAccount" resultType="Module" parameterType="String">
+		<![CDATA[
+			SELECT DISTINCT c.module_id,c.pmodule_id,c.module_name,c.module_entry,c.module_type,c.module_target
+			               FROM sys_accountrole a, sys_rolemodule b, sys_module c
+			              WHERE  a.account_id = #{account_id}
+			                AND a.role_id = b.role_id
+			                AND b.module_id = c.module_id
+		]]>
 	</select>
+
     <!-- 只查询用户有权限的菜单 -->
 	<select id="findModuleSuperUser" resultType="Module" >
 		<![CDATA[
-			SELECT DISTINCT *
+			SELECT DISTINCT module_id,pmodule_id,module_name,module_entry,module_type,module_target
 			  FROM sys_module
 			 WHERE (module_type != 3 OR module_type IS NULL)
 			   AND (module_hide != 1 OR module_hide IS NULL)
@@ -160,4 +171,12 @@
 		]]>
 	
 	</delete>
+
+	<!-- 根据传入的父节点ID查询菜单 -->
+	<select id="queryByPModuleId" parameterType="Module" resultType="Module">
+		SELECT module_id,pmodule_id,module_name FROM sys_module WHERE module_id IN
+		<foreach collection="list" open="(" close=")" separator="," item="item">
+			#{item.pmodule_id, jdbcType=VARCHAR}
+		</foreach>
+	</select>
 </mapper>

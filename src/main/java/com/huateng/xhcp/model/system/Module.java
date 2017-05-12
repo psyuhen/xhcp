@@ -9,12 +9,14 @@ import com.huateng.xhcp.model.BaseModel;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 菜单Bean
  * @author pansen
  *
  */
+@ToString
 public class Module extends BaseModel implements Serializable{
 	/**
 	 * 

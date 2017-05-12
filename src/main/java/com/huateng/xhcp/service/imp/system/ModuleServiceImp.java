@@ -3,6 +3,7 @@
  */
 package com.huateng.xhcp.service.imp.system;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
@@ -44,7 +45,32 @@ public class ModuleServiceImp implements ModuleService {
 	 * @return
 	 */
 	public List<Module> findModuleByAccount(String account_id){
-		return this.moduleMapper.findModuleByAccount(account_id);
+		final List<Module> leafByAccount = this.moduleMapper.findLeafByAccount(account_id);
+		if(leafByAccount == null || leafByAccount.isEmpty()){
+			return null;
+		}
+
+		List<Module> allList = new ArrayList<Module>();
+		allList.addAll(leafByAccount);
+
+		queryModuleByPModuleId(allList, leafByAccount);
+		return allList;
+	}
+
+	/**
+	 * 递归查询菜单信息
+	 * @param allList
+	 * @param list
+	 */
+	private void queryModuleByPModuleId(List<Module> allList, List<Module> list){
+		final List<Module> modules = this.queryByPModuleId(list);
+		if(modules == null || modules.isEmpty()){
+			return;
+		}
+
+		allList.addAll(modules);
+
+		queryModuleByPModuleId(allList, modules);
 	}
 	/**
 	 * 查询所有状态不为3而且不隐藏的菜单
@@ -159,5 +185,19 @@ public class ModuleServiceImp implements ModuleService {
 	 */
 	public void deleteModuleById(String module_id){
 		this.moduleMapper.deleteModuleById(module_id);
+	}
+
+
+	/**
+	 * 根据传入的父节点ID查询菜单
+	 * @param list
+	 * @return
+	 */
+	public List<Module> queryByPModuleId(List<Module> list){
+		if(list == null || list.isEmpty()){
+			return null;
+		}
+
+		return this.moduleMapper.queryByPModuleId(list);
 	}
 }

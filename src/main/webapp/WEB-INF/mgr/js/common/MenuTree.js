@@ -340,7 +340,11 @@ var MenuTree = function(options){
 		selectObj = selectObj || $("#menu_list");
 		
 		var moduleIdObj = $("#" + moduleId);
-		
+
+		if(moduleIdObj.size() == 0){
+			return;
+		}
+
 		setTimeout(function(){
 			selectObj.scrollTop(moduleIdObj.offset().top - selectObj.offset().top + selectObj.scrollTop());
 			selectObj.animate({scrollTop: moduleIdObj.offset().top - selectObj.offset().top + selectObj.scrollTop()}, "fast");

@@ -108,7 +108,7 @@ public class AccountController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/user/queryAccount", method = RequestMethod.POST)
+	@RequestMapping(value = "/mgr/user/queryAccount", method = RequestMethod.POST)
 	public List<Account> queryAccount(Account account){
 		return this.accountService.queryAccount(account);
 	}

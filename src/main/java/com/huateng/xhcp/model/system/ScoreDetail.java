@@ -7,12 +7,14 @@ import com.huateng.xhcp.model.BaseModel;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 会员积分明细信息Bean
  * @author sam.pan
  *
  */
+@ToString
 public class ScoreDetail extends BaseModel{
 	
 	private @Setter @Getter String score_id;

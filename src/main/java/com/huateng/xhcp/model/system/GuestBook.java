@@ -7,12 +7,14 @@ import com.huateng.xhcp.model.BaseModel;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 访客留言簿信息信息Bean
  * @author sam.pan
  *
  */
+@ToString
 public class GuestBook extends BaseModel{
 	
 	private @Setter @Getter String msg_id;

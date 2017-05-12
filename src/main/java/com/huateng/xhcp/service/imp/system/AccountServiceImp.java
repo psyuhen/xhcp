@@ -6,6 +6,8 @@ package com.huateng.xhcp.service.imp.system;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.huateng.xhcp.mapper.system.RoleMapper;
+import com.huateng.xhcp.model.system.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,6 +27,7 @@ import com.huateng.xhcp.web.page.PageHelper;
 public class AccountServiceImp implements AccountService {
 
 	private @Autowired @Setter @Getter AccountMapper accountMapper;
+	private @Autowired @Setter @Getter RoleMapper roleMapper;
 	/**
 	 * 查询用户信息
 	 * @param account
@@ -95,5 +98,14 @@ public class AccountServiceImp implements AccountService {
 	@Override
 	public int deleteByMobile(String mobile) {
 		return this.accountMapper.deleteByMobile(mobile);
+	}
+
+	/**
+	 * 查询用户拥有的角色
+	 * @param account_id 用户Id
+	 * @return
+	 */
+	public List<Role> queryBelongRoleByAccountId(String account_id){
+		return this.roleMapper.queryBelongRoleByAccountId(account_id);
 	}
 }

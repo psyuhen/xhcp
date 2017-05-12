@@ -223,3 +223,15 @@
     <script src="${ctx}/js/colorbox/jquery.colorbox.${__min}js"></script>
     <script src="${ctx}/js/colorbox/jquery.colorbox-zh-CN.js"></script>
 </c:if>
+<%-- select or dropdown enhancer --%>
+<c:if test="${chosen eq 'true'}">
+	<%--
+		chose使用说明：
+		在加载完页面后必须加上这句：
+		$('[data-rel="chosen"],[rel="chosen"]').chosen();
+		其中'[data-rel="chosen"],[rel="chosen"]'为jQuery的选择器，也即是对应的select，
+		一般有特殊，在对应的页面加上，在此不再自动加上
+	--%>
+	<link href='${ctx}/css/chosen/chosen.${__min}css' rel='stylesheet'>
+	<script src="${ctx}/js/chosen/chosen.jquery.${__min}js"></script>
+</c:if>

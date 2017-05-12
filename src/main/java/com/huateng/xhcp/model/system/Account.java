@@ -6,12 +6,14 @@ package com.huateng.xhcp.model.system;
 import com.huateng.xhcp.model.BaseModel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 用户信息Bean
  * @author pansen
  *
  */
+@ToString
 public class Account extends BaseModel{
 	/**
 	 * 

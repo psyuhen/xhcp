@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.huateng.xhcp.mapper.system.RoleMapper">
+    <!-- 查询角色 -->
+	<select id="queryRole" resultType="Role" parameterType="Role">
+		SELECT role_id,role_name,role_desc
+		FROM sys_role
+		<where>
+			<if test="role_id != null and role_id != ''">role_id = #{role_id,jdbcType=INTEGER}</if>
+			<if test="role_name != null  and role_name != ''">AND role_name LIKE CONCAT('%', CONCAT(#{role_name,jdbcType=VARCHAR}, '%'))</if>
+			<if test="role_desc != null  and role_desc != ''">AND role_desc LIKE CONCAT('%', CONCAT(#{role_desc,jdbcType=VARCHAR}, '%'))</if>
+		</where>
+		<if test="true">ORDER BY role_id</if>
+	</select>
+	<!-- 查询用户支配的角色 -->
+    <select id="queryAssignRoleByAccountId" resultType="Role" parameterType="String">
+        SELECT b.role_id, b.role_name, b.role_desc
+          FROM sys_accountroleconf a, sys_role b
+         WHERE a.role_id = b.role_id
+           AND a.account_id = #{account_id,jdbcType=VARCHAR}
+    </select>
+    <!-- 查询用户拥有的角色 -->
+    <select id="queryBelongRoleByAccountId" resultType="Role" parameterType="String">
+        SELECT b.role_id, b.role_name, b.role_desc
+          FROM sys_accountrole a, sys_role b
+         WHERE a.role_id = b.role_id
+           AND a.account_id = #{account_id,jdbcType=VARCHAR}
+    </select>
+	<!-- 新增用户角色-->
+	<insert id="addAccountRole" parameterType="Role" useGeneratedKeys="true" keyProperty="role_id">
+		INSERT INTO sys_accountrole (role_id,account_id) VALUES
+		<foreach item="roleId" collection="roleIdList" separator=",">
+			(#{roleId,jdbcType=INTEGER},#{account_id,jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+	<!-- 删除用户角色 -->
+	<delete id="deleteAccountRole" parameterType="Role">
+		DELETE FROM sys_accountrole WHERE account_id = #{account_id,jdbcType=VARCHAR}
+		AND role_id IN
+		<foreach item="roleId" collection="roleIdList" separator="," open="(" close=")">
+			#{roleId,jdbcType=INTEGER}
+		</foreach>
+	</delete>
+	<!-- 新增用户支配角色-->
+	<insert id="addAccountRoleConf" parameterType="Role">
+		INSERT INTO sys_accountroleconf (role_id,account_id) VALUES
+		<foreach item="roleId" collection="roleIdList" separator=",">
+			(#{roleId,jdbcType=INTEGER},#{account_id,jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+	<!-- 删除用户支配角色 -->
+	<delete id="deleteAccountRoleConf" parameterType="Role">
+		DELETE FROM sys_accountroleconf WHERE account_id = #{account_id,jdbcType=VARCHAR}
+		AND role_id in
+		<foreach item="roleId" collection="roleIdList" separator="," open="(" close=")">
+			#{roleId,jdbcType=INTEGER}
+		</foreach>
+	</delete>
+	<!-- 新增角色-->
+	<insert id="addRole" parameterType="Role" useGeneratedKeys="true" keyProperty="role_id">
+		INSERT INTO sys_role (role_name,role_desc)
+		VALUES (#{role_name},#{role_desc,jdbcType=VARCHAR})
+	</insert>
+	<!-- 编辑角色-->
+	<update id="updateRole" parameterType="Role">
+		UPDATE sys_role set role_name=#{role_name},role_desc=#{role_desc,jdbcType=VARCHAR}
+		WHERE role_id=#{role_id,jdbcType=INTEGER}
+	</update>
+	<!-- 删除角色 -->
+	<delete id="deleteRole" parameterType="Role">
+		DELETE FROM sys_role WHERE  role_id = #{role_id,jdbcType=INTEGER}
+	</delete>
+</mapper>

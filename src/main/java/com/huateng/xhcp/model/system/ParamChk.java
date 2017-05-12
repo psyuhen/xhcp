@@ -6,6 +6,7 @@ import com.huateng.xhcp.model.BaseModel;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 复核参数信息Bean  
@@ -13,6 +14,7 @@ import lombok.Setter;
  * @author chengz
  *  
  */
+@ToString
 public class ParamChk extends BaseModel{
 	//表字段
 	private @Setter @Getter String check_flow_no;//复核流水号 | 主键

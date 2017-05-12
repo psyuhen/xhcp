@@ -7,12 +7,14 @@ import com.huateng.xhcp.model.BaseModel;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 城市城区信息信息Bean
  * @author sam.pan
  *
  */
+@ToString
 public class CityTown extends BaseModel{
 	
 	private @Setter @Getter String town_code;

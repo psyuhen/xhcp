@@ -58,9 +58,9 @@
 	      	<if test="invalid_date != null">account_inv_date = #{account_inv_date,jdbcType=VARCHAR},</if>
 	      	<if test="qq != null">qq = #{qq,jdbcType=VARCHAR},</if>
 	      	<if test="wechat != null">wechat = #{wechat,jdbcType=VARCHAR},</if>
-	      	<if test="mobile != null">mobile = #{mobile,jdbcType=VARCHAR}</if>
-	      	<if test="account_type != null">account_type = #{account_type,jdbcType=CHAR}</if>
-	      	<if test="total_score != null">total_score = #{total_score,jdbcType=INTEGER}</if>
+	      	<if test="mobile != null">mobile = #{mobile,jdbcType=VARCHAR},</if>
+	      	<if test="account_type != null">account_type = #{account_type,jdbcType=CHAR},</if>
+	      	<if test="total_score != null">total_score = #{total_score,jdbcType=INTEGER},</if>
 		</set>
 		WHERE  account_id = #{account_id}
 	</update>

@@ -3,9 +3,10 @@
  */
 package com.huateng.xhcp.service.system;
 
-import java.util.List;
-
 import com.huateng.xhcp.model.system.Account;
+import com.huateng.xhcp.model.system.Role;
+
+import java.util.List;
 
 /**
  * 用户服务类
@@ -66,4 +67,10 @@ public interface AccountService {
 	 * @param mobile
 	 */
 	int deleteByMobile(String mobile);
+	/**
+	 * 查询用户拥有的角色
+	 * @param account_id 用户Id
+	 * @return
+	 */
+	List<Role> queryBelongRoleByAccountId(String account_id);
 }

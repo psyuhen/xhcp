@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.huateng.xhcp.security.SecurityContext;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -169,7 +170,7 @@ public class ModuleController {
 	@RequestMapping(value="/mgr/module/findRoleMenu", method = RequestMethod.GET)
 	public List<Module> findModuleByAccount(HttpServletRequest request){
 		HttpSession session = request.getSession();
-//		Account account = (Account)session.getAttribute("user");
+		Account account = (Account)session.getAttribute(SecurityContext.BACK_ACCOUNT);
 		
 		/* 把菜单保存到session中*/
 		@SuppressWarnings("unchecked")
@@ -181,11 +182,11 @@ public class ModuleController {
 		List<Module> tmpMenuTree = null;
         tmpMenuTree = this.moduleService.findModuleSuperUser();
 
-		/*if(account.isSuperUser()){*//*超级管理员不受权限控制的*//*
+		if(account.isSuperUser()){/*超级管理员不受权限控制的*/
 			tmpMenuTree = this.moduleService.findModuleSuperUser();
 		}else{
 			tmpMenuTree = this.moduleService.findModuleByAccount(account.getAccount_id());
-		}*/
+		}
 		
 		/* 保存菜单节点，方便操作*/
 		Map<String, Module> map = new HashMap<String, Module>();

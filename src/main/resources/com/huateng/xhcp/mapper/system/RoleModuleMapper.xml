@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!-- add by chengz -->
+<mapper namespace="com.huateng.xhcp.mapper.system.RoleModuleMapper">
+    <!-- 查询角色模块 -->
+	<select id="queryRoleModule" resultType="RoleModule" parameterType="RoleModule">
+		SELECT role_id,module_id
+		FROM sys_rolemodule
+		<where>
+			<if test="null != role_id and '' != role_id">role_id = #{role_id,jdbcType=INTEGER}</if>
+			<if test="null != module_id and '' != module_id">AND module_id = #{module_id,jdbcType=VARCHAR}</if>
+		</where>
+		<if test="true">ORDER BY role_id</if>
+	</select>
+	<!-- 新增角色模块-->
+	<insert id="addRoleModule" parameterType="RoleModule">
+		INSERT INTO sys_rolemodule (role_id,module_id)
+		VALUES (#{role_id,jdbcType=INTEGER},#{module_id,jdbcType=VARCHAR})
+	</insert>
+	<!-- 删除角色模块 -->
+	<delete id="deleteRoleModule" parameterType="RoleModule">
+		DELETE FROM sys_rolemodule
+		<where>
+			<if test="role_id != null and role_id != ''">role_id = #{role_id,jdbcType=INTEGER}</if>
+	      	<if test="module_id != null and module_id != ''">AND module_id = #{module_id,jdbcType=VARCHAR}</if>
+		</where>
+	</delete>
+	<!-- 只查询用户可支配的菜单
+	<select id="findModuleByAccount" resultType="Module" parameterType="String">
+		<![CDATA[ 
+			SELECT DISTINCT module_id,module_name,pmodule_id,module_order
+			  FROM sys_module
+			 WHERE (module_type != 3 OR module_type IS NULL)
+			   AND (module_hide != 1 OR module_hide IS NULL)
+			 START WITH module_id IN
+			            (SELECT DISTINCT c.module_id
+			               FROM sys_accountroleconf a, sys_rolemodule b, sys_module c
+			              WHERE  a.account_id = #{account_id}
+			                AND a.role_id = b.role_id
+			                AND b.module_id = c.module_id)
+			CONNECT BY PRIOR pmodule_id = module_id
+			ORDER BY module_order NULLS FIRST
+		]]>
+	</select> -->
+	<!-- 查询所有能支配的菜单ID -->
+	<select id="findLeafNodeByAccount" resultType="Module" parameterType="String">
+		<![CDATA[
+			SELECT DISTINCT c.module_id,c.pmodule_id,c.module_name
+			               FROM sys_accountroleconf a, sys_rolemodule b, sys_module c
+			              WHERE  a.account_id = #{account_id,jdbcType=VARCHAR}
+			                AND a.role_id = b.role_id
+			                AND b.module_id = c.module_id
+		]]>
+	</select>
+</mapper>

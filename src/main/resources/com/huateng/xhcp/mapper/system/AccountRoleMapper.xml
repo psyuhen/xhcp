@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.huateng.xhcp.mapper.system.AccountRoleMapper">
+    <!-- 查询用户权限信息 -->
+	<select id="queryAccountRole" resultType="AccountRole" parameterType="AccountRole">
+		SELECT account_id, role_id
+		FROM sys_accountrole
+		<where>
+			<if test="account_id != null and account_id != ''">account_id = #{account_id,jdbcType=VARCHAR}</if>
+	      	<if test="role_id != null and role_id !='' ">AND role_id = #{role_id,jdbcType=INTEGER}</if>
+		</where>
+	</select>
+	<!-- 新增用户权限 -->
+	<insert id="addAccountRole" parameterType="AccountRole">
+		INSERT INTO sys_accountrole (role_id, account_id)
+		VALUES (#{role_id,jdbcType=INTEGER}, #{account_id,jdbcType=VARCHAR})
+	</insert>
+	<!-- 更新用户权限信息 -->
+	<update id="updateAccountRole" parameterType="AccountRole">
+		UPDATE sys_accountrole
+		<set>
+	      	<if test="account_id != null">account_id = #{account_id,jdbcType=VARCHAR},</if>
+			<if test="role_id != null">role_id = #{role_id,jdbcType=INTEGER},</if>
+		</set>
+		<where>
+			<if test="account_id != null">account_id = #{account_id}</if>
+		</where>
+	</update>
+	<!-- 删除用户权限信息 -->
+	<delete id="deleteAccountRole" parameterType="AccountRole">
+		DELETE FROM sys_accountrole
+		<where>
+			<if test="account_id != null and account_id != ''">account_id = #{account_id,jdbcType=VARCHAR}</if>
+	      	<if test="role_id != null and role_id != '' ">AND role_id = #{role_id,jdbcType=INTEGER}</if>
+		</where>
+	</delete>
+	
+	<!-- add by chengz -->
+	<!-- 查询支配角色的用户 -->
+	<select id="queryAccountRoleConf" resultType="AccountRole" parameterType="AccountRole">
+		SELECT account_id, role_id
+		FROM sys_accountroleconf
+		<where>
+			<if test="account_id != null and account_id != ''">account_id = #{account_id,jdbcType=VARCHAR}</if>
+	      	<if test="role_id != null and role_id != ''">AND role_id = #{role_id,jdbcType=INTEGER}</if>
+		</where>
+	</select>
+	<!-- 新增支配角色的用户 -->
+	<insert id="addAccountRoleConf" parameterType="AccountRole">
+		INSERT INTO sys_accountroleconf (role_id, account_id)
+		VALUES (#{role_id,jdbcType=INTEGER}, #{account_id,jdbcType=VARCHAR})
+	</insert>
+	<!-- 删除支配角色的用户 -->
+	<delete id="deleteAccountRoleConf" parameterType="AccountRole">
+		DELETE FROM sys_accountroleconf
+		<where>
+			<if test="account_id != null and account_id != ''">account_id = #{account_id,jdbcType=VARCHAR}</if>
+	      	<if test="role_id != null and role_id != ''">AND role_id = #{role_id,jdbcType=INTEGER}</if>
+		</where>
+	</delete>
+</mapper>
