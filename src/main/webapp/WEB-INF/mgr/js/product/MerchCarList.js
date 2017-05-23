@@ -28,7 +28,7 @@ var MerchCarList = function (options){
 			"method_name"		: "queryMerchCar",
 			"param_type"		: _param_type,
 			"module_name"		: "购物车维护",
-			"url"				: ctx + "/mgr/mgr/product/car/queryMerchCarPage",
+			"url"				: ctx + "/mgr/product/car/queryMerchCarPage",
 			"formId"			: "conditionForm",
 			"tableHeaders"		: ["购物车ID","商品ID","购买数量","用户ID","创建时间"],
 			"columnNames"		: ["car_id","merch_id","buy_num","account_id","create_time"]

@@ -31,30 +31,28 @@
 	                       	<%-- 查询条件输入 --%>
 			                <div class="box-content">
 			                	<div class="row">
-			                	    <div class="col-md-6">
+			                	    <div class="col-md-3">
 			                	    	<%-- 购物车ID --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="car_id"><spring:message code="购物车ID" /></label>
 			                		        <input type="text" name="car_id" class="form-control" id="car_id" placeholder="<spring:message code="购物车ID" />">
 			                		    </div>
 			                		</div>
-			                	    <div class="col-md-6">
+			                	    <div class="col-md-3">
 			                	    	<%-- 商品ID --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="merch_id"><spring:message code="商品ID" /></label>
 			                		        <input type="text" name="merch_id" class="form-control" id="merch_id" placeholder="<spring:message code="商品ID" />">
 			                		    </div>
 			                		</div>
-			                	    <div class="col-md-6">
+			                	    <div class="col-md-3">
 			                	    	<%-- 购买数量 --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="buy_num"><spring:message code="购买数量" /></label>
 			                		        <input type="text" name="buy_num" class="form-control" id="buy_num" placeholder="<spring:message code="购买数量" />">
 			                		    </div>
 			                		</div>
-			                	</div>
-			                	<div class="row">
-			                	    <div class="col-md-6">
+			                	    <div class="col-md-3">
 			                	    	<%-- 用户ID --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="account_id"><spring:message code="用户ID" /></label>
@@ -77,7 +75,7 @@
 						    	<spring:message code="btn_reset" />
 						    </button>
 						    <c:if test="${requestScope.page eq 'mgr'}">
-							    <a href="${ctx}/mgr/mgr/product/car/add?module_id=${requestScope.module_id}&page=${requestScope.page}" class="btn btn-primary btn-sm">
+							    <a href="${ctx}/mgr/product/car/add?module_id=${requestScope.module_id}&page=${requestScope.page}" class="btn btn-primary btn-sm">
 							    	<i class="glyphicon glyphicon-plus"></i>
 							    	<spring:message code="btn_add" />
 							    </a>
