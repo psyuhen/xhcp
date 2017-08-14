@@ -57,7 +57,7 @@ public class MapperRefresh implements Runnable{
 
                 xmlMap.put(filePath, xmlFile.lastModified());
             } catch (IOException e) {
-                e.printStackTrace();
+            	LOGGER.error(e.getMessage(), e);
             }
         }
 

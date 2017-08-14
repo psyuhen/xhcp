@@ -22,7 +22,7 @@ import java.util.*;
 public class UploadFileUtil {
     private static final Log LOGGER = LogFactory.getLog(IndexController.class);
 
-    public static UploadType upload(HttpServletRequest request, UploadCallback uploadCallback){
+    public static UploadType upload(HttpServletRequest request, UploadCallback<FileInfo> uploadCallback){
         final String realPath = request.getServletContext().getRealPath("upfiles/");
         LOGGER.info("readlPath =>" + realPath);
 
@@ -149,7 +149,7 @@ public class UploadFileUtil {
         }
     }
 
-    public static UploadType uploadPhoto(String merchId, HttpServletRequest request, UploadCallback uploadCallback){
+    public static UploadType uploadPhoto(String merchId, HttpServletRequest request, UploadCallback<MerchGallery> uploadCallback){
         final String realPath = request.getServletContext().getRealPath("upfiles/");
         LOGGER.info("readlPath =>" + realPath);
 

@@ -4,25 +4,14 @@
 package com.huateng.xhcp.web.article;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.huateng.xhcp.model.kindeditor.KEMsg;
-import com.huateng.xhcp.model.system.FileInfo;
-import com.huateng.xhcp.util.DateUtil;
-import com.huateng.xhcp.util.PropertiesReader;
-import com.huateng.xhcp.util.StringUtil;
-import lombok.Getter;
-import lombok.Setter;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -30,16 +19,25 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.github.pagehelper.Page;
 import com.huateng.xhcp.model.ResponseInfo;
 import com.huateng.xhcp.model.article.Article;
+import com.huateng.xhcp.model.kindeditor.KEMsg;
 import com.huateng.xhcp.service.article.ArticleService;
+import com.huateng.xhcp.util.DateUtil;
 import com.huateng.xhcp.util.HttpUtil;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.ModelAndView;
+import com.huateng.xhcp.util.PropertiesReader;
+import com.huateng.xhcp.util.StringUtil;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 资讯信息 Controller类
@@ -334,7 +332,6 @@ public class ArticleController implements com.huateng.xhcp.service.upload.Valida
 	@ResponseBody
     @RequestMapping(value = "/mgr/article/uploadFile", method = RequestMethod.POST)
     public KEMsg uploadFile(HttpServletRequest request) {
-        InputStream is = null;
         try {
 
 			String realPath = request.getServletContext().getRealPath("upfiles/");

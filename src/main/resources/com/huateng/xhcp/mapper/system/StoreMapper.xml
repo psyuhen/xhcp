@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.huateng.xhcp.mapper.system.StoreMapper">
+    <!-- 查询店铺信息信息 -->
+	<select id="queryStore" resultType="Store" parameterType="Store">
+		SELECT store_id,store_name,contents,is_use,update_time,create_time
+		FROM tbl_store_info
+		<where>
+			<if test="store_id != null and store_id != ''">AND store_id = #{store_id,jdbcType=INTEGER}</if>
+			<if test="store_name != null and store_name != ''">AND store_name = #{store_name,jdbcType=VARCHAR}</if>
+			<if test="contents != null and contents != ''">AND contents = #{contents,jdbcType=VARCHAR}</if>
+			<if test="is_use != null and is_use != ''">AND is_use = #{is_use,jdbcType=CHAR}</if>
+			<if test="update_time != null and update_time != ''">AND update_time = #{update_time,jdbcType=VARCHAR}</if>
+			<if test="create_time != null and create_time != ''">AND create_time = #{create_time,jdbcType=VARCHAR}</if>
+			<if test="b_start_date != null and b_start_date != ''"><![CDATA[AND create_time >= #{b_start_date,jdbcType=VARCHAR} ]]></if>
+			<if test="b_end_date != null and b_end_date != ''"><![CDATA[AND create_time <= #{b_end_date,jdbcType=VARCHAR} ]]></if>
+			
+		</where>
+		<if test="b_order_name != null  and b_order_name != ''"><![CDATA[ORDER BY ${b_order_name} ${b_order_asc}  ]]></if>
+		<if test='b_order_name == null  and b_order_name == ""'><![CDATA[ORDER BY create_time DESC   ]]></if>
+	</select>
+	
+	<!-- 新增店铺信息 -->
+	<insert id="addStore" parameterType="Store" useGeneratedKeys="true" keyProperty="store_id">
+		INSERT INTO tbl_store_info (store_name,contents,is_use,update_time,create_time)
+		VALUES (#{store_name,jdbcType=VARCHAR},#{contents,jdbcType=VARCHAR},#{is_use,jdbcType=CHAR},#{update_time,jdbcType=VARCHAR},DATE_FORMAT(now(),'%Y%m%d%H%i%s'))
+	</insert>
+	
+	<!-- 批量新增店铺信息信息 -->
+	<insert id="addBatchStore" parameterType="Store" useGeneratedKeys="true" keyProperty="store_id">
+		INSERT INTO tbl_store_info (store_name,contents,is_use,update_time,create_time) VALUES
+		<foreach item="item" collection="list" separator=",">
+			(#{item.store_name,jdbcType=VARCHAR},#{item.contents,jdbcType=VARCHAR},#{item.is_use,jdbcType=CHAR},#{item.update_time,jdbcType=VARCHAR},DATE_FORMAT(now(),'%Y%m%d%H%i%s'))
+		</foreach>
+	</insert>
+	
+	<!-- 更新店铺信息信息 -->
+	<update id="updateStore" parameterType="Store">
+		UPDATE tbl_store_info
+		<set>
+	      	<if test="store_id != null">store_id = #{store_id,jdbcType=VARCHAR},</if>
+	      	<if test="store_name != null">store_name = #{store_name,jdbcType=VARCHAR},</if>
+	      	<if test="contents != null">contents = #{contents,jdbcType=VARCHAR},</if>
+	      	<if test="is_use != null">is_use = #{is_use,jdbcType=CHAR},</if>
+	      	<![CDATA[
+              update_time = DATE_FORMAT(now(),'%Y%m%d%H%i%s')
+            ]]>
+		</set>
+		WHERE store_id = #{store_id,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 删除店铺信息信息 -->
+	<delete id="deleteStore" parameterType="Store">
+		DELETE FROM tbl_store_info WHERE store_id = #{store_id,jdbcType=INTEGER}
+	</delete>
+	
+	<!-- 批量删除店铺信息信息-->
+	<delete id="deleteBatchStore" parameterType="Store">
+		DELETE FROM tbl_store_info WHERE store_id IN
+		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+			#{item.store_id,jdbcType=INTEGER}
+		</foreach>
+	</delete>
+</mapper>

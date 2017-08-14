@@ -5,20 +5,19 @@ package com.huateng.xhcp.service.imp.product;
 
 import java.util.List;
 
-import com.huateng.xhcp.mapper.product.MerchCarMapper;
-import com.huateng.xhcp.mapper.product.OrderDetailMapper;
-import com.huateng.xhcp.model.product.OrderDetail;
-import com.huateng.xhcp.service.product.MerchCarService;
-import lombok.Getter;
-import lombok.Setter;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.huateng.xhcp.mapper.product.MerchCarMapper;
+import com.huateng.xhcp.mapper.product.OrderDetailMapper;
 import com.huateng.xhcp.mapper.product.OrderInfoMapper;
+import com.huateng.xhcp.model.product.OrderDetail;
 import com.huateng.xhcp.model.product.OrderInfo;
 import com.huateng.xhcp.service.product.OrderInfoService;
 import com.huateng.xhcp.web.page.PageHelper;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 订单信息服务实现类

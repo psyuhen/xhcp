@@ -29,21 +29,21 @@
 				            <div class="box-inner">
 				                <div class="box-content">
 				                	<div class="row">
-			                	    <div class="col-md-6">
+			                	    <div class="col-md-4">
 			                	    	<%-- 会员等级ID --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="vip_id"><spring:message code="会员等级ID" /></label>
-			                		        <input type="text" name="vip_id" class="form-control" id="vip_id" placeholder="<spring:message code="会员等级ID" />">
+			                		        <input type="text" name="vip_id" readonly="readonly" class="form-control" id="vip_id" placeholder="<spring:message code="会员等级ID" />">
 			                		    </div>
 			                		</div>
-			                	    <div class="col-md-6">
+			                	    <div class="col-md-4">
 			                	    	<%-- 等级名称 --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="name"><spring:message code="等级名称" /></label>
 			                		        <input type="text" name="name" class="form-control" id="name" placeholder="<spring:message code="等级名称" />">
 			                		    </div>
 			                		</div>
-			                	    <div class="col-md-6">
+			                	    <div class="col-md-4">
 			                	    	<%-- 积分要求 --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="score"><spring:message code="积分要求" /></label>
@@ -52,7 +52,7 @@
 			                		</div>
 			                	</div>
 			                	<div class="row">
-			                	    <div class="col-md-6">
+			                	    <div class="col-md-4">
 			                	    	<%-- 享受折扣 --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="discount"><spring:message code="享受折扣" /></label>

@@ -60,13 +60,13 @@ public class ReflectUtil {
 	 * @return
 	 * @throws ClassNotFoundException
 	 */
-	public static Class[]  getMethodParamTypes(Object classInstance,
+	public static Class<?>[]  getMethodParamTypes(Object classInstance,
 											   String methodName) throws ClassNotFoundException{
-		Class[] paramTypes = null;
+		Class<?>[] paramTypes = null;
 		Method[]  methods = classInstance.getClass().getMethods();//全部方法
 		for (int  i = 0;  i< methods.length; i++) {
 			if(methodName.equals(methods[i].getName())){//和传入方法名匹配
-				Class[] params = methods[i].getParameterTypes();
+				Class<?>[] params = methods[i].getParameterTypes();
 				paramTypes = new Class[ params.length] ;
 				for (int j = 0; j < params.length; j++) {
 					paramTypes[j] = Class.forName(params[j].getName());

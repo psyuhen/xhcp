@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.github.pagehelper.Page;
 import com.huateng.xhcp.model.ResponseInfo;
 import com.huateng.xhcp.model.product.OrderInfo;
+import com.huateng.xhcp.model.product.OrderStatus;
 import com.huateng.xhcp.service.product.OrderInfoService;
 import com.huateng.xhcp.util.HttpUtil;
 
@@ -66,7 +67,7 @@ public class OrderInfoController implements com.huateng.xhcp.service.upload.Vali
 
 		OrderInfo orderInfo = new OrderInfo();
 		orderInfo.setOrder_id(order_id);
-		orderInfo.setStatus("5");
+		orderInfo.setStatus(OrderStatus.TRADCANCEL.toString());
 		orderInfo.setTrad_finish_time(DateUtil.currentTime());
 
 		orderInfoService.updateOrderInfo(orderInfo);
@@ -152,7 +153,7 @@ public class OrderInfoController implements com.huateng.xhcp.service.upload.Vali
 		orderInfo.setCurrency_unit("人民币");
 		orderInfo.setPay_type(payment);
 //		orderInfo.setTrad_time(DateUtil.currentTime());
-		orderInfo.setStatus("0");//0-买方待付款
+		orderInfo.setStatus(OrderStatus.NOPAY.toString());//0-买方待付款
 
 
 		List<OrderDetail> details = new ArrayList<OrderDetail>();

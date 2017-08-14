@@ -33,14 +33,14 @@
 			                	    	<%-- 导航ID --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="nav_id"><spring:message code="导航ID" /></label>
-			                		        <input type="text" name="nav_id" class="form-control" id="nav_id" placeholder="<spring:message code="导航ID" />">
+			                		        <input type="text" name="nav_id" class="form-control" readonly="readonly" id="nav_id" placeholder="<spring:message code="导航ID" />">
 			                		    </div>
 			                		</div>
 			                	    <div class="col-md-4">
 			                	    	<%-- 导航父ID --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="pnav_id"><spring:message code="导航父ID" /></label>
-			                		        <input type="text" name="pnav_id" class="form-control" id="pnav_id" placeholder="<spring:message code="导航父ID" />">
+			                		        <input type="text" name="pnav_id" class="form-control" title="一般-1为顶级导航,其他值为导航的ID" id="pnav_id" placeholder="<spring:message code="导航父ID（一般-1为顶级导航,其他值为导航的ID）" />">
 			                		    </div>
 			                		</div>
 			                	    <div class="col-md-4">
@@ -52,14 +52,14 @@
 			                		</div>
 			                	</div>
 			                	<div class="row">
-			                	    <div class="col-md-6">
+			                	    <div class="col-md-4">
 			                	    	<%-- 导航地址 --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="url"><spring:message code="导航地址" /></label>
 			                		        <input type="text" name="url" class="form-control" id="url" placeholder="<spring:message code="导航地址" />">
 			                		    </div>
 			                		</div>
-			                	    <div class="col-md-6">
+			                	    <div class="col-md-4">
 			                	    	<%-- 是否为外连导航 --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="is_out_link"><spring:message code="是否为外连导航" /></label>
@@ -69,9 +69,7 @@
                                             </select>
                                         </div>
 			                		</div>
-			                	</div>
-			                	<div class="row">
-			                	    <div class="col-md-6">
+			                	    <div class="col-md-4">
 			                	    	<%-- 是否为默认显示 --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="is_default"><spring:message code="是否为默认显示" /></label>
@@ -81,7 +79,9 @@
                                             </select>
 			                		    </div>
 			                		</div>
-			                	    <div class="col-md-6">
+			                	</div>
+			                	<div class="row">
+			                	    <div class="col-md-4">
 			                	    	<%-- 排序 --%>
 			                		    <div class="form-group">
 			                		        <label class="control-label" for="order_id"><spring:message code="排序" /></label>

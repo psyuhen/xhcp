@@ -86,7 +86,7 @@
     	你打开的页面找不到
     <br>
     <br>
-    <a href="${ctx}">回到主页</a>
+    <a href="${ctx}/mgr">回到主页</a>
     <br>
     <br>
 </div>

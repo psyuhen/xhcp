@@ -1,23 +1,23 @@
 /**
  * function:
- * GuestBookList.js
+ * StoreList.js
  * @author sam.pan
- * @createTime 2017-04-20 17:53:20
+ * @createTime 2017-06-06 17:18:15
  */
-var GuestBookList = function (options){
+var StoreList = function (options){
 	var $this = this;
 	var $dataTable = null;
 	var $rowData = null;
 	var $table = null;
-	var _service_name = "com.huateng.xhcp.web.system.GuestBookController";
-	var _param_type = "com.huateng.xhcp.model.system.GuestBook";
+	var _service_name = "com.huateng.xhcp.web.system.StoreController";
+	var _param_type = "com.huateng.xhcp.model.system.Store";
 	var _page = options.page;
 	var _module_id = options.module_id;
 	
 	/*初始化数据表格*/
 	this.initTable = function(){
 		var t = new Table({
-			"table_id"			: "guestBookList",
+			"table_id"			: "storeList",
 			"ordering"			: false,
 			"download"			: {enabled:false},
 			"row_btn_enabled"	: true,
@@ -25,33 +25,43 @@ var GuestBookList = function (options){
 			"btn_edit_callback"	: btnEditEvent,
 			"btn_del_callback"	: btnDelEvent,
 			"service_name"		: _service_name,
-			"method_name"		: "queryGuestBook",
+			"method_name"		: "queryStore",
 			"param_type"		: _param_type,
-			"module_name"		: "访客留言簿信息维护",
-			"url"				: ctx + "/mgr/system/guest/queryGuestBookPage",
+			"module_name"		: "店铺信息维护",
+			"url"				: ctx + "/mgr/store/queryStorePage",
 			"formId"			: "conditionForm",
-			"tableHeaders"		: ["留言ID","姓名","电话","邮箱","地址","留言","创建时间"],
-			"columnNames"		: ["msg_id","name","phone","email","address","msg_info",{"create_time":RenderUtil.time}]
+			"tableHeaders"		: ["店铺ID","店铺名称","店铺内容","是否使用","更新时间","创建时间"],
+			"columnNames"		: ["store_id","store_name",{"contents":_ellipsis},{"is_use":RenderUtil.yesOrNo},"update_time",{"create_time":RenderUtil.time}]
 		});
 		$dataTable = t.getDataTable();
 		$table = t;
 	};
 	
+	function _ellipsis(data, type, row) {
+        if(data == null || data == undefined){
+            return "";
+        }
+
+        var text = StringUtil.delHtmlTag(data);
+        return StringUtil.ellipsis(text, 100);
+    }
+	
 	/*初始化日期控件*/
 	this.initDateTimePicker = function(){
+		Form.dateTime("b_start_date", "b_end_date");
 		//Form.dateTime("div_start_date", "div_end_date", 'YYYY-MM-DD');
 	};
 	
 	/* 查看*/
 	function btnViewEvent($rowData){
-		var msg_id = $rowData.msg_id;
-		window.location.href = ctx + "/mgr/system/guest/view?msg_id=" + msg_id + "&page=" + _page + "&module_id=" + _module_id;
+		var store_id = $rowData.store_id;
+		window.location.href = ctx + "/mgr/store/view?store_id=" + store_id + "&page=" + _page + "&module_id=" + _module_id;
 	}
 	
 	/* 编辑*/
 	function btnEditEvent($rowData){
-		var msg_id = $rowData.msg_id;
-		window.location.href = ctx + "/mgr/system/guest/update?page=mgr&msg_id=" + msg_id + "&module_id=" + _module_id;
+		var store_id = $rowData.store_id;
+		window.location.href = ctx + "/mgr/store/update?page=mgr&store_id=" + store_id + "&module_id=" + _module_id;
 	}
 	
 	/* 删除*/
@@ -75,18 +85,18 @@ var GuestBookList = function (options){
 	/* 删除*/
 	function btnDelCallback(rowdata){
 		var params = [
-		    ParamCheck.initChkObj("msg_id", "信息ID", rowdata.msg_id)
+		    ParamCheck.initChkObj("store_id", "店铺ID", rowdata.store_id)
 		];
 		
 		ParamCheck.commonSubmit({
 			service_name : _service_name,
-			method_name : "deleteGuestBook",
+			method_name : "deleteStore",
 			parameter_type : _param_type,
 			oper_type : "delete",
-			oper_desc : "删除访客留言簿信息信息",
-			switch_name : "guestBookSwitch",
-			module_id : "msgmgr",
-			check_fields : ["msg_id"],
+			oper_desc : "删除店铺信息信息",
+			switch_name : "storeSwitch",
+			module_id : "storemgr",
+			check_fields : ["store_id"],
 			params : params,
 			success : function(){
 				$("#btn_search").click();

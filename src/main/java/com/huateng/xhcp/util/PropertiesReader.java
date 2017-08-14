@@ -3,6 +3,8 @@
  */
 package com.huateng.xhcp.util;
 
+import java.util.List;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConversionException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -124,5 +126,15 @@ public class PropertiesReader {
 	 */
 	public static String[] getStringArray(String key){
 		return prop.getStringArray(key);
+	}
+	
+	/**
+	 * Get a List of strings associated with the given configuration key. 
+	 * If the key doesn't map to an existing object an empty List is returned.
+	 * @param key The configuration key.
+	 * @return The associated List.
+	 */
+	public static List<Object> getList(String key){
+		return prop.getList(key);
 	}
 }

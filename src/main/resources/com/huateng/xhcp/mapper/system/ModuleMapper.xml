@@ -118,7 +118,7 @@
     <!-- 只查询用户有权限的菜单 -->
 	<select id="findModuleSuperUser" resultType="Module" >
 		<![CDATA[
-			SELECT DISTINCT module_id,pmodule_id,module_name,module_entry,module_type,module_target
+			SELECT DISTINCT module_id,pmodule_id,module_name,module_entry,module_type,module_target,module_order
 			  FROM sys_module
 			 WHERE (module_type != 3 OR module_type IS NULL)
 			   AND (module_hide != 1 OR module_hide IS NULL)

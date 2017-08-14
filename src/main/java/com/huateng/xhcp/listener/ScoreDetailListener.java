@@ -1,14 +1,5 @@
 package com.huateng.xhcp.listener;
 
-import com.huateng.xhcp.event.ScoreDetailEvent;
-import com.huateng.xhcp.model.system.Account;
-import com.huateng.xhcp.model.system.ScoreDetail;
-import com.huateng.xhcp.security.SecurityContext;
-import com.huateng.xhcp.service.system.ScoreDetailService;
-import static org.apache.commons.lang3.StringUtils.defaultIfBlank;
-import static org.apache.commons.lang3.StringUtils.trimToEmpty;
-
-import com.huateng.xhcp.util.StringUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +7,13 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
+
+import com.huateng.xhcp.event.ScoreDetailEvent;
+import com.huateng.xhcp.model.system.Account;
+import com.huateng.xhcp.model.system.ScoreDetail;
+import com.huateng.xhcp.security.SecurityContext;
+import com.huateng.xhcp.service.system.ScoreDetailService;
+import com.huateng.xhcp.util.StringUtil;
 
 /**
  * Created by pansen on 2017/5/9.
